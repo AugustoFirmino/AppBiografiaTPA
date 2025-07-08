@@ -1,0 +1,183 @@
+.fundo {
+  display: flex;
+  justify-content: center; /* centraliza .director-container */
+  padding: 20px 0;
+}
+.director-container {
+
+
+
+    display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 8px;
+  justify-content: center;
+  padding: 0;
+}
+
+.director-card {
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+}
+
+.director-card img {
+
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  transition: transform 0.3s;
+  margin-left: -15px;
+  margin-top: -20px;
+}
+
+.director-card:hover img {
+  position: absolute;
+  top: -10px;       /* ajusta pra cima */
+  left: -10px;      /* centrando hack */
+  width: 220px;     /* maior que o normal */
+  height: 220px;
+  z-index: 10;      /* na frente dos outros */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  transform: scale(1.08);
+
+}
+
+
+/* Nome oculto por padrão */
+.director-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+  font-size: 1rem;
+ margin-bottom: -10px;
+  margin-left: -20px;
+  width: 200px;
+}
+
+.azul{
+  color: blue;
+  text-decoration: none;
+}
+.director-card:hover .director-name {
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 10;
+}
+
+/* ≥ 320px – smartphones pequenos */
+@media (min-width: 320px) {
+  .director-container {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+/* ≥ 400px – celulares maiores */
+@media (min-width: 400px) {
+  .director-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+/* ≥ 576px – celulares grandes / tablets pequenos */
+@media (min-width: 576px) {
+  .director-container {
+ grid-template-columns: repeat(2, 235px);
+  }
+}
+/* ≥ 768px – tablets / laptops */
+@media (min-width: 768px) {
+  .director-container {
+    grid-template-columns: repeat(4, 180px);
+  }
+}
+/* ≥ 800px – tablets médios */
+@media (min-width: 800px) {
+  .director-container {
+    grid-template-columns: repeat(6, 200px);
+  }
+}
+/* ≥ 800px – tablets médios */
+@media (min-width: 900px) {
+  .director-container {
+    grid-template-columns: repeat(5, 150px);
+  }
+}
+/* ≥ 992px – desktops padrão */
+@media (min-width: 992px) {
+  .director-container {
+    grid-template-columns: repeat(6, 200px);
+  }
+}
+@media (min-width: 1000px) {
+  .director-container {
+    grid-template-columns: repeat(6, 150px);
+  }
+}
+@media (min-width: 1100px) {
+  .director-container {
+    grid-template-columns: repeat(6, 180px);
+  }
+}
+
+/* ≥ 1200px – desktops grandes */
+@media (min-width: 1200px) {
+  .director-container {
+    grid-template-columns: repeat(7, 180px);
+  }
+}
+/* ≥ 1440px – widescreen / 2K */
+@media (min-width: 1440px) {
+  .director-container {
+    grid-template-columns: repeat(10, 220px);
+  }
+}
+/* ≥ 1200px – desktops grandes */
+@media (min-width: 1200px) {
+  .director-container {
+    grid-template-columns: repeat(7, 180px);
+  }
+}
+/* ≥ 1500px – grandes monitores */
+@media (min-width: 1450px) {
+  .director-container {
+    grid-template-columns: repeat(7, 190px);
+  }
+}
+/* ≥ 1700px – monitores maiores */
+@media (min-width: 1700px) {
+  .director-container {
+    grid-template-columns: repeat(8, 200px);
+  }
+}
+/* ≥ 1800px – 2K/4K */
+@media (min-width: 1800px) {
+  .director-container {
+    grid-template-columns: repeat(9, 190px);
+  }
+}
+/* ≥ 1900px – 4K */
+@media (min-width: 1900px) {
+  .director-container {
+    grid-template-columns: repeat(10, 190px);
+  }
+}
+/* ≥ 2000px – ultra wide */
+@media (min-width: 2000px) {
+  .director-container {
+    grid-template-columns: repeat(10, 235px);
+  }
+}
+/* ≥ 2000px – ultra wide */
+@media (min-width: 2050px) {
+  .director-container {
+    grid-template-columns: repeat(10, 240px);
+  }
+}
