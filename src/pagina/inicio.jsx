@@ -5,12 +5,14 @@ import { useState } from 'react'
 import LogoTPA from '../assets/imgs/tpa.png';
 
 import ImagemDirector1 from '../assets/imgs/Augusto Firmino.jpeg';
-import ImagemDirector2 from '../assets/imgs/francisco mendes.jpg';
+import ImagemDirector2 from '../assets/imgs/MbalaGaston.jpg';
 
 import '../styles/listasdirectores.css'; // importamos o CSS separado
 
+
+import { directors } from '../dados/directors';
 function Inicio() {
- const directors = [
+ const directors3 = [
   {
     id:1,
     name: 'Augusto Afonso Firmino',
@@ -18,9 +20,9 @@ function Inicio() {
     link: 'https://en.wikipedia.org/wiki/Quentin_Tarantino',
   },
     {
-       id:2,
-    name: 'Augusto Afonso Firmino',
-    image: ImagemDirector1,
+    id:2,
+    name: 'Mbala Gaston',
+    image: ImagemDirector2,
     link: 'https://en.wikipedia.org/wiki/Quentin_Tarantino',
   },
     {
@@ -319,33 +321,50 @@ function Inicio() {
     setSelectedDirector(director);
   };
 
+
+   const [busca, setBusca] = useState('');
+
+  const filtrados = directors.filter((dir) =>
+    dir.name.toLowerCase().includes(busca.toLowerCase())
+  );
   return (
    
   <div >
-        <img src={LogoTPA} alt={'TPA'} />
-      <h2>Directores da TPA</h2>
-         <div className="fundo">
-      <div className="director-container">
-   
       
-        {directors.map((dir) => (
-
-          <>
-
-          <Link
-            key={dir.id}
-            to={`biografia/${dir.name}/${dir.id}`}
+      <div  className='search-container'>
+      
+       <input
+        type="text"
+        placeholder="Pesquisar diretor pelo nome..."
+        value={busca}
+        onChange={(e) => setBusca(e.target.value)}
         
-            className="director-card"
-          >
-            <img src={dir.image} alt={dir.name} />
-             <p className="director-name"> <Link to={`/biografia/${dir.name}/${dir.id}`} className='azul'>  {dir.name} </Link ></p> 
-          </Link>
+      />
+     </div>
+
+        <img src={LogoTPA} alt={'TPA'} />
+      <h2> 50 Anos 50 Histórias</h2>
+         <div className="fundo">
       
-          </>
-        ))}
-            
-      </div>
+{filtrados.length === 0 ? (
+  <div className="nenhum-diretor">
+    <p>Nenhum diretor encontrado.</p>
+  </div>
+) : (
+  <div className="director-container">
+    {filtrados.map((dir) => (
+      <Link
+        key={dir.id}
+        to={`/biografia/${dir.name}/${dir.id}`}
+        className="director-card"
+      >
+        <img src={dir.image} alt={dir.name} />
+        <p className="director-name">{dir.name}</p>
+      </Link>
+    ))}
+  </div>
+)}
+      
        </div>
     </div>
  
