@@ -19,14 +19,8 @@ import {depoimentos} from "../dados/depoimentos";
 function Inicio() {
 
 
-// Definindo o estado para o diretor selecionado
-  const [selectedDirector, setSelectedDirector] = useState(null);
 
-  //criando o controle de clique para fexhar e abrir o menu
-  const handleClick = (director) => {
-    setSelectedDirector(director);
-  };
-
+  
     const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
