@@ -11,7 +11,7 @@ export const directors = [
     idade:'39',
     nacionalidade:'Angolana',
     ocupacao:'Programador, Engenheiro de Software, Gestor de Projectos, Formador e Consultor',
-    nascimento:'09/08/1961',
+    nascimento:'26/05/1986',
     falecimento:'',
     cargo:'Director de Produtos Digitais',   
       biografia: `

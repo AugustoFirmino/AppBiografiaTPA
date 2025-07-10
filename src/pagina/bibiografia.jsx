@@ -13,10 +13,11 @@ import '../styles/biografia.css'; // importamos o CSS separado
 
 
 import { directors } from '../dados/directors';
-import { fotos } from '../dados/fotos';
+import { fotos } from '../dados/fotos'
+import {depoimentos} from "../dados/depoimentos";
 
 function Inicio() {
- 
+
 
 // Definindo o estado para o diretor selecionado
   const [selectedDirector, setSelectedDirector] = useState(null);
@@ -35,7 +36,9 @@ function Inicio() {
     const { nome, id } = useParams();
     const ImagemPessoa = directors.find(p => p.id === parseInt(id));
     const FotoPessoa = fotos.find(p => p.id === parseInt(id));
- 
+    const DepoimentosPessoa = depoimentos.filter(p => p.id === parseInt(id))
+
+ console.log("Depoimentos:", DepoimentosPessoa);
       const [secaoAtiva, setSecaoAtiva] = useState("biografia");
   return (
    
@@ -249,9 +252,29 @@ function Inicio() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Depoimentos
           </h2>
-          <p className="text-gray-700 italic">
-            Nenhum depoimento disponível no momento.
-          </p>
+{Array.isArray(DepoimentosPessoa) && DepoimentosPessoa.length > 0 ? (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {DepoimentosPessoa.map((depoimento, index) => (
+      <div
+        key={index}
+        className="relative bg-white border border-gray-200 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+      >
+        <div className="absolute top-2 left-3 text-5xl text-blue-500 select-none leading-none">“</div>
+
+        <p className="text-gray-800 italic leading-relaxed pl-8">
+          {depoimento.mensagem}
+        </p>
+
+        <div className="mt-4 border-t pt-3 text-sm text-gray-600 text-right">
+          — <span className="font-semibold text-gray-800">{depoimento.nome}</span>, {depoimento.cargo}
+        </div>
+      </div>
+    ))}
+  </div>
+) : (
+  <p className="text-gray-500 italic text-center">Ainda não há depoimentos para este diretor.</p>
+)}
+    
         </div>
       )}
     </div>
