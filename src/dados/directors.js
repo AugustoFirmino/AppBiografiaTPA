@@ -14,7 +14,7 @@ export const directors = [
     ocupacao:'Programador, Engenheiro de Software, Gestor de Projectos, Formador e Consultor',
     nascimento:'26/05/1986',
     falecimento:'',
-    cargo:'Director de Produtos Digitais',   
+    cargo:'Director de Produtos Digitais da Televisão Pública de Angola ',   
       biografia: `
     <p>
    Augusto Afonso Firmino é um jovem angolano de 36 anos de idade, nascido no Rangel, em Luanda, e criado no Cazenga, Hoji ya Henda. É um programador e empreendedor no ramo das Tecnologias de Informação e Comunicação, tendo criado a sua primeira empresa, INOKRI, em 2016, com o objectivo de oferecer serviços e soluções inovadoras ao mercado nacional. Em 2019, decidiu criar a startup SÓCIA, uma plataforma voltada para a economia de partilha que tem como finalidade principal criar poder de compra no seio das famílias angolanas.
@@ -137,9 +137,9 @@ export const directors = [
     link: 'https://en.wikipedia.org/wiki/Quentin_Tarantino',
     idade:'39',
     nacionalidade:'Angolana',
-    ocupacao:'Apresentador de programas,Criador dos programas  e actor ',
+    ocupacao:'Editor, produtor, repórter e chefe de reportagem',
   
-     nascimento:'23/06/1957',
+     nascimento:' 26/12/1961',
     falecimento:'',
     cargo:'Subdiretor do Gabinete de Relações Institucionais da Televisão Pública de Angola.',   
       biografia: `
@@ -161,8 +161,8 @@ export const directors = [
 `,
     
     
-    qualificacoes_academica:['1963 a 1967 - Escola Primária nº15, Luanda.','1967 a 1969 - Escola Preparatória Emídio Navarro, Luanda.','1970 a 1975 - Liceu Nacional Salvador Correia, Luanda.','1976 a 1977 - Faculdade de Medicina, Luanda.'],
-    experiencias:['1977 / 1984 - Rádio Nacional de Angola, Luanda.Locutor, redactor repórter.','1985 / 1992 - Conoco Angola Ltd., Luanda., Director Geral','1993 / 1994 - Moagem do Kikolo, Luanda., Director Geral','1997 / 1999 - Luanda Antena Comercial, Locutor do programa “7/9”. Realizador, produtor e apresentador do programa “Figuras, Figurinhas e Figurões”. Locutor e co-produtor doprograma “Vector”.','1997 / 2003 - Televisão Pública de Angola TPA, Apresentador dos programas “Discoteca”, “Explosão”, “Quem sabe, sabe”,“Você Decide”. Criador dos programas “Janela Aberta”, “3x3” e“Conversas no Quintal”. Como actor, participei, como protagonista, nastelenovelas “Pecado Original”, “Vidas Ocultas”, Reviravolta”, “DocePitanga”, “Komba” e “Sede de Viver”.','2003 / 2014 - Governo da Província de Luanda, Director Provincial da Comunicação Social. Assessor do GovernadorProvincial de Luanda.','2014 / 2017 - Embaixada de Angola no Canadá, Ottawa. Adido de Imprensa.', '2020 -  Rádio Mais Benguela, Director Geral.'],
+    qualificacoes_academica:['Fez o ensino primário na escola dos padres capuchinhos São Domingos, e o secundário na segunda secção da escola Geraldo de António Victor, por detrás da Liga Nacional Africana (atual Ngola Nzinga). Também estudou nas escolas Juventude e Luta e Mutu Ya Kevela, onde concluiu a sétima e oitava classes.','Estudou jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora Gabriela Antunes.'],
+    experiencias:['1982 / 2023 - Televisão Pública de Angola, Subdiretor do Gabinete de Relações Institucionais.','Cobriu desporto e cultura, e mais tarde passou a atuar nas áreas de política, economia e assuntos sociais. Foi um dos primeiros repórteres a fazer reportagens nas províncias do Kwanza Norte e Moxico.','Participou na produção de vários programas da TPA, como Zoom, Visor, "A Polícia Popular ao Serviço do Povo", Telesemana, TPA Actualidade (sob direção de Ramiro Matos), "Luanda, a Capital", "Ecos e Factos" e "TV Regiões".'],
   
  
         titulo: [''],
@@ -171,7 +171,7 @@ export const directors = [
     email:'lau.silva57@hotmail.com',
     contactos:['923416883'],
     redes_sociais:[''],
-    idiomas:['Fala e escreve em português','Espanhol','Inglês','Francês '],
+    idiomas:['Português'],
     data_publicacao:'09/07/25',
     data_actualizacao:'',
      },
