@@ -2,16 +2,8 @@ import { BrowserRouter } from 'react-router-dom';
 import {  Link} from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react'
-
-import ImagemDirector from '../assets/imgs/Augusto Firmino.jpeg';
-import ImagemDirector2 from '../assets/imgs/MbalaGaston.jpg';
-
 import LogoTPA from '../assets/imgs/tpa.png';
-
 import '../styles/biografia.css'; // importamos o CSS separado
-
-
-
 import { directors } from '../dados/directors';
 import { fotos } from '../dados/fotos'
 import {depoimentos} from "../dados/depoimentos";
@@ -272,7 +264,8 @@ function Inicio() {
         </div>
       )}
     </div>
-
+ 
+  
     </div>
  
   )

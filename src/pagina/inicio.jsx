@@ -1,16 +1,9 @@
-
 import {  Link} from 'react-router-dom';
-
 import { useState } from 'react'
 import LogoTPA from '../assets/imgs/tpa.png';
-
-import ImagemDirector1 from '../assets/imgs/Augusto Firmino.jpeg';
-import ImagemDirector2 from '../assets/imgs/MbalaGaston.jpg';
-
 import '../styles/listasdirectores.css'; // importamos o CSS separado
-
-
 import { directors } from '../dados/directors';
+
 function Inicio() {
  
 

@@ -1,4 +1,8 @@
 // App.jsx
+
+
+
+
 import { BrowserRouter, Routes,Router, Route, Link } from 'react-router-dom';
 import Home from './pagina/inicio'
 import Biografia from './pagina/bibiografia'

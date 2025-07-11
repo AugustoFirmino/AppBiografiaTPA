@@ -1,6 +1,7 @@
 import ImagemDirector from '../assets/imgs/Augusto Firmino.jpeg';
 import ImagemDirector2 from '../assets/imgs/MbalaGaston.jpg';
 import ImagemDirector3 from '../assets/imgs/director3-ladislau.jpeg';
+import ImagemDirector4 from '../assets/imgs/Alves de Jesus.jpeg';
 export const directors = [
   {
     id:1,
@@ -46,7 +47,7 @@ export const directors = [
     ocupacao:'CEO da Academia "A Nação do Saber", Consultor, Formador da Oficina de Multimédia do Curso de Jornalismo no CEFOJOR',
     nascimento:'09/08/1961',
     falecimento:'',
-    cargo:'Director do Gabinete de Multimédia da Televisão Pública de Angola,',   
+    cargo:'Director do Gabinete de Multimédia da Televisão Pública de Angola',   
       biografia: `
       <p><strong>Mbala Gaston</strong> é um renomado engenheiro e gestor angolano, com <strong>63 anos</strong>,natural do Luena (ex-Luso), província do Moxico, nasceu aos 9 de Agosto de 1961, filho de Mbala Gaston e de Sompo Florência.</p>
        <p>Iniciou a sua carreira profissional no ramo das Tecnologias de Informação e Comunicação em 1984 trabalhando como técnico de Manutenção e Reparação de Cámaras profissionais de vídeo na Televisão Pública de Angola. Foi quadro da multinacional americana Chevron Overseas Petroleum Inc de 1994 à 2005 onde exerceu as funções de Técnico de Manutenção de Microcomputadores, Admininistrador da Rede de Computadores e Supervisor da Equipe de Administradores da Infra-estrutura de Sistemas Informáticos (Server Infrastructure Support Supervisor) da base de Malongo em Cabinda e Offshore, tendo durante esse período participado em vários projectos multinacionais em Angola, Estados Unidos da América, Reino Unido, Indonésia, Congo Brazzaville e República Democrática do Congo. Exerceu também as funções de Director de Tecnologias de Informação da Televisão Pública de Angola de 2006 à 2012 e de Director do Gabinete de Multimédia da Televisão Pública de Angola de 2016 à 2019. Acessor do PCA da TPA de 2019 à 2020. Mbala Gaston é actualmente o CEO da Academia "A Nação do Saber", Consultor, Formador Certificado pelo CENFOR e ©; Formador da Oficina de Multimédia do Curso de Jornalismo no CEFOJOR; é especialista em Criação e Publicação de livros digitais; é autor dos livros "Fundamentos de Televisão - Dicas & Truques", "Fundamentos de Computadores para Kotas & Kandengues", e dos livros digitais "How to Write & Publish a Transformational eBook" e do romance "The Princess of Kawelele" todos publicados na plataforma digital da Amazon. </p>
@@ -77,7 +78,7 @@ export const directors = [
   
      nascimento:'23/06/1957',
     falecimento:'',
-    cargo:'Director do Gabinete de Multimédia da Televisão Pública de Angola,',   
+    cargo:'Director do Gabinete de Multimédia da Televisão Pública de Angola',   
       biografia: `
         <p>
         Ladislau Augusto Torres da Silva nasceu em Luanda, Angola, no dia 23 de Junho de 1957. Filho de Henrique Augusto da Silva e Violeta Torres Vieira Dias, é casado.
@@ -129,18 +130,51 @@ export const directors = [
     data_actualizacao:'',
      },
     
-    {
-       id:4,
-    name: 'Augusto Afonso Firmino',
-    image: ImagemDirector,
+{
+    id:4,
+    name: 'Manuel da Conceição Alves de Jesus',
+    image: ImagemDirector4,
     link: 'https://en.wikipedia.org/wiki/Quentin_Tarantino',
     idade:'39',
     nacionalidade:'Angolana',
-    ocupacao:'',
-    nascimento:'26/05/1986',
-    cargo:'Diretor de Produtos Digitais'
+    ocupacao:'Apresentador de programas,Criador dos programas  e actor ',
+  
+     nascimento:'23/06/1957',
+    falecimento:'',
+    cargo:'Subdiretor do Gabinete de Relações Institucionais da Televisão Pública de Angola.',   
+      biografia: `
+<p>
+  Manuel da Conceição Alves de Jesus é filho de Henrique Alves de Jesus, um homem que dedicou a sua vida às letras gráficas, e de Madalena José da Costa, doméstica. Natural de Luanda, nasceu a 26 de Dezembro de 1961, tendo atualmente 63 anos de idade, do signo Capricórnio. Estudou jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora Gabriela Antunes, tendo realizado diversos cursos em Angola e no estrangeiro. Fez o ensino primário na escola dos padres capuchinhos São Domingos, e o secundário na segunda secção da escola Geraldo de António Victor, por detrás da Liga Nacional Africana (atual Ngola Nzinga). Também estudou nas escolas Juventude e Luta e Mutu Ya Kevela, onde concluiu a sétima e oitava classes. 
 
-  },
+  O seu percurso no jornalismo televisivo soma 42 anos, tendo ingressado na TPA a 15 de Outubro de 1982. Sempre foi reconhecido como uma pessoa simples, humilde, honesta e respeitadora, pautando-se pela dignidade. Um dos seus maiores dons é a prestabilidade: vive para servir o próximo. Socorreu inúmeras pessoas em hospitais e conseguiu centenas de cadeiras de rodas e muletas sem qualquer interesse pessoal. 
+
+  Casado há 39 anos com Mariana de Deus Fernandes Gaspar da Costa Alves, é pai de três filhos. Apesar de ter sonhado ser comandante de navios de longo curso, nunca exerceu outra profissão além do jornalismo. Nos 42 anos de TPA, esteve sempre ligado à direção de informação, tendo iniciado com um curso básico de jornalismo. Na época, ainda não existia uma direção formal de informação, mas sim um departamento, chefiado pelo saudoso mestre Júlio Guerra. A redação era então coordenada pelo veterano e malogrado jornalista Pedro Ramalhoso, que viria a dirigir o Instituto Nacional de Cinema. 
+
+  O ambiente era de grande união e solidariedade, e Manuel tratava todos por "Tio", costume que fez com que passasse a ser conhecido como "Tio Oh". O apelido "Oh" foi acrescentado por Luís Júnior, o Barão, em homenagem a Ho Chi Minh, tratado como "Tio Oh" no Vietname. 
+
+  Iniciou a carreira cobrindo desporto e cultura, e mais tarde passou a atuar nas áreas de política, economia e assuntos sociais. Foi um dos primeiros repórteres a fazer reportagens nas províncias do Kwanza Norte e Moxico, tornando-se aquele que mais viajou pelo país. Cobriu diversos momentos marcantes da história angolana, como o massacre de Camabatela, a tentativa de sabotagem do Complexo Petrolífero do Malongo em Cabinda, a guerra da Mavinga, e missões presidenciais, incluindo a Comissão dos Acordos de Gbadolite no ex-Zaire. 
+
+  Participou na produção de vários programas da TPA, como Zoom, Visor, "A Polícia Popular ao Serviço do Povo", Telesemana, TPA Actualidade (sob direção de Ramiro Matos), "Luanda, a Capital", "Ecos e Factos" e "TV Regiões". Foi editor, produtor, repórter e chefe de reportagem. A rubrica "Ecos do Musseque", por si criada, marcou a televisão angolana, sendo ainda lembrada 19 anos após ter saído da grelha. Recebeu uma menção honrosa do Prêmio Maboque de Jornalismo. 
+
+  "TV Regiões", criado a 9 de Maio de 2009, foi vencedor do Prêmio Nacional de Jornalismo. Em 2014, concluiu a sua carreira como subdiretor do Gabinete de Relações Institucionais da TPA, no Centro de Produção da Camama, entrando para a reforma em abril de 2023.
+</p>
+`,
+    
+    
+    qualificacoes_academica:['1963 a 1967 - Escola Primária nº15, Luanda.','1967 a 1969 - Escola Preparatória Emídio Navarro, Luanda.','1970 a 1975 - Liceu Nacional Salvador Correia, Luanda.','1976 a 1977 - Faculdade de Medicina, Luanda.'],
+    experiencias:['1977 / 1984 - Rádio Nacional de Angola, Luanda.Locutor, redactor repórter.','1985 / 1992 - Conoco Angola Ltd., Luanda., Director Geral','1993 / 1994 - Moagem do Kikolo, Luanda., Director Geral','1997 / 1999 - Luanda Antena Comercial, Locutor do programa “7/9”. Realizador, produtor e apresentador do programa “Figuras, Figurinhas e Figurões”. Locutor e co-produtor doprograma “Vector”.','1997 / 2003 - Televisão Pública de Angola TPA, Apresentador dos programas “Discoteca”, “Explosão”, “Quem sabe, sabe”,“Você Decide”. Criador dos programas “Janela Aberta”, “3x3” e“Conversas no Quintal”. Como actor, participei, como protagonista, nastelenovelas “Pecado Original”, “Vidas Ocultas”, Reviravolta”, “DocePitanga”, “Komba” e “Sede de Viver”.','2003 / 2014 - Governo da Província de Luanda, Director Provincial da Comunicação Social. Assessor do GovernadorProvincial de Luanda.','2014 / 2017 - Embaixada de Angola no Canadá, Ottawa. Adido de Imprensa.', '2020 -  Rádio Mais Benguela, Director Geral.'],
+  
+ 
+        titulo: [''],
+        descricao: [''],
+        premios: [''],
+    email:'lau.silva57@hotmail.com',
+    contactos:['923416883'],
+    redes_sociais:[''],
+    idiomas:['Fala e escreve em português','Espanhol','Inglês','Francês '],
+    data_publicacao:'09/07/25',
+    data_actualizacao:'',
+     },
   {
      id:5,
     name: 'Augusto Afonso Firmino',
