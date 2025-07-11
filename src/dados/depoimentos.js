@@ -13,6 +13,12 @@ export const depoimentos = [
     mensagem: "Augusto Firmino é uma inspiração para todos nós. Um verdadeiro mentor e profissional exemplar.",
   },
    {
+    id: 1,
+    nome: "Amilcar Santos",
+    cargo: "Editor de Vídeo",
+    mensagem: "Augusto Firmino é uma inspiração para todos nós. Um verdadeiro mentor e profissional exemplar.",
+  },
+   {
     id: 2,
     nome: "Maria João",
     cargo: "Ex-funcionária da TPA",

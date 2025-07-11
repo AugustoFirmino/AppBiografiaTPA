@@ -89,12 +89,17 @@ function Inicio() {
                 <p className="text-gray-600 text-justify">{ImagemPessoa?.nacionalidade || "Não informada"}</p>
               </div>
               {/* Experiência Profissional */}
-              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 md:col-span-2">
-                <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Experiência Profissional</h3>
+              <div className="bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 shadow-xl flex flex-col gap-4 border border-red-100 md:col-span-2">
+                <h3 className="font-extrabold text-lg text-red-700 mb-3 flex items-center gap-2 tracking-tight"><svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m-6 4V7a4 4 0 014-4h4a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4h4" /></svg> Experiência Profissional</h3>
                 {Array.isArray(ImagemPessoa?.experiencias) && ImagemPessoa.experiencias.length > 0 ? (
-                  <ul className="list-disc list-inside text-gray-600 text-justify">
-                    {ImagemPessoa.experiencias.map((exp, i) => <li key={i}>{exp}</li>)}
-                  </ul>
+                  <ol className="space-y-4">
+                    {ImagemPessoa.experiencias.map((exp, i) => (
+                      <li key={i} className="relative bg-white border border-red-100 rounded-xl shadow flex items-start gap-3 p-4 hover:shadow-lg transition-all duration-300">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-base shadow-sm border border-red-200">{i+1}</div>
+                        <span className="text-gray-700 text-justify leading-relaxed font-medium">{exp}</span>
+                      </li>
+                    ))}
+                  </ol>
                 ) : <p className="text-gray-400">Nenhuma experiência disponível.</p>}
               </div>
               {/* Idiomas */}
@@ -175,18 +180,28 @@ function Inicio() {
               Depoimentos
             </h2>
             {Array.isArray(DepoimentosPessoa) && DepoimentosPessoa.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {DepoimentosPessoa.map((depoimento, index) => (
                   <div
                     key={index}
-                    className="relative bg-white border border-gray-200 p-6 rounded-xl shadow hover:shadow-lg transition-shadow duration-300"
+                    className="relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 p-7 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col gap-4"
                   >
-                    <div className="absolute top-2 left-3 text-5xl text-blue-500 select-none leading-none">“</div>
-                    <p className="text-gray-800 italic leading-relaxed pl-8">
-                      {depoimento.mensagem}
-                    </p>
-                    <div className="mt-4 border-t pt-3 text-sm text-gray-600 text-right">
-                      — <span className="font-semibold text-gray-800">{depoimento.nome}</span>, {depoimento.cargo}
+                    <div className="flex items-center gap-4 mb-2">
+                      <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-400 bg-blue-100 flex items-center justify-center">
+                        {depoimento.avatar ? (
+                          <img src={depoimento.avatar} alt={depoimento.nome} className="w-full h-full object-cover" />
+                        ) : (
+                          <svg className="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        )}
+                      </div>
+                      <div>
+                        <span className="block font-bold text-gray-800 text-base">{depoimento.nome}</span>
+                        <span className="block text-xs text-blue-600 font-medium">{depoimento.cargo}</span>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div className="absolute -top-2 -left-3 text-5xl text-blue-200 select-none leading-none pointer-events-none">“</div>
+                      <p className="text-gray-800 italic leading-relaxed pl-6 text-justify text-base">{depoimento.mensagem}</p>
                     </div>
                   </div>
                 ))}
