@@ -118,7 +118,7 @@ function Inicio() {
                   ) : <p className="text-gray-400">Nenhum idioma disponível.</p>}
                 </div>
                 {/* Nacionalidade */}
-                <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100">
+                <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100 md:h-full overflow-hidden">
                   <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Nacionalidade</h3>
                   <p className="text-gray-600 text-justify">{ImagemPessoa?.nacionalidade || "Não informada"}</p>
                 </div>
