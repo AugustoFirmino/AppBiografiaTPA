@@ -71,7 +71,10 @@ function Inicio() {
         {/* BIOGRAFIA */}
         {secaoAtiva === "biografia" && (
           <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8 mt-10 md:mt-16">
-            <h1 className="text-3xl font-extrabold text-red-700 mb-4 text-center tracking-tight">Biografia de {ImagemPessoa?.name}</h1>
+            <h1 className="text-3xl font-extrabold mb-4 text-center tracking-tight">
+              <span className="text-black">Biografia de </span>
+              <span className="text-red-700">{ImagemPessoa?.name}</span>
+            </h1>
             {ImagemPessoa?.biografia ? (
               <div className="prose max-w-none mb-6 text-justify text-gray-800" style={{textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: ImagemPessoa.biografia }} />
             ) : (
@@ -195,8 +198,8 @@ function Inicio() {
         {/* DEPOIMENTOS */}
         {secaoAtiva === "depoimentos" && (
           <section className="w-full max-w-5xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow-lg">
-              <span className="text-blue-700">Depoimentos</span>
+            <h2 className="text-3xl font-extrabold mb-8 text-center tracking-tight drop-shadow-lg">
+              <span className="text-black">Depoimentos</span>
             </h2>
             {Array.isArray(DepoimentosPessoa) && DepoimentosPessoa.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
