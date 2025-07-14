@@ -62,10 +62,10 @@ function Inicio() {
       </button>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 h-full overflow-y-auto flex items-center justify-center">
+      <main className="flex-1 ml-64 p-6 h-full overflow-y-auto flex items-start justify-center">
         {/* BIOGRAFIA */}
         {secaoAtiva === "biografia" && (
-          <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8">
+          <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8 mt-10 md:mt-16">
             <h1 className="text-3xl font-extrabold text-red-700 mb-4 text-center tracking-tight">Biografia de {ImagemPessoa?.name}</h1>
             {ImagemPessoa?.biografia ? (
               <div className="prose max-w-none mb-6 text-justify text-gray-800" style={{textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: ImagemPessoa.biografia }} />
@@ -143,36 +143,46 @@ function Inicio() {
 
         {/* GALERIA */}
         {secaoAtiva === "galeria" && (
-          <section className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-8 text-center text-blue-900 tracking-tight drop-shadow">Galeria de {FotoPessoa?.name}</h2>
+          <section className="w-full max-w-5xl mx-auto">
+            <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow-lg">
+              Galeria de <span className="text-red-700">{FotoPessoa?.name}</span>
+            </h2>
             {Array.isArray(FotoPessoa?.images) && FotoPessoa.images.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {FotoPessoa.images.map((img, index) => (
                   <div
                     key={index}
-                    className="group relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col"
+                    className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100"
                   >
-                    <div className="relative w-full h-56 overflow-hidden">
+                    <div className="overflow-hidden h-64 flex items-center justify-center bg-gray-100">
                       <img
                         src={img}
                         alt={`Imagem ${index + 1} de ${FotoPessoa.name}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
                       />
-                      <div className="absolute top-2 right-2 bg-white/80 text-blue-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm select-none">Foto #{index + 1}</div>
+                      <div className="absolute top-3 right-3 bg-white/80 rounded-full px-3 py-1 text-xs font-semibold text-blue-700 shadow backdrop-blur-sm">
+                        {index + 1} / {FotoPessoa.images.length}
+                      </div>
                     </div>
-                    <div className="flex-1 flex items-center justify-center p-4">
-                      <p className="text-sm text-gray-700 text-center font-medium leading-relaxed">
-                        {FotoPessoa.descricao?.[index] || ''}
+                    <div className="p-4 flex flex-col items-center">
+                      <p className="text-sm text-gray-700 text-center font-medium mb-2 min-h-[2.5rem]">
+                        {FotoPessoa.descricao?.[index] || 'Sem descrição'}
                       </p>
+                      <button
+                        className="mt-2 px-4 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        onClick={() => window.open(img, '_blank')}
+                        title="Ver imagem em tamanho real"
+                      >
+                        Ver em tamanho real
+                      </button>
                     </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-200/30 via-transparent to-transparent pointer-events-none group-hover:from-blue-300/40 transition-all duration-300" />
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 bg-white/70 rounded-xl shadow-inner">
-                <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a4 4 0 004 4h10a4 4 0 004-4V7M16 3v4M8 3v4m-5 4h18" /></svg>
-                <p className="text-gray-500 text-lg font-medium">Nenhuma imagem disponível.</p>
-              </div>
+              <p className="text-center text-gray-500 italic text-lg mt-10">Nenhuma imagem disponível.</p>
             )}
           </section>
         )}
