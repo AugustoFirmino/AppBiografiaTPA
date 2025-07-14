@@ -22,7 +22,11 @@ function Inicio() {
   return (
     <div className="fixed inset-0 min-h-screen bg-gray-50 flex overflow-x-hidden">
       {/* Sidebar */}
-      <aside className="h-full w-64 bg-white shadow-lg border-r z-20 flex-shrink-0 flex flex-col fixed top-0 left-0">
+      {/* Sidebar responsivo */}
+      <aside
+        className={`h-full w-64 bg-white shadow-lg border-r z-20 flex-shrink-0 flex flex-col fixed top-0 left-0 transition-transform duration-300 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:block`}
+        style={{ minWidth: '16rem' }}
+      >
         <div className="flex flex-col items-center py-8 px-4 h-full">
           <img src={LogoTPA} alt="TPA" className="w-24 mb-6" />
           <img src={ImagemPessoa?.image} alt="Perfil" className="w-28 h-28 rounded-full object-cover border-4 border-red-600 shadow mb-4" />
@@ -53,16 +57,17 @@ function Inicio() {
       </aside>
 
       {/* Hamburger for mobile */}
+      {/* Botão hamburguer para mobile */}
       <button
         className="md:hidden fixed top-4 left-4 z-30 bg-white border rounded-full p-2 shadow-lg"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         aria-label="Abrir menu"
       >
         <span className="text-2xl text-red-600">☰</span>
       </button>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 h-full overflow-y-auto flex items-start justify-center">
+      <main className="flex-1 md:ml-64 p-6 h-full overflow-y-auto flex items-start justify-center transition-all duration-300">
         {/* BIOGRAFIA */}
         {secaoAtiva === "biografia" && (
           <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8 mt-10 md:mt-16">
