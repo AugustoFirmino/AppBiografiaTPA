@@ -189,39 +189,44 @@ function Inicio() {
 
         {/* DEPOIMENTOS */}
         {secaoAtiva === "depoimentos" && (
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              Depoimentos
+          <section className="w-full max-w-5xl mx-auto">
+            <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow-lg">
+              <span className="text-blue-700">Depoimentos</span>
             </h2>
             {Array.isArray(DepoimentosPessoa) && DepoimentosPessoa.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                 {DepoimentosPessoa.map((depoimento, index) => (
                   <div
                     key={index}
-                    className="relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 p-7 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col gap-4"
+                    className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100 p-8 flex flex-col gap-6"
                   >
                     <div className="flex items-center gap-4 mb-2">
-                      <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-400 bg-blue-100 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-blue-400 bg-blue-100 flex items-center justify-center shadow-lg">
                         {depoimento.avatar ? (
                           <img src={depoimento.avatar} alt={depoimento.nome} className="w-full h-full object-cover" />
                         ) : (
-                          <svg className="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                          <svg className="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         )}
                       </div>
                       <div>
-                        <span className="block font-bold text-gray-800 text-base">{depoimento.nome}</span>
-                        <span className="block text-xs text-blue-600 font-medium">{depoimento.cargo}</span>
+                        <span className="block font-bold text-gray-800 text-lg">{depoimento.nome}</span>
+                        <span className="block text-xs text-blue-600 font-semibold">{depoimento.cargo}</span>
                       </div>
                     </div>
-                    <div className="relative">
-                      <div className="absolute -top-2 -left-3 text-5xl text-blue-200 select-none leading-none pointer-events-none">“</div>
-                      <p className="text-gray-800 italic leading-relaxed pl-6 text-justify text-base">{depoimento.mensagem}</p>
+                    <div className="relative bg-white/80 rounded-xl p-6 shadow-inner border border-blue-100">
+                      <div className="absolute -top-6 left-4 text-7xl text-blue-100 select-none leading-none pointer-events-none font-serif">“</div>
+                      <p className="text-gray-800 italic leading-relaxed text-justify text-base font-medium z-10 relative">
+                        {depoimento.mensagem}
+                      </p>
+                    </div>
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="inline-block bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">#{index + 1}</span>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 italic text-center">Ainda não há depoimentos para este diretor.</p>
+              <p className="text-center text-gray-500 italic text-lg mt-10">Ainda não há depoimentos para este diretor.</p>
             )}
           </section>
         )}
