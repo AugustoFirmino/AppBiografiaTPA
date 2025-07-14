@@ -83,7 +83,7 @@ function Inicio() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Qualificações Acadêmicas */}
-              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100">
+              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 w-full md:col-span-2">
                 <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Qualificações Académicas</h3>
                 {Array.isArray(ImagemPessoa?.qualificacoes_academica) && ImagemPessoa.qualificacoes_academica.length > 0 ? (
                   <ul className="list-disc list-inside text-gray-600 text-justify">
@@ -91,11 +91,7 @@ function Inicio() {
                   </ul>
                 ) : <p className="text-gray-400">Nenhuma qualificação disponível.</p>}
               </div>
-              {/* Nacionalidade */}
-              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100">
-                <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Nacionalidade</h3>
-                <p className="text-gray-600 text-justify">{ImagemPessoa?.nacionalidade || "Não informada"}</p>
-              </div>
+              
               {/* Experiência Profissional */}
               <div className="bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 shadow-xl flex flex-col gap-4 border border-red-100 md:col-span-2">
                 <h3 className="font-extrabold text-lg text-red-700 mb-3 flex items-center gap-2 tracking-tight"><svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m-6 4V7a4 4 0 014-4h4a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4h4" /></svg> Experiência Profissional</h3>
@@ -110,14 +106,22 @@ function Inicio() {
                   </ol>
                 ) : <p className="text-gray-400">Nenhuma experiência disponível.</p>}
               </div>
-              {/* Idiomas */}
-              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100">
-                <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Idiomas</h3>
-                {Array.isArray(ImagemPessoa?.idiomas) && ImagemPessoa.idiomas.length > 0 ? (
-                  <ul className="list-disc list-inside text-gray-600 text-justify">
-                    {ImagemPessoa.idiomas.map((idioma, i) => <li key={i}>{idioma}</li>)}
-                  </ul>
-                ) : <p className="text-gray-400">Nenhum idioma disponível.</p>}
+              {/* Idiomas e Nacionalidade lado a lado, expandindo toda a largura */}
+              <div className="flex flex-col md:flex-row gap-4 w-full md:col-span-2">
+                {/* Idiomas */}
+                <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100">
+                  <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Idiomas</h3>
+                  {Array.isArray(ImagemPessoa?.idiomas) && ImagemPessoa.idiomas.length > 0 ? (
+                    <ul className="list-disc list-inside text-gray-600 text-justify">
+                      {ImagemPessoa.idiomas.map((idioma, i) => <li key={i}>{idioma}</li>)}
+                    </ul>
+                  ) : <p className="text-gray-400">Nenhum idioma disponível.</p>}
+                </div>
+                {/* Nacionalidade */}
+                <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100">
+                  <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Nacionalidade</h3>
+                  <p className="text-gray-600 text-justify">{ImagemPessoa?.nacionalidade || "Não informada"}</p>
+                </div>
               </div>
             </div>
 
