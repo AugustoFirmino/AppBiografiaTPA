@@ -233,7 +233,11 @@ function Inicio() {
                       </div>
                       <div className="mt-4 flex items-center justify-between w-full">
                         <span className="text-sm text-gray-700 font-semibold">{FotoPessoa.descricao?.[slideIndex] || 'Sem descrição'}</span>
-                        <span className="text-xs text-blue-700 font-bold ml-4">{slideIndex + 1} / {FotoPessoa.images.length}</span>
+                        <div className="flex items-center gap-2 bg-white/80 rounded-full px-4 py-1 shadow text-blue-700 font-bold text-sm ml-4">
+                          <span>{slideIndex + 1}</span>
+                          <span className="text-gray-400">/</span>
+                          <span>{FotoPessoa.images.length}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
