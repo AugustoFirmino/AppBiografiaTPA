@@ -1,13 +1,16 @@
+
 import { Link, useParams } from 'react-router-dom';
-import { useState } from 'react';
 import LogoTPA from '../assets/imgs/tpa.png';
 import { directors } from '../dados/directors';
 import { fotos } from '../dados/fotos';
 import { depoimentos } from "../dados/depoimentos";
+import { useState } from 'react';
+
 
 function Inicio() {
   const [isOpen, setIsOpen] = useState(false);
   const [secaoAtiva, setSecaoAtiva] = useState("biografia");
+  const [slideIndex, setSlideIndex] = useState(null);
   const { id } = useParams();
   const ImagemPessoa = directors.find(p => p.id === parseInt(id));
   const FotoPessoa = fotos.find(p => p.id === parseInt(id));
@@ -160,39 +163,82 @@ function Inicio() {
               Galeria de <span className="text-red-700">{FotoPessoa?.name}</span>
             </h2>
             {Array.isArray(FotoPessoa?.images) && FotoPessoa.images.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {FotoPessoa.images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100"
-                  >
-                    <div className="overflow-hidden h-64 flex items-center justify-center bg-gray-100">
-                      <img
-                        src={img}
-                        alt={`Imagem ${index + 1} de ${FotoPessoa.name}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-3 right-3 bg-white/80 rounded-full px-3 py-1 text-xs font-semibold text-blue-700 shadow backdrop-blur-sm">
-                        {index + 1} / {FotoPessoa.images.length}
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                  {FotoPessoa.images.map((img, index) => (
+                    <div
+                      key={index}
+                      className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100"
+                    >
+                      <div className="overflow-hidden h-64 flex items-center justify-center bg-gray-100">
+                        <img
+                          src={img}
+                          alt={`Imagem ${index + 1} de ${FotoPessoa.name}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-3 right-3 bg-white/80 rounded-full px-3 py-1 text-xs font-semibold text-blue-700 shadow backdrop-blur-sm">
+                          {index + 1} / {FotoPessoa.images.length}
+                        </div>
+                      </div>
+                      <div className="p-4 flex flex-col items-center">
+                        <p className="text-sm text-gray-700 text-center font-medium mb-2 min-h-[2.5rem]">
+                          {FotoPessoa.descricao?.[index] || 'Sem descrição'}
+                        </p>
+                        <button
+                          className="mt-2 px-4 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          onClick={() => setSlideIndex(index)}
+                          title="Ver imagem em tamanho real"
+                        >
+                          Ver em tamanho real
+                        </button>
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-blue-200/30 via-transparent to-transparent pointer-events-none group-hover:from-blue-300/40 transition-all duration-300" />
+                    </div>
+                  ))}
+                </div>
+                {/* Modal Slide */}
+                {typeof slideIndex === 'number' && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 flex flex-col items-center p-6 animate-fade-in">
+                      <button
+                        className="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold focus:outline-none"
+                        onClick={() => setSlideIndex(null)}
+                        aria-label="Fechar"
+                      >
+                        ×
+                      </button>
+                      <div className="flex items-center justify-center w-full h-96 max-h-[70vh] relative">
+                        <button
+                          className="absolute left-0 top-1/2 -translate-y-1/2 bg-blue-600 text-white rounded-full p-2 shadow hover:bg-blue-700 disabled:opacity-40"
+                          onClick={() => setSlideIndex((prev) => prev > 0 ? prev - 1 : prev)}
+                          disabled={slideIndex === 0}
+                          aria-label="Imagem anterior"
+                        >
+                          ‹
+                        </button>
+                        <img
+                          src={FotoPessoa.images[slideIndex]}
+                          alt={`Imagem ${slideIndex + 1} de ${FotoPessoa.name}`}
+                          className="max-h-96 max-w-full object-contain rounded-xl mx-auto"
+                        />
+                        <button
+                          className="absolute right-0 top-1/2 -translate-y-1/2 bg-blue-600 text-white rounded-full p-2 shadow hover:bg-blue-700 disabled:opacity-40"
+                          onClick={() => setSlideIndex((prev) => prev < FotoPessoa.images.length - 1 ? prev + 1 : prev)}
+                          disabled={slideIndex === FotoPessoa.images.length - 1}
+                          aria-label="Próxima imagem"
+                        >
+                          ›
+                        </button>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between w-full">
+                        <span className="text-sm text-gray-700 font-semibold">{FotoPessoa.descricao?.[slideIndex] || 'Sem descrição'}</span>
+                        <span className="text-xs text-blue-700 font-bold ml-4">{slideIndex + 1} / {FotoPessoa.images.length}</span>
                       </div>
                     </div>
-                    <div className="p-4 flex flex-col items-center">
-                      <p className="text-sm text-gray-700 text-center font-medium mb-2 min-h-[2.5rem]">
-                        {FotoPessoa.descricao?.[index] || 'Sem descrição'}
-                      </p>
-                      <button
-                        className="mt-2 px-4 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        onClick={() => window.open(img, '_blank')}
-                        title="Ver imagem em tamanho real"
-                      >
-                        Ver em tamanho real
-                      </button>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-200/30 via-transparent to-transparent pointer-events-none group-hover:from-blue-300/40 transition-all duration-300" />
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             ) : (
               <p className="text-center text-gray-500 italic text-lg mt-10">Nenhuma imagem disponível.</p>
             )}
