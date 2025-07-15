@@ -25,7 +25,6 @@ const initialState = {
   contactos: [''],
   redes_sociais: [''],
   data_publicacao: '',
-  data_actualizacao: '',
 };
 
 function App() {
@@ -56,7 +55,16 @@ function App() {
       setImagemModal(null);
     }
   };
-  const [form, setForm] = useState(initialState);
+  // Define data_publicacao automaticamente na criação do cadastro
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const [form, setForm] = useState({ ...initialState, data_publicacao: getTodayDate() });
   const countryOptions = countryList().getData();
 
   useEffect(() => {
@@ -159,13 +167,48 @@ function App() {
     }
   };
 
-  // Salvar (mock)
-  const handleSubmit = e => {
+
+  // Salvar (envio real para o servidor)
+  const [enviando, setEnviando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const handleSubmit = async e => {
     e.preventDefault();
-    alert('Cadastro salvo! (mock)');
-    setForm(initialState);
-    setImagens([]);
-    setImagemModal(null);
+    setEnviando(true);
+    setMensagem("");
+    try {
+      const formData = new FormData();
+      // Campos simples
+      Object.entries(form).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v, idx) => {
+            formData.append(`${key}[${idx}]`, v);
+          });
+        } else {
+          formData.append(key, value);
+        }
+      });
+      // Imagens
+      imagens.forEach((img, idx) => {
+        formData.append('fotos', img.file);
+        formData.append(`descricao_foto_${idx+1}`, img.descricao || "");
+        formData.append(`rotate_foto_${idx+1}`, img.rotate || 0);
+      });
+      const resp = await fetch('http://localhost:3001/api/directores', {
+        method: 'POST',
+        body: formData
+      });
+      if (resp.ok) {
+        setMensagem('Cadastro realizado com sucesso!');
+        setForm({ ...initialState, data_publicacao: getTodayDate() });
+        setImagens([]);
+        setImagemModal(null);
+      } else {
+        setMensagem('Erro ao cadastrar. Tente novamente.');
+      }
+    } catch (err) {
+      setMensagem('Erro de conexão com o servidor.');
+    }
+    setEnviando(false);
   };
 
   return (
@@ -321,17 +364,25 @@ function App() {
             <label className="block font-semibold">Email</label>
             <input name="email" value={form.email} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
           </div>
-          <div>
-            <label className="block font-semibold">Data de Publicação</label>
-            <input name="data_publicacao" value={form.data_publicacao} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
+          <div className="flex flex-col items-center justify-end w-full">
+            <label className="block font-semibold mb-1 text-center w-full">Data de Publicação</label>
+            <div className="w-full flex items-center">
+              <input
+                name="data_publicacao"
+                value={form.data_publicacao}
+                readOnly
+                className="text-blue-700 font-bold py-3 px-6 rounded-lg text-lg shadow-lg transition-all border-0 focus:ring-2 focus:ring-blue-300 cursor-not-allowed w-full text-center outline-none"
+                style={{ letterSpacing: '1px', background: 'none' }}
+              />
+            </div>
           </div>
-          <div>
-            <label className="block font-semibold">Data de Actualização</label>
-            <input name="data_actualizacao" value={form.data_actualizacao} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
-          </div>
+
         </div>
-        <div className="flex justify-center mt-8">
-          <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg transition-all">Salvar Cadastro</button>
+        <div className="flex flex-col items-center mt-8 gap-2">
+          <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg transition-all" disabled={enviando}>
+            {enviando ? 'Enviando...' : 'Salvar Cadastro'}
+          </button>
+          {mensagem && <div className="text-center font-semibold">{mensagem}</div>}
         </div>
       </form>
 
