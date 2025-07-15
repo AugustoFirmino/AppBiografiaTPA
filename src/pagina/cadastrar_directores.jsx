@@ -345,18 +345,50 @@ function App() {
             className="bg-white p-6 rounded-2xl shadow-2xl relative max-w-lg w-full flex flex-col items-center animate-fadeIn"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex flex-col items-center w-full">
+            <div className="flex flex-row items-center w-full justify-center relative">
+              {/* Botão Anterior */}
+              <button
+                type="button"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full p-1.5 shadow focus:outline-none disabled:opacity-30 z-10 transition-all duration-150"
+                style={{ fontSize: 20, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                onClick={() => {
+                  const idx = imagens.findIndex(img => img.id === imagemModal.id);
+                  if (idx > 0) {
+                    setImagemModal({ ...imagens[idx - 1], rotate: imagens[idx - 1].rotate || 0 });
+                  }
+                }}
+                disabled={imagens.findIndex(img => img.id === imagemModal.id) === 0}
+                aria-label="Anterior"
+              >
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20 }}>&#8592;</span>
+              </button>
               <img
                 src={imagemModal.url}
                 style={{ transform: `rotate(${imagemModal.rotate}deg)` }}
-                className="rounded-lg border-4 border-blue-200 shadow-lg object-contain bg-gray-50"
+                className="rounded-lg border-4 border-blue-200 shadow-lg object-contain bg-gray-50 mx-8"
                 alt="Visualização"
                 width={350}
                 height={350}
               />
-              <div className="text-gray-600 text-xs mt-2 max-w-xs text-center truncate">
-                {imagens.find(img => img.id === imagemModal.id)?.descricao || 'Sem descrição'}
-              </div>
+              {/* Botão Próxima */}
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full p-1.5 shadow focus:outline-none disabled:opacity-30 z-10 transition-all duration-150"
+                style={{ fontSize: 20, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                onClick={() => {
+                  const idx = imagens.findIndex(img => img.id === imagemModal.id);
+                  if (idx < imagens.length - 1) {
+                    setImagemModal({ ...imagens[idx + 1], rotate: imagens[idx + 1].rotate || 0 });
+                  }
+                }}
+                disabled={imagens.findIndex(img => img.id === imagemModal.id) === imagens.length - 1}
+                aria-label="Próxima"
+              >
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20 }}>&#8594;</span>
+              </button>
+            </div>
+            <div className="text-gray-600 text-xs mt-2 max-w-xs text-center truncate">
+              {imagens.find(img => img.id === imagemModal.id)?.descricao || 'Sem descrição'}
             </div>
             <div className="flex flex-wrap gap-3 mt-6 justify-center w-full">
               <button
@@ -377,8 +409,22 @@ function App() {
                 type="button"
                 className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
                 onClick={() => {
+                  const idx = imagens.findIndex(img => img.id === imagemModal.id);
                   handleRemoveImage(imagemModal.id);
-                  setImagemModal(null);
+                  // Após excluir, mostrar próxima imagem, ou anterior se não houver próxima
+                  setTimeout(() => {
+                    if (imagens.length > 1) {
+                      if (idx < imagens.length - 1) {
+                        setImagemModal(imagens[idx + 1]);
+                      } else if (idx > 0) {
+                        setImagemModal(imagens[idx - 1]);
+                      } else {
+                        setImagemModal(null);
+                      }
+                    } else {
+                      setImagemModal(null);
+                    }
+                  }, 0);
                 }}
               >
                 Excluir
