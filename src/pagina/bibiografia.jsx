@@ -1,19 +1,20 @@
 
 import { Link, useParams } from 'react-router-dom';
 import LogoTPA from '../assets/imgs/tpa.png';
-import { directors } from '../dados/directors';
-import { fotos } from '../dados/fotos';
 import { depoimentos } from "../dados/depoimentos";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getDirectorById } from '../dados/api';
+
 
 
 function Inicio() {
+  
   const [isOpen, setIsOpen] = useState(false);
   const [secaoAtiva, setSecaoAtiva] = useState("biografia");
   const [slideIndex, setSlideIndex] = useState(null);
   const { id } = useParams();
-  const ImagemPessoa = directors.find(p => p.id === parseInt(id));
-  const FotoPessoa = fotos.find(p => p.id === parseInt(id));
+  const [director, setDirector] = useState(null);
+  const [loading, setLoading] = useState(true);
   const DepoimentosPessoa = depoimentos.filter(p => p.id === parseInt(id));
 
   const navItems = [
@@ -22,6 +23,30 @@ function Inicio() {
     { key: "galeria", label: "Galeria de Fotos" },
   ];
 
+  useEffect(() => {
+    setLoading(true);
+    getDirectorById(id)
+      .then(d => setDirector(d))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-blue-700">Carregando...</div>;
+  }
+  if (!director) {
+    return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-red-700">Diretor não encontrado.</div>;
+  }
+
+  // Para galeria: fotos e descrições
+  const galeriaImages = Array.isArray(director.fotos)
+    ? director.fotos.map(f => `http://localhost:3001/uploads/${f}`)
+    : [];
+  const galeriaDescricoes = [];
+  for (let i = 1; i <= galeriaImages.length; i++) {
+    galeriaDescricoes.push(director[`descricao_foto_${i}`] || '');
+  }
+
+  console.log('galeriaImages:', galeriaImages);
   return (
     <div className="fixed inset-0 min-h-screen bg-gray-50 flex overflow-x-hidden">
       {/* Sidebar */}
@@ -32,9 +57,14 @@ function Inicio() {
       >
         <div className="flex flex-col items-center py-8 px-4 h-full">
           <img src={LogoTPA} alt="TPA" className="w-24 mb-6" />
-          <img src={ImagemPessoa?.image} alt="Perfil" className="w-28 h-28 rounded-full object-cover border-4 border-red-600 shadow mb-4" />
-          <h2 className="text-lg font-bold text-gray-800 mb-1 text-center">{ImagemPessoa?.name}</h2>
-          <p className="text-sm text-gray-500 mb-4 text-center">{ImagemPessoa?.cargo}</p>
+          {/* Imagem de perfil: primeira foto da galeria, se houver */}
+          {galeriaImages[0] ? (
+            <img src={galeriaImages[0]} alt="Perfil" className="w-28 h-28 rounded-full object-cover border-4 border-red-600 shadow mb-4" />
+          ) : (
+            <div className="w-28 h-28 rounded-full bg-gray-200 border-4 border-red-600 shadow mb-4 flex items-center justify-center text-3xl text-gray-400">?</div>
+          )}
+          <h2 className="text-lg font-bold text-gray-800 mb-1 text-center">{director?.name}</h2>
+          <p className="text-sm text-gray-500 mb-4 text-center">{director?.cargo}</p>
           <nav className="w-full">
             {navItems.map(item => (
               <button
@@ -52,8 +82,8 @@ function Inicio() {
           </nav>
           <div className="mt-6 w-full">
             <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2">Info</h3>
-            <div className="text-sm text-gray-700 mb-1"><span className="font-semibold">Ocupação:</span> {ImagemPessoa?.ocupacao}</div>
-            <div className="text-sm text-gray-700"><span className="font-semibold">Nascimento:</span> {ImagemPessoa?.nascimento}</div>
+            <div className="text-sm text-gray-700 mb-1"><span className="font-semibold">Ocupação:</span> {director?.ocupacao}</div>
+            <div className="text-sm text-gray-700"><span className="font-semibold">Nascimento:</span> {director?.nascimento}</div>
           </div>
           <Link to="/" className="mt-8 inline-block text-red-600 font-semibold hover:underline transition">← Voltar</Link>
         </div>
@@ -76,10 +106,10 @@ function Inicio() {
           <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8 mt-10 md:mt-16">
             <h1 className="text-3xl font-extrabold mb-4 text-center tracking-tight">
               <span className="text-black">Biografia de </span>
-              <span className="text-red-700">{ImagemPessoa?.name}</span>
+              <span className="text-red-700">{director?.name}</span>
             </h1>
-            {ImagemPessoa?.biografia ? (
-              <div className="prose max-w-none mb-6 text-justify text-gray-800" style={{textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: ImagemPessoa.biografia }} />
+            {director?.biografia ? (
+              <div className="prose max-w-none mb-6 text-justify text-gray-800" style={{textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: director.biografia }} />
             ) : (
               <p className="text-gray-500">Nenhuma biografia disponível.</p>
             )}
@@ -88,9 +118,9 @@ function Inicio() {
               {/* Qualificações Acadêmicas */}
               <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 w-full md:col-span-2">
                 <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Qualificações Académicas</h3>
-                {Array.isArray(ImagemPessoa?.qualificacoes_academica) && ImagemPessoa.qualificacoes_academica.length > 0 ? (
+                {Array.isArray(director?.qualificacoes_academica) && director.qualificacoes_academica.length > 0 ? (
                   <ul className="list-disc list-inside text-gray-600 text-justify">
-                    {ImagemPessoa.qualificacoes_academica.map((q, i) => <li key={i}>{q}</li>)}
+                    {director.qualificacoes_academica.map((q, i) => <li key={i}>{q}</li>)}
                   </ul>
                 ) : <p className="text-gray-400">Nenhuma qualificação disponível.</p>}
               </div>
@@ -98,9 +128,9 @@ function Inicio() {
               {/* Experiência Profissional */}
               <div className="bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 shadow-xl flex flex-col gap-4 border border-red-100 md:col-span-2">
                 <h3 className="font-extrabold text-lg text-red-700 mb-3 flex items-center gap-2 tracking-tight"><svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m-6 4V7a4 4 0 014-4h4a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4h4" /></svg> Experiência Profissional</h3>
-                {Array.isArray(ImagemPessoa?.experiencias) && ImagemPessoa.experiencias.length > 0 ? (
+                {Array.isArray(director?.experiencias) && director.experiencias.length > 0 ? (
                   <ol className="space-y-4">
-                    {ImagemPessoa.experiencias.map((exp, i) => (
+                    {director.experiencias.map((exp, i) => (
                       <li key={i} className="relative bg-white border border-red-100 rounded-xl shadow flex items-start gap-3 p-4 hover:shadow-lg transition-all duration-300">
                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-base shadow-sm border border-red-200">{i+1}</div>
                         <span className="text-gray-700 text-justify leading-relaxed font-medium">{exp}</span>
@@ -114,25 +144,25 @@ function Inicio() {
                 {/* Idiomas */}
                 <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100">
                   <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Idiomas</h3>
-                  {Array.isArray(ImagemPessoa?.idiomas) && ImagemPessoa.idiomas.length > 0 ? (
+                  {Array.isArray(director?.idiomas) && director.idiomas.length > 0 ? (
                     <ul className="list-disc list-inside text-gray-600 text-justify">
-                      {ImagemPessoa.idiomas.map((idioma, i) => <li key={i}>{idioma}</li>)}
+                      {director.idiomas.map((idioma, i) => <li key={i}>{idioma}</li>)}
                     </ul>
                   ) : <p className="text-gray-400">Nenhum idioma disponível.</p>}
                 </div>
                 {/* Nacionalidade */}
                 <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100 md:h-full overflow-hidden">
                   <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Nacionalidade</h3>
-                  <p className="text-gray-600 text-justify">{ImagemPessoa?.nacionalidade || "Não informada"}</p>
+                  <p className="text-gray-600 text-justify">{director?.nacionalidade || "Não informada"}</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow border border-gray-100">
               <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Obras Notáveis</h3>
-              {Array.isArray(ImagemPessoa?.titulo) && ImagemPessoa.titulo.length > 0 ? (
+              {Array.isArray(director?.titulo) && director.titulo.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {ImagemPessoa.titulo.map((titulo, i) => (
+                  {director.titulo.map((titulo, i) => (
                     <div key={i} className="group relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-2xl shadow-lg p-6 flex flex-col gap-2 hover:shadow-2xl transition-all duration-300">
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-200 transition">
@@ -140,7 +170,7 @@ function Inicio() {
                         </div>
                         <span className="font-bold text-lg text-blue-800 group-hover:text-blue-900 transition">{titulo}</span>
                       </div>
-                      <span className="block text-gray-700 text-justify text-sm">{ImagemPessoa.descricao?.[i] || "Sem descrição disponível"}</span>
+                      <span className="block text-gray-700 text-justify text-sm">{director.descricao?.[i] || "Sem descrição disponível"}</span>
                     </div>
                   ))}
                 </div>
@@ -150,7 +180,7 @@ function Inicio() {
             <div className="mt-10 flex justify-end">
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-blue-100 px-4 py-2 rounded-full shadow text-xs font-semibold text-blue-700 border border-blue-200">
                 <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                Publicado em {ImagemPessoa?.data_publicacao}
+                Publicado em {director?.data_publicacao}
               </div>
             </div>
           </section>
@@ -160,12 +190,12 @@ function Inicio() {
         {secaoAtiva === "galeria" && (
           <section className="w-full max-w-5xl mx-auto">
             <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow-lg">
-              Galeria de <span className="text-red-700">{FotoPessoa?.name}</span>
+              Galeria de <span className="text-red-700">{director?.name}</span>
             </h2>
-            {Array.isArray(FotoPessoa?.images) && FotoPessoa.images.length > 0 ? (
+            {galeriaImages.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                  {FotoPessoa.images.map((img, index) => (
+                  {galeriaImages.map((img, index) => (
                     <div
                       key={index}
                       className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100"
@@ -173,17 +203,17 @@ function Inicio() {
                       <div className="overflow-hidden h-64 flex items-center justify-center bg-gray-100">
                         <img
                           src={img}
-                          alt={`Imagem ${index + 1} de ${FotoPessoa.name}`}
+                          alt={`Imagem ${index + 1} de ${director.name}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           loading="lazy"
                         />
                         <div className="absolute top-3 right-3 bg-white/80 rounded-full px-3 py-1 text-xs font-semibold text-blue-700 shadow backdrop-blur-sm">
-                          {index + 1} / {FotoPessoa.images.length}
+                          {index + 1} / {galeriaImages.length}
                         </div>
                       </div>
                       <div className="p-4 flex flex-col items-center">
                         <p className="text-sm text-gray-700 text-center font-medium mb-2 min-h-[2.5rem]">
-                          {FotoPessoa.descricao?.[index] || 'Sem descrição'}
+                          {galeriaDescricoes[index] || 'Sem descrição'}
                         </p>
                         <button
                           className="mt-2 px-4 py-1 rounded-full bg-blue-600 text-white text-xs font-semibold shadow hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -218,25 +248,25 @@ function Inicio() {
                           ‹
                         </button>
                         <img
-                          src={FotoPessoa.images[slideIndex]}
-                          alt={`Imagem ${slideIndex + 1} de ${FotoPessoa.name}`}
+                          src={galeriaImages[slideIndex]}
+                          alt={`Imagem ${slideIndex + 1} de ${director.name}`}
                           className="max-h-96 max-w-full object-contain rounded-xl mx-auto"
                         />
                         <button
                           className="absolute right-0 top-1/2 -translate-y-1/2 bg-blue-600 text-white rounded-full p-2 shadow hover:bg-blue-700 disabled:opacity-40"
-                          onClick={() => setSlideIndex((prev) => prev < FotoPessoa.images.length - 1 ? prev + 1 : prev)}
-                          disabled={slideIndex === FotoPessoa.images.length - 1}
+                          onClick={() => setSlideIndex((prev) => prev < galeriaImages.length - 1 ? prev + 1 : prev)}
+                          disabled={slideIndex === galeriaImages.length - 1}
                           aria-label="Próxima imagem"
                         >
                           ›
                         </button>
                       </div>
                       <div className="mt-4 flex items-center justify-between w-full">
-                        <span className="text-sm text-gray-700 font-semibold">{FotoPessoa.descricao?.[slideIndex] || 'Sem descrição'}</span>
+                        <span className="text-sm text-gray-700 font-semibold">{galeriaDescricoes[slideIndex] || 'Sem descrição'}</span>
                         <div className="flex items-center gap-2 bg-white/80 rounded-full px-4 py-1 shadow text-blue-700 font-bold text-sm ml-4">
                           <span>{slideIndex + 1}</span>
                           <span className="text-gray-400">/</span>
-                          <span>{FotoPessoa.images.length}</span>
+                          <span>{galeriaImages.length}</span>
                         </div>
                       </div>
                     </div>

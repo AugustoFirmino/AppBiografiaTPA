@@ -12,7 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 // Configuração do multer para uploads
-const uploadDir = path.join(process.cwd(), 'uploads');
+// Caminho absoluto para a pasta uploads dentro de src/app-servidor (compatível ES module)
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
