@@ -31,7 +31,31 @@ const initialState = {
 function App() {
   const [imagemModal, setImagemModal] = useState(null);
   const [imagens, setImagens] = useState([]);
+  const [selectedImagesToDelete, setSelectedImagesToDelete] = useState([]);
   const imagensRef = useRef([]);
+  // Seleção de imagens para exclusão múltipla
+  const handleToggleSelectImage = (id) => {
+    setSelectedImagesToDelete((prev) =>
+      prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]
+    );
+  };
+
+  const handleDeleteSelectedImages = () => {
+    setImagens((prev) => prev.filter((img) => !selectedImagesToDelete.includes(img.id)));
+    setSelectedImagesToDelete([]);
+    // Atualiza o input file para manter apenas as imagens restantes
+    if (fileInputRef.current) {
+      const dt = new DataTransfer();
+      imagens.forEach((img) => {
+        if (!selectedImagesToDelete.includes(img.id) && img.file) dt.items.add(img.file);
+      });
+      fileInputRef.current.files = dt.files;
+    }
+    // Fecha modal se a imagem modal foi deletada
+    if (imagemModal && selectedImagesToDelete.includes(imagemModal.id)) {
+      setImagemModal(null);
+    }
+  };
   const [form, setForm] = useState(initialState);
   const countryOptions = countryList().getData();
 
@@ -219,9 +243,33 @@ function App() {
             <div className="mt-6">
               <label className="block font-semibold">Galerias de Fotos</label>
               <input ref={fileInputRef} type="file" multiple accept="image/*" onChange={handleImageChange} className="file-input file-input-bordered w-full" />
+              {imagens.length > 0 && (
+                <div className="flex items-center gap-4 mt-2 mb-2">
+                  <button
+                    type="button"
+                    className={`bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition disabled:opacity-50 disabled:cursor-not-allowed`}
+                    onClick={handleDeleteSelectedImages}
+                    disabled={selectedImagesToDelete.length === 0}
+                  >
+                    Excluir Selecionadas
+                  </button>
+                  <span className="text-sm text-gray-500">
+                    {selectedImagesToDelete.length === 0
+                      ? 'Nenhuma imagem selecionada'
+                      : `${selectedImagesToDelete.length} imagem${selectedImagesToDelete.length > 1 ? 's' : ''} selecionada${selectedImagesToDelete.length > 1 ? 's' : ''}`}
+                  </span>
+                </div>
+              )}
               <div className="flex flex-wrap gap-2 mt-2">
                 {imagens.map(img => (
                   <div key={img.id} className="relative flex flex-col items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedImagesToDelete.includes(img.id)}
+                      onChange={() => handleToggleSelectImage(img.id)}
+                      className="absolute top-1 left-1 w-4 h-4 accent-blue-600 z-10 bg-white border border-blue-300 rounded"
+                      title="Selecionar para exclusão em lote"
+                    />
                     <img
                       src={img.url}
                       className="w-20 h-20 object-cover rounded cursor-pointer border-2 border-blue-200"
@@ -294,34 +342,66 @@ function App() {
           onClick={() => setImagemModal(null)}
         >
           <div
-            className="bg-white p-4 rounded shadow relative max-w-md"
+            className="bg-white p-6 rounded-2xl shadow-2xl relative max-w-lg w-full flex flex-col items-center animate-fadeIn"
             onClick={e => e.stopPropagation()}
           >
-            <img
-              src={imagemModal.url}
-              style={{ transform: `rotate(${imagemModal.rotate}deg)` }}
-              className="max-w-full max-h-[80vh] rounded"
-            />
-            <div className="flex gap-2 mt-4 justify-center">
-              <button type="button" onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate - 90 + 360) % 360 }))}>
+            <div className="flex flex-col items-center w-full">
+              <img
+                src={imagemModal.url}
+                style={{ transform: `rotate(${imagemModal.rotate}deg)` }}
+                className="rounded-lg border-4 border-blue-200 shadow-lg object-contain bg-gray-50"
+                alt="Visualização"
+                width={350}
+                height={350}
+              />
+              <div className="text-gray-600 text-xs mt-2 max-w-xs text-center truncate">
+                {imagens.find(img => img.id === imagemModal.id)?.descricao || 'Sem descrição'}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-6 justify-center w-full">
+              <button
+                type="button"
+                className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition"
+                onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate - 90 + 360) % 360 }))}
+              >
                 Rotacionar -90°
               </button>
-              <button type="button" onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate + 90) % 360 }))}>
+              <button
+                type="button"
+                className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition"
+                onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate + 90) % 360 }))}
+              >
                 Rotacionar +90°
               </button>
-              <button type="button" onClick={() => {
-                handleRemoveImage(imagemModal.id);
-                setImagemModal(null);
-              }}>
+              <button
+                type="button"
+                className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
+                onClick={() => {
+                  handleRemoveImage(imagemModal.id);
+                  setImagemModal(null);
+                }}
+              >
                 Excluir
               </button>
-              <button type="button" onClick={() => {
-                setImagens(prev => prev.map(img => img.id === imagemModal.id ? { ...img, rotate: imagemModal.rotate } : img));
-                setImagemModal(null);
-              }}>
+              <button
+                type="button"
+                className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-semibold transition"
+                onClick={() => {
+                  setImagens(prev => prev.map(img => img.id === imagemModal.id ? { ...img, rotate: imagemModal.rotate } : img));
+                  setImagemModal(null);
+                }}
+              >
                 Salvar
               </button>
             </div>
+            <button
+              type="button"
+              className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+              onClick={() => setImagemModal(null)}
+              aria-label="Fechar modal"
+            >
+              &times;
+            </button>
           </div>
         </div>
       )}
