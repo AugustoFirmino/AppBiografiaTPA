@@ -1,6 +1,9 @@
 // Arquivo: App.jsx
 
 import { useEffect, useState, useRef } from 'react';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
+import ReactCountryFlag from 'react-country-flag';
 
 const initialState = {
   name: '',
@@ -30,6 +33,7 @@ function App() {
   const [imagens, setImagens] = useState([]);
   const imagensRef = useRef([]);
   const [form, setForm] = useState(initialState);
+  const countryOptions = countryList().getData();
 
   useEffect(() => {
     imagensRef.current.forEach(img => {
@@ -43,7 +47,28 @@ function App() {
   // Handlers para campos simples
   const handleChange = e => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    // Se o campo alterado for nascimento, calcula idade automaticamente
+    if (name === 'nascimento') {
+      let idade = '';
+      if (value) {
+        const hoje = new Date();
+        const nasc = new Date(value);
+        let anos = hoje.getFullYear() - nasc.getFullYear();
+        const m = hoje.getMonth() - nasc.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
+          anos--;
+        }
+        idade = anos >= 0 ? String(anos) : '';
+      }
+      setForm(prev => ({ ...prev, nascimento: value, idade }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // Handler para nacionalidade (country select)
+  const handleCountryChange = option => {
+    setForm(prev => ({ ...prev, nacionalidade: option ? option.label : '' }));
   };
 
   // Handlers para arrays
@@ -132,36 +157,63 @@ function App() {
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Link</label>
-                <input name="link" value={form.link} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Link externo (opcional)" />
+                <input name="link" value={form.link} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Link externo (opcional)" />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Idade</label>
-                <input name="idade" value={form.idade} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Idade" />
+                <div className="relative">
+                  <input
+                    name="idade"
+                    value={form.idade ? form.idade + ' Anos' : ''}
+                    readOnly
+                    required
+                    className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-gray-100 cursor-not-allowed pr-16"
+                    placeholder="Idade"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Nacionalidade</label>
-                <input name="nacionalidade" value={form.nacionalidade} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Nacionalidade" />
+                <Select
+                  options={countryOptions}
+                  value={countryOptions.find(opt => opt.label === form.nacionalidade) || null}
+                  onChange={handleCountryChange}
+                  isClearable={false}
+                  placeholder="Selecione a nacionalidade..."
+                  classNamePrefix="react-select"
+                  formatOptionLabel={option => (
+                    <div className="flex items-center gap-2">
+                      <ReactCountryFlag countryCode={option.value} svg style={{ width: '1.5em', height: '1.5em' }} />
+                      <span>{option.label}</span>
+                    </div>
+                  )}
+                  styles={{
+                    control: (base) => ({ ...base, minHeight: '48px', borderRadius: '0.5rem', borderColor: '#bfdbfe', boxShadow: 'none' }),
+                    option: (base, state) => ({ ...base, padding: '10px 16px', backgroundColor: state.isSelected ? '#2563eb' : state.isFocused ? '#e0e7ff' : 'white', color: state.isSelected ? 'white' : '#1e293b' }),
+                  }}
+                  required
+                />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Ocupação</label>
-                <input name="ocupacao" value={form.ocupacao} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Ocupação" />
+                <input name="ocupacao" value={form.ocupacao} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Ocupação" />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Nascimento</label>
-                <input name="nascimento" value={form.nascimento} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de nascimento" />
+                <input type="date" name="nascimento" value={form.nascimento} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de nascimento" />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Falecimento</label>
-                <input name="falecimento" value={form.falecimento} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de falecimento (opcional)" />
+                <input type="date" name="falecimento" value={form.falecimento} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de falecimento (opcional)" />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Cargo</label>
-                <input name="cargo" value={form.cargo} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Cargo" />
+                <input name="cargo" value={form.cargo} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Cargo" />
               </div>
             </div>
             <div>
               <label className="block font-semibold text-blue-800 mb-1">Biografia</label>
-              <textarea name="biografia" value={form.biografia} onChange={handleChange} rows={5} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Biografia detalhada do director" />
+              <textarea name="biografia" value={form.biografia} onChange={handleChange} rows={5} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Biografia detalhada do director" />
             </div>
             {/* Imagens */}
             <div className="mt-6">
