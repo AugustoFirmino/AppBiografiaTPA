@@ -1,430 +1,278 @@
-import { useEffect, useState } from 'react';
+// Arquivo: App.jsx
+
+import { useEffect, useState, useRef } from 'react';
+
+const initialState = {
+  name: '',
+  link: '',
+  idade: '',
+  nacionalidade: '',
+  ocupacao: '',
+  nascimento: '',
+  falecimento: '',
+  cargo: '',
+  biografia: '',
+  qualificacoes_academica: [''],
+  experiencias: [''],
+  titulo: [''],
+  descricao: [''],
+  premios: [''],
+  idiomas: [''],
+  email: '',
+  contactos: [''],
+  redes_sociais: [''],
+  data_publicacao: '',
+  data_actualizacao: '',
+};
 
 function App() {
-  // Estado para modal/slidebar de visualização de imagem
-  const [imagemModal, setImagemModal] = useState(null); // {url, idx}
-  const [directors, setDirectors] = useState([]);
-  const [form, setForm] = useState({
-    name: '', idade: '', nacionalidade: '', ocupacao: '', nascimento: '', cargo: '',
-    biografia: '', qualificacoes_academica: '', experiencias: '', idiomas: '', data_publicacao: ''
-  });
-
-  const [fotoForm, setFotoForm] = useState({ name: '' });
-  const [successMsg, setSuccessMsg] = useState('');
-  const [imagens, setImagens] = useState([]); // [{file, url, descricao}]
-  const [fotos, setFotos] = useState([]);
-
-  const fetchDirectors = async () => {
-    const res = await fetch('http://localhost:3001/api/directors');
-    const data = await res.json();
-    setDirectors(data);
-  };
-
-  const fetchFotos = async () => {
-    const res = await fetch('http://localhost:3001/api/fotos');
-    const data = await res.json();
-    setFotos(data);
-  };
+  const [imagemModal, setImagemModal] = useState(null);
+  const [imagens, setImagens] = useState([]);
+  const imagensRef = useRef([]);
+  const [form, setForm] = useState(initialState);
 
   useEffect(() => {
-    fetchDirectors();
-    fetchFotos();
-  }, []);
+    imagensRef.current.forEach(img => {
+      if (!imagens.find(i => i.url === img.url)) {
+        URL.revokeObjectURL(img.url);
+      }
+    });
+    imagensRef.current = imagens;
+  }, [imagens]);
 
+  // Handlers para campos simples
   const handleChange = e => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleFotoChange = e => {
-    const { name, value, files } = e.target;
-    if (name === 'images' && files) {
-      // Revoga todos os blobs antigos
-      imagens.forEach(img => { if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url); });
-      const fileArr = Array.from(files);
-      const novasImagens = fileArr.map(file => ({ file, url: URL.createObjectURL(file), descricao: '' }));
-      setImagens(novasImagens);
-    } else if (name.startsWith('descricao_')) {
-      const idx = parseInt(name.split('_')[1], 10);
-      setImagens(imgs => imgs.map((img, i) => i === idx ? { ...img, descricao: value } : img));
-    } else {
-      setFotoForm({ ...fotoForm, [name]: value });
+  // Handlers para arrays
+  const handleArrayChange = (e, field, idx) => {
+    const { value } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [field]: prev[field].map((item, i) => (i === idx ? value : item)),
+    }));
+  };
+  const handleAddArrayItem = field => {
+    // Só permite adicionar se o último item não está vazio
+    setForm(prev => {
+      const arr = prev[field];
+      if (arr.length === 0 || arr[arr.length - 1].trim() !== '') {
+        return { ...prev, [field]: [...arr, ''] };
+      }
+      return prev;
+    });
+  };
+  const handleRemoveArrayItem = (field, idx) => {
+    setForm(prev => ({ ...prev, [field]: prev[field].filter((_, i) => i !== idx) }));
+  };
+
+  // Imagem (mantém seleção múltipla e preview)
+  const fileInputRef = useRef();
+  const handleImageChange = e => {
+    const files = Array.from(e.target.files);
+    const novas = files.map(file => ({
+      id: `${file.name}_${file.size}_${file.lastModified}`,
+      file,
+      url: URL.createObjectURL(file),
+      descricao: '',
+      rotate: 0,
+    }));
+    setImagens(prev => [...prev, ...novas]);
+    // Para o formulário, pega a primeira imagem como principal
+    if (files[0]) setForm(prev => ({ ...prev, image: files[0] }));
+    // Limpa o input file para permitir re-seleção do mesmo arquivo se necessário
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Handler para descrição de cada imagem
+  const handleImageDescricaoChange = (id, value) => {
+    setImagens(prev => prev.map(img => img.id === id ? { ...img, descricao: value } : img));
+  };
+
+  const handleRemoveImage = id => {
+    setImagens(prev => {
+      const novas = prev.filter(img => img.id !== id);
+      // Atualiza o input file para manter apenas as imagens restantes
+      if (fileInputRef.current) {
+        // Cria um novo DataTransfer para atualizar o input file
+        const dt = new DataTransfer();
+        novas.forEach(img => {
+          if (img.file) dt.items.add(img.file);
+        });
+        fileInputRef.current.files = dt.files;
+      }
+      return novas;
+    });
+    if (imagemModal?.id === id) {
+      setImagemModal(null);
     }
   };
 
-  const handleSubmit = async e => {
+  // Salvar (mock)
+  const handleSubmit = e => {
     e.preventDefault();
-    // Cadastro de director
-    const newDirector = {
-      ...form,
-      qualificacoes_academica: form.qualificacoes_academica.split(', '),
-      experiencias: form.experiencias.split(', '),
-      idiomas: form.idiomas.split(', '),
-    };
-    await fetch('http://localhost:3001/api/directors', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newDirector),
-    });
-    // Cadastro de fotos
-    if (imagens.length > 0) {
-      const imageUrls = imagens.map(img => img.url);
-      const descricoes = imagens.map(img => img.descricao || '');
-      const newFoto = {
-        name: fotoForm.name || form.name,
-        images: imageUrls,
-        descricao: descricoes
-      };
-      await fetch('http://localhost:3001/api/fotos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newFoto),
-      });
-      imagens.forEach(img => { if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url); });
-      setImagens([]);
-    }
-    setForm({
-      name: '', idade: '', nacionalidade: '', ocupacao: '', nascimento: '', cargo: '',
-      biografia: '', qualificacoes_academica: '', experiencias: '', idiomas: '', data_publicacao: ''
-    });
-    setFotoForm({ name: '' });
-    setSuccessMsg('Cadastrado com sucesso!');
-    fetchDirectors();
-    fetchFotos();
-    setTimeout(() => setSuccessMsg(''), 2500);
-  };
-
-  const deleteDirector = async id => {
-    await fetch(`http://localhost:3001/api/directors/${id}`, { method: 'DELETE' });
-    fetchDirectors();
-  };
-
-  const deleteFoto = async id => {
-    await fetch(`http://localhost:3001/api/fotos/${id}`, { method: 'DELETE' });
-    fetchFotos();
+    alert('Cadastro salvo! (mock)');
+    setForm(initialState);
+    setImagens([]);
+    setImagemModal(null);
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-gradient-to-br from-blue-50 to-white min-h-screen">
-      <div className="mb-10">
-        <h1 className="text-3xl font-extrabold mb-6 text-blue-800 text-center tracking-tight drop-shadow">Cadastro de Directores</h1>
-        <form onSubmit={async (e) => {
-          e.preventDefault();
-          // Cadastro de director
-          const newDirector = {
-            ...form,
-            qualificacoes_academica: form.qualificacoes_academica.split(', '),
-            experiencias: form.experiencias.split(', '),
-            idiomas: form.idiomas.split(', '),
-          };
-          await fetch('http://localhost:3001/api/directors', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newDirector),
-          });
-          // Cadastro de fotos
-          if (imagens.length > 0) {
-            const imageUrls = imagens.map(img => img.url);
-            const descricoes = imagens.map(img => img.descricao || '');
-            const newFoto = {
-              name: fotoForm.name || form.name,
-              images: imageUrls,
-              descricao: descricoes
-            };
-            await fetch('http://localhost:3001/api/fotos', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(newFoto),
-            });
-            imagens.forEach(img => { if (img.url.startsWith('blob:')) URL.revokeObjectURL(img.url); });
-            setImagens([]);
-          }
-          setForm({
-            name: '', idade: '', nacionalidade: '', ocupacao: '', nascimento: '', cargo: '',
-            biografia: '', qualificacoes_academica: '', experiencias: '', idiomas: '', data_publicacao: ''
-          });
-          setFotoForm({ name: '' });
-          setSuccessMsg('Cadastrado com sucesso!');
-          fetchDirectors();
-          fetchFotos();
-          setTimeout(() => setSuccessMsg(''), 2500);
-        }} className="bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-4 border border-blue-100 max-w-2xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input name="name" placeholder="Nome" className="input-form" value={form.name} onChange={handleChange} />
-            <input name="idade" placeholder="Idade" className="input-form" value={form.idade} onChange={handleChange} />
-            <input name="nacionalidade" placeholder="Nacionalidade" className="input-form" value={form.nacionalidade} onChange={handleChange} />
-            <input name="ocupacao" placeholder="Ocupação" className="input-form" value={form.ocupacao} onChange={handleChange} />
-            <input name="nascimento" placeholder="Data de nascimento" className="input-form" value={form.nascimento} onChange={handleChange} />
-            <input name="cargo" placeholder="Cargo" className="input-form" value={form.cargo} onChange={handleChange} />
-            <input name="data_publicacao" placeholder="Data de publicação" className="input-form md:col-span-2" value={form.data_publicacao} onChange={handleChange} />
-          </div>
-          <textarea name="biografia" placeholder="Biografia (HTML)" className="input-form min-h-[80px]" value={form.biografia} onChange={handleChange} />
-          <input name="qualificacoes_academica" placeholder="Qualificações (separadas por vírgula)" className="input-form" value={form.qualificacoes_academica} onChange={handleChange} />
-          <input name="experiencias" placeholder="Experiências (separadas por vírgula)" className="input-form" value={form.experiencias} onChange={handleChange} />
-          <input name="idiomas" placeholder="Idiomas (separados por vírgula)" className="input-form" value={form.idiomas} onChange={handleChange} />
-          <div className="mt-6">
-            <h2 className="text-xl font-bold mb-2 text-green-700 text-center">Cadastro de fotos para galerias</h2>
-            <div className="relative mb-4">
-              <input
-                name="name"
-                placeholder="Nome do Director (opcional para fotos)"
-                className="input-form ml-0 w-[350px] max-w-full"
-                value={fotoForm.name}
-                onChange={handleFotoChange}
-              />
+    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Cadastro de Directores</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex-1 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow p-6 space-y-6 border border-blue-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Nome</label>
+                <input name="name" value={form.name} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Nome completo" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Link</label>
+                <input name="link" value={form.link} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Link externo (opcional)" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Idade</label>
+                <input name="idade" value={form.idade} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Idade" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Nacionalidade</label>
+                <input name="nacionalidade" value={form.nacionalidade} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Nacionalidade" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Ocupação</label>
+                <input name="ocupacao" value={form.ocupacao} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Ocupação" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Nascimento</label>
+                <input name="nascimento" value={form.nascimento} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de nascimento" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Falecimento</label>
+                <input name="falecimento" value={form.falecimento} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de falecimento (opcional)" />
+              </div>
+              <div>
+                <label className="block font-semibold text-blue-800 mb-1">Cargo</label>
+                <input name="cargo" value={form.cargo} onChange={handleChange} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Cargo" />
+              </div>
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <label className="block font-semibold">Selecionar Imagens</label>
-                {imagens.length > 0 && (
-                  <span className="text-xs text-gray-600 bg-gray-100 rounded px-2 py-0.5">{imagens.length} arquivo{imagens.length > 1 ? 's' : ''} atual</span>
-                )}
+              <label className="block font-semibold text-blue-800 mb-1">Biografia</label>
+              <textarea name="biografia" value={form.biografia} onChange={handleChange} rows={5} className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Biografia detalhada do director" />
+            </div>
+            {/* Imagens */}
+            <div className="mt-6">
+              <label className="block font-semibold">Galerias de Fotos</label>
+              <input ref={fileInputRef} type="file" multiple accept="image/*" onChange={handleImageChange} className="file-input file-input-bordered w-full" />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {imagens.map(img => (
+                  <div key={img.id} className="relative flex flex-col items-center">
+                    <img
+                      src={img.url}
+                      className="w-20 h-20 object-cover rounded cursor-pointer border-2 border-blue-200"
+                      style={{ transform: `rotate(${img.rotate}deg)` }}
+                      onClick={() => setImagemModal(img)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Descrição da imagem"
+                      value={img.descricao}
+                      onChange={e => handleImageDescricaoChange(img.id, e.target.value)}
+                      className="mt-1 text-xs p-1 border rounded w-20"
+                    />
+                    <button
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5"
+                      type="button"
+                      onClick={() => handleRemoveImage(img.id)}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
               </div>
-              <input name="images" type="file" accept="image/*" multiple className="input-form" onChange={handleFotoChange} />
-              {imagens.length > 0 && (
-                <div className="flex flex-wrap gap-4 mt-2">
-                  {imagens.map((img, i) => (
-                    <div key={img.url} className="relative flex flex-col items-center">
-                      <button
-                        type="button"
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-700 z-10"
-                        title="Excluir imagem"
-                        onClick={() => {
-                          if (img.url.startsWith('blob:')) {
-                            try { URL.revokeObjectURL(img.url); } catch (e) { /* ignore */ }
-                          }
-                          setImagens(prev => prev.filter((_, idx) => idx !== i));
-                        }}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                      </button>
-                      <img
-                        src={img.url}
-                        alt="preview"
-                        className="w-16 h-16 object-cover rounded shadow mb-1 cursor-pointer hover:scale-105 transition"
-                        style={imagemModal && imagemModal.idx === i && typeof imagemModal.rotate === 'number' ? { transform: `rotate(${imagemModal.rotate}deg)` } : (img.rotate ? { transform: `rotate(${img.rotate}deg)` } : {})}
-                        onClick={() => setImagemModal({ url: img.url, idx: i, rotate: img.rotate || 0 })}
-                        title="Clique para ver em tamanho real"
-                      />
-                      <input
-                        name={`descricao_${i}`}
-                        placeholder={`Descrição da imagem ${i + 1}`}
-                        className="input-form text-xs"
-                        value={img.descricao || ''}
-                        onChange={handleFotoChange}
-                      />
-                    </div>
-                  ))}
-      {/* Modal/slidebar para visualização da imagem em tamanho real */}
+            </div>
+          </div>
+        </div>
+        {/* Arrays dinâmicos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {['qualificacoes_academica','experiencias','titulo','descricao','premios','idiomas','contactos','redes_sociais'].map(field => (
+            <div key={field}>
+              <label className="block font-semibold capitalize">{field.replace(/_/g,' ')}</label>
+              {form[field].map((item, idx) => (
+                <div key={idx} className="flex gap-2 mb-1">
+                  <input value={item} onChange={e => handleArrayChange(e, field, idx)} className="input input-bordered w-full rounded border-gray-300 p-2" />
+                  <button type="button" onClick={() => handleRemoveArrayItem(field, idx)} className="text-red-500 font-bold">-</button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleAddArrayItem(field)}
+                className={`text-blue-600 font-bold ${form[field].length > 0 && form[field][form[field].length-1].trim() === '' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={form[field].length > 0 && form[field][form[field].length-1].trim() === ''}
+              >Adicionar</button>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-semibold">Email</label>
+            <input name="email" value={form.email} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
+          </div>
+          <div>
+            <label className="block font-semibold">Data de Publicação</label>
+            <input name="data_publicacao" value={form.data_publicacao} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
+          </div>
+          <div>
+            <label className="block font-semibold">Data de Actualização</label>
+            <input name="data_actualizacao" value={form.data_actualizacao} onChange={handleChange} className="input input-bordered w-full rounded border-gray-300 p-2" />
+          </div>
+        </div>
+        <div className="flex justify-center mt-8">
+          <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg transition-all">Salvar Cadastro</button>
+        </div>
+      </form>
+
+      {/* Modal de visualização de imagem */}
       {imagemModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setImagemModal(null)}>
+        <div
+          className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+          onClick={() => setImagemModal(null)}
+        >
           <div
-            className="relative rounded-xl shadow-xl p-4 max-w-full max-h-full flex flex-col items-center"
-            style={{
-              minWidth: 320,
-              background: 'linear-gradient(to bottom right, #eff6ff 0%, #fff 100%)'
-            }}
+            className="bg-white p-4 rounded shadow relative max-w-md"
             onClick={e => e.stopPropagation()}
           >
-            {/* Barra de topo com fechar */}
-            <div className="flex w-full justify-end gap-2 mb-2">
-              <button
-                className="bg-gray-200 hover:bg-gray-400 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center shadow"
-                title="Fechar visualização"
-                style={{ position: 'relative', top: 0, right: 0 }}
-                onClick={() => setImagemModal(null)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            <img
+              src={imagemModal.url}
+              style={{ transform: `rotate(${imagemModal.rotate}deg)` }}
+              className="max-w-full max-h-[80vh] rounded"
+            />
+            <div className="flex gap-2 mt-4 justify-center">
+              <button type="button" onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate - 90 + 360) % 360 }))}>
+                Rotacionar -90°
               </button>
-            </div>
-            <div className="flex items-center justify-center w-full" style={{ minHeight: 320, minWidth: 320 }}>
-              <div style={{ marginTop: '3px', marginBottom: '3px', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <img
-                  src={imagemModal.url}
-                  alt="Imagem em tamanho real"
-                  className="rounded-xl shadow-lg"
-                  style={{
-                    objectFit: 'contain',
-                    background: 'none',
-                    width: '100%',
-                    height: '100%',
-                    maxWidth: '320px',
-                    maxHeight: '320px',
-                    display: 'block',
-                    margin: '0 auto',
-                    transform: `rotate(${imagemModal.rotate || 0}deg)`
-                  }}
-                />
-              </div>
-            </div>
-            {/* Opções de rotação e exclusão */}
-            <div className="flex flex-wrap gap-2 mt-4 justify-center">
-              {/* Girar -90° */}
-              <button
-                className="px-3 py-2 rounded bg-gray-200 text-blue-700 font-bold shadow hover:bg-blue-100 flex items-center gap-1"
-                title="Girar -90° (anti-horário)"
-                onClick={() => {
-                  setImagemModal(imagemModal ? {
-                    ...imagemModal,
-                    rotate: ((imagemModal.rotate || 0) - 90 + 360) % 360
-                  } : null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 rotate-[-90deg]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                -90°
+              <button type="button" onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate + 90) % 360 }))}>
+                Rotacionar +90°
               </button>
-              {/* Girar 90° */}
-              <button
-                className="px-3 py-2 rounded bg-gray-200 text-blue-700 font-bold shadow hover:bg-blue-100 flex items-center gap-1"
-                title="Girar 90° (horário)"
-                onClick={() => {
-                  setImagemModal(imagemModal ? {
-                    ...imagemModal,
-                    rotate: ((imagemModal.rotate || 0) + 90) % 360
-                  } : null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                90°
+              <button type="button" onClick={() => {
+                handleRemoveImage(imagemModal.id);
+                setImagemModal(null);
+              }}>
+                Excluir
               </button>
-              {/* Girar 180° */}
-              <button
-                className="px-3 py-2 rounded bg-gray-200 text-blue-700 font-bold shadow hover:bg-blue-100 flex items-center gap-1"
-                title="Girar 180° (de cabeça para baixo)"
-                onClick={() => {
-                  setImagemModal(imagemModal ? {
-                    ...imagemModal,
-                    rotate: 180
-                  } : null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                180°
-              </button>
-              {/* Resetar rotação */}
-              <button
-                className="px-3 py-2 rounded bg-gray-200 text-blue-700 font-bold shadow hover:bg-blue-100 flex items-center gap-1"
-                title="Resetar rotação (0°)"
-                onClick={() => {
-                  setImagemModal(imagemModal ? {
-                    ...imagemModal,
-                    rotate: 0
-                  } : null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2" /></svg>
-                0°
-              </button>
-              {/* Salvar posição */}
-              <button
-                className="px-4 py-2 rounded bg-green-600 text-white font-bold shadow hover:bg-green-800 flex items-center gap-2"
-                title="Salvar posição"
-                onClick={() => {
-                  if (imagemModal && typeof imagemModal.idx === 'number') {
-                    setImagens(prev => prev.map((img, idx) => idx === imagemModal.idx ? { ...img, rotate: imagemModal.rotate || 0 } : img));
-                  }
-                  setImagemModal(null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                Salvar posição
-              </button>
-              {/* Excluir imagem */}
-              <button
-                className="px-4 py-2 rounded bg-red-600 text-white font-bold shadow hover:bg-red-800 flex items-center gap-2"
-                title="Excluir imagem"
-                onClick={() => {
-                  const idx = imagemModal.idx;
-                  const url = imagemModal.url;
-                  if (url.startsWith('blob:')) {
-                    try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ }
-                  }
-                  setImagens(prev => prev.filter((_, i) => i !== idx));
-                  setImagemModal(null);
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                Excluir imagem
+              <button type="button" onClick={() => {
+                setImagens(prev => prev.map(img => img.id === imagemModal.id ? { ...img, rotate: imagemModal.rotate } : img));
+                setImagemModal(null);
+              }}>
+                Salvar
               </button>
             </div>
           </div>
         </div>
       )}
-                </div>
-              )}
-            </div>
-          </div>
-          <button type="submit" className="btn-primary self-end mt-6">Salvar</button>
-          {successMsg && <div className="text-green-700 font-bold text-center mt-2 animate-pulse">{successMsg}</div>}
-        </form>
-      </div>
-
-      {/*
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Lista de Directores</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {directors.map(d => (
-            <div key={d.id} className="bg-white rounded-xl shadow border border-blue-100 p-6 flex flex-col gap-2 hover:shadow-lg transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-lg text-blue-800">{d.name}</span>
-                <button onClick={() => deleteDirector(d.id)} className="text-red-600 font-bold hover:underline">Apagar</button>
-              </div>
-              <div className="flex flex-wrap gap-2 text-sm text-gray-600">
-                <span className="bg-blue-50 px-2 py-1 rounded-full border border-blue-100">{d.nacionalidade}</span>
-                <span className="bg-blue-50 px-2 py-1 rounded-full border border-blue-100">{d.cargo}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      */}
-
-      {/*
-      <div>
-        <h2 className="text-2xl font-bold mb-4 text-green-700 text-center">Galeria de Fotos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {fotos.map(f => (
-            <div key={f.id} className="bg-white rounded-xl shadow border border-green-100 p-6 flex flex-col gap-2 hover:shadow-lg transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-lg text-green-700">{f.name}</span>
-                <button onClick={() => deleteFoto(f.id)} className="text-red-600 font-bold hover:underline">Apagar</button>
-              </div>
-              <ul className="mt-2 ml-2 list-disc text-gray-700 text-sm">
-                {f.images.map((img, i) => (
-                  <li key={i} className="mb-1"><a href={img} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-600">{f.descricao[i] || 'Sem descrição'}</a></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-      */}
-
-      {/* Estilos utilitários para inputs e botões */}
-      <style>{`
-        .input-form {
-          width: 100%;
-          padding: 0.75rem 1rem; /* padding reduzido para melhor performance visual */
-          border-radius: 0.75rem;
-          border: 2px solid #2563eb; /* azul-600 do Tailwind */
-          transition: border-color 0.2s, box-shadow 0.2s;
-          outline: none;
-        }
-        input[type="file"].input-form {
-          padding: 0;
-          border: none;
-          background: none;
-          border-radius: 0;
-          margin-top: 0.5rem;
-          margin-bottom: 0.5rem;
-        }
-        .input-form:focus {
-          border-color: #1d4ed8; /* azul-700 do Tailwind */
-          box-shadow: 0 0 0 2px #93c5fd44;
-        }
-        .btn-primary { @apply bg-blue-600 text-white px-6 py-2 rounded font-bold shadow hover:bg-blue-700 transition; }
-        .btn-success { @apply bg-green-600 text-white px-6 py-2 rounded font-bold shadow hover:bg-green-700 transition; }
-      `}</style>
     </div>
   );
 }
