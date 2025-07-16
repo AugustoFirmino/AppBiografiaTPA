@@ -4,8 +4,12 @@ import { useEffect, useState, useRef } from 'react';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import ReactCountryFlag from 'react-country-flag';
+import { useNavigate } from 'react-router-dom';
 
+import { FiLogOut } from "react-icons/fi";
 const initialState = {
+  
+  id: null,
   name: '',
   link: '',
   idade: '',
@@ -33,6 +37,10 @@ function App() {
   const [selectedImagesToDelete, setSelectedImagesToDelete] = useState([]);
   const imagensRef = useRef([]);
   // Seleção de imagens para exclusão múltipla
+   const navigate = useNavigate();
+
+
+
   const handleToggleSelectImage = (id) => {
     setSelectedImagesToDelete((prev) =>
       prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]
@@ -210,9 +218,27 @@ function App() {
     }
     setEnviando(false);
   };
+  const handleLogout = async () => {
+    try {
+      await fetch('http://localhost:3001/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
 
+      navigate('/'); // redireciona para a página principal
+    } catch (error) {
+      console.error('Erro ao fazer logout', error);
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
+   <button
+    onClick={handleLogout}
+    className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 transition mb-[10px]"
+  >
+    <FiLogOut size={20} />
+    Sair
+  </button>
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Cadastro de Directores</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col md:flex-row gap-6">
@@ -282,6 +308,42 @@ function App() {
               <label className="block font-semibold text-blue-800 mb-1">Biografia</label>
               <textarea name="biografia" value={form.biografia} onChange={handleChange} rows={5} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Biografia detalhada do director" />
             </div>
+
+
+            <div>
+  
+  <button
+    type="button"
+    onClick={async () => {
+      if (!form.biografia.trim()) return;
+
+      setMensagem("Gerando biografia com IA...");
+      try {
+        const res = await fetch("http://localhost:3001/api/gerar-biografia", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ biografia: form.biografia })
+        });
+
+        const data = await res.json();
+        if (data.resultado) {
+          setForm(prev => ({ ...prev, biografia: data.resultado }));
+          setMensagem("Biografia gerada com sucesso!");
+        } else {
+          setMensagem("Erro ao gerar biografia.");
+        }
+      } catch (err) {
+        console.error(err);
+        setMensagem("Erro de conexão com o servidor de IA.");
+      }
+    }}
+    className="mt-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+  >
+    Gerar Biografia com IA
+  </button>
+</div>
             {/* Imagens */}
             <div className="mt-6">
               <label className="block font-semibold">Galerias de Fotos</label>

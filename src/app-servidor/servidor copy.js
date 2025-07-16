@@ -64,8 +64,6 @@ app.post('/upload', upload.single('imagem'), (req, res) => {
   res.status(201).json({ message: 'Upload realizado com sucesso', imageUrl });
 });
 
-
-//cadastrando o director
 app.post('/api/directores', upload.any(), (req, res) => {
   try {
     const dadosPath = path.join(process.cwd(), 'dados.json');
@@ -99,24 +97,10 @@ app.post('/api/directores', upload.any(), (req, res) => {
       return path.join('uploads', pasta, file.filename);
     });
 
-    // 🟡 Processar depoimentos
-    const depoimentos = [];
-    let i = 0;
-    while (req.body[`depoimentos[${i}][nome]`] !== undefined) {
-      depoimentos.push({
-        id: i + 1,
-        nome: req.body[`depoimentos[${i}][nome]`],
-        cargo: req.body[`depoimentos[${i}][cargo]`],
-        mensagem: req.body[`depoimentos[${i}][mensagem]`]
-      });
-      i++;
-    }
-
     const cadastro = {
       ...req.body,
       id,
       fotos,
-      depoimentos,
       data_cadastro: new Date().toISOString()
     };
 
@@ -124,13 +108,11 @@ app.post('/api/directores', upload.any(), (req, res) => {
     fs.writeFileSync(dadosPath, JSON.stringify(dados, null, 2));
 
     res.status(201).json({ message: 'Diretor cadastrado com sucesso', data: cadastro });
-
   } catch (err) {
     console.error('ERRO AO CADASTRAR:', err);
     res.status(500).json({ message: 'Erro interno ao cadastrar', error: err.message });
   }
 });
-
 
 // Rota para listar todos os directores
 app.get('/api/listar/directores', (req, res) => {

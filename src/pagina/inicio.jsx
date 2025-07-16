@@ -27,7 +27,7 @@ function Inicio() {
       <div className="w-full max-w-2xl flex flex-col items-center mb-8">
         <img src={LogoTPA} alt={'TPA'} className="w-32 mb-4 drop-shadow-lg" />
         <h2 className="text-3xl md:text-4xl font-extrabold text-red-700 mb-2 tracking-tight text-center drop-shadow">50 Anos 50 Histórias</h2>
-        <p className="text-gray-600 text-lg mb-6 text-center max-w-xl">Conheça os grandes diretores que marcaram a história da TPA. Pesquise pelo nome ou explore a galeria abaixo.</p>
+        <p className="text-gray-600 text-lg mb-6 text-center max-w-xl">A Alma da Televisão</p>
         <div className="w-full flex justify-center mb-6">
           <input
             type="text"
