@@ -123,6 +123,31 @@ app.get('/api/directores/:id/imagens', (req, res) => {
   res.json(urls);
 });
 
+// Rota de login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Lê o arquivo usuarios.json
+  fs.readFile('./usuarios.json', 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Erro ao acessar usuários' });
+    }
+
+    const usuarios = JSON.parse(data);
+
+    // Procura um usuário que corresponda
+    const user = usuarios.find(u => u.username === username && u.password === password);
+
+    if (user) {
+      return res.json({ success: true, message: 'Login bem-sucedido' });
+    } else {
+      return res.status(401).json({ success: false, message: 'Usuário ou senha incorretos' });
+    }
+  });
+});
+
+
+
 // Servir arquivos estáticos da pasta uploads
 app.use('/uploads', express.static(baseUploadDir));
 

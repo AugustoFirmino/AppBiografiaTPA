@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- importar o hook
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [mensagem, setMensagem] = useState('');
+  const navigate = useNavigate(); // <-- inicializar
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,6 +22,14 @@ function Login() {
 
       const data = await res.json();
       setMensagem(data.message);
+
+      if (data.success) {
+        // Espera 2 segundos e redireciona para /biografia
+        setTimeout(() => {
+          navigate('/cadastrar_directores');
+        }, 2000);
+      }
+
     } catch (error) {
       setMensagem('Erro ao conectar ao servidor');
     }
