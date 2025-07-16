@@ -7,7 +7,7 @@ import { BrowserRouter, Routes,Router, Route, Link } from 'react-router-dom';
 import Home from './pagina/inicio'
 import Biografia from './pagina/bibiografia'
 import Cadastro_Directores from './pagina/cadastrar_directores'
-import './app.css';
+import './App.css';
 function App() {
   return (
    <>

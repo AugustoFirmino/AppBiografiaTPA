@@ -6,8 +6,6 @@ import countryList from 'react-select-country-list';
 import ReactCountryFlag from 'react-country-flag';
 
 const initialState = {
-  
-  id: null,
   name: '',
   link: '',
   idade: '',

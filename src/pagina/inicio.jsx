@@ -50,7 +50,7 @@ function Inicio() {
               // Mostra a primeira foto da galeria, se houver
               let imgUrl = '';
               if (Array.isArray(dir.fotos) && dir.fotos.length > 0) {
-             imgUrl = `http://localhost:3001/uploads/${dir.fotos[0]}`;
+             imgUrl = `http://localhost:3001/${dir.fotos[0]}`;
               }
 
               return (

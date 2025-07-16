@@ -1,60 +1,179 @@
 [
   {
-    "name": "efs",
-    "link": "ee",
-    "idade": "25",
-    "nacionalidade": "Åland Islands",
-    "ocupacao": "Programador",
-    "nascimento": "2000-07-06",
-    "falecimento": "2005-04-12",
-    "cargo": "Director de Produtos Digitas da TPA",
-    "biografia": "bvffddfdf",
+    "id": 1,
+    "name": "Manuel da Conceição Alves de Jesus",
+    "link": "Alves de jesus",
+    "idade": "63",
+    "nacionalidade": "Angola",
+    "ocupacao": "Reporter",
+    "nascimento": "1961-12-26",
+    "falecimento": "1960-01-01",
+    "cargo": "Jornalista",
+    "biografia": "Manuel da Conceição Alves de Jesus. Filho de Henrique Alves de Jesus, homem que dedicou a sua vida as letras gráficas e de Madalena José da Costa, doméstica. \r\n\r\nNatural de Luanda. Nascido a 26 de Dezembro de 1961. Tenho 63 anos de idade. Signo capricórnio.  \r\n\r\nEstudei jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora,  Gabriela Antunes e fiz vários cursos no país e no Estrangeiro.\r\n\r\nO ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                      Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\nEm 1982 ainda nao havia direção de Informação. Era departamento, o chefe era o nosso saudoso mestre, Júlio Guerra. A redação era  assegurada pelo veterano e malogrado jornalista, Pedro Ramalhoso, que mais tarde foi Diretor do Instituto Nacional de Cinema.\r\n\r\nNa época, parecíamos filhos da mesma mãe. A solidariedade é fraternidade funcionava a toda dimensão. \r\n\r\nPor excesso de educação ou defeito de fabrico, eu, tratava todos por Tio. Até que no final de contas passei a ser tratado como o próprio  Tio e até hoje sou mais conhecido na tpa e não só, por TIO OH. \r\nTio começou com o Pedro Ramalhoso, Ramiro Matos, Nelson Rosa, José Maria, kota Baltazar e o Oh foi acrescentado pelo Luis Junior, o Barão, em homenagem ao Ochi Min que no Vietname é tratado de TIO OH.\r\n\r\nBoa parte dos reportes admitidos na altura passavam primeiro pela área desportiva e na cobertura de assuntos culturais. \r\n\r\nMais tarde, fiquei a fazer reportagens sobre política, economia e social. Não havia áreas especializadas.\r\n\r\nKwanza Norte e Moxico foram as. primeiras províncias que fiz reportagens no tempo dos comissários provinciais. Muito cedo tornei me no repórter que mais andou pelas províncias. Acredito que ninguém superou o meu recorde até hoje.\r\n\r\nAo longo da minha carreira  estive na cobertura da guerra que devastou o país.\r\nO inesquecivel massacre de Camabatela. A abortada tentativa de sabotagem e destruição do Complexo Petrolífero do Malongo em Cabinda, em que morreram 9 comandos Sul Africanos. Vivo, ficou o capitão William Detriot, chefe do grupo. A guerra da Mavinga é outras das tristes recordações que a história jamais esconderá e fazem parte  da minha vida profissional e pessoal. \r\n\r\nA cobertura de atividades presidenciais no pais e da Comissão de Materialização dos Acordos de Gbadolite no ex Zaire de Mobutu Sesse Seko, constam no meu perfil Biográfico. \r\n\r\nSão 42 de TPA com muitas passagens aqui e acolá. Fiz os programas Zoom, Visor, a rubrica \"A Polícia Popular ao Serviço do Povo\" e coordenei as últimas noticias. Trabalhei para a Telesemana, espaço informativo internacional e no TPA Actualidade, cuja edição estava a cargo do veterano jornalista e professor Ramiro Matos.\r\nFiz parte dos fundadores  dos programas Luanda, a Capital e Ecos e Factos.\r\nNum passado recente fui chefe de reportagem e finalmente Editor, repórter, produtor do Programa TV REGIOES.\r\n\r\nDe recordar que no Ecos é Factos fiz a Rubrica \" ECOS DO MUSSEQUE\" que deixou marcas inapagaveis e conquistou muita audiência. O programa está fora da grelha a 19 anos mas, os telespectadores continuam a chorar pelo seu regresso. O Ecos do Musseque ganhou uma menção honrosa do Prêmio Maboque de Jornalismo. \r\n\r\nO TV REGIÕES nascido a 9 de Maio de 2009, foi vencedor do Prêmio Nacional de Jornalismo.\r\n\r\nEm 2014, fechei a minha carreira profissional no Centro de Produção da TPA- Camama, como sub Director do Gabinete de Relações Institucionais  abrindo portas a minha reforma em Abril de 2023.\r\n",
     "qualificacoes_academica": [
-      "rfds"
+      "2020  / 2021 - Instituto Médio Industrial  de Luanda",
+      "2024 / 2023 - Universidade Agostinho Neto"
     ],
     "experiencias": [
-      "dsd"
+      ""
     ],
     "titulo": [
-      "ddd"
+      "A Polícia Popular ao Serviço do Povo",
+      "Luanda, a Capital e Ecos e Factos."
     ],
     "descricao": [
-      "dd"
+      ""
     ],
     "premios": [
-      "ddd"
+      "Fiz os programas ",
+      "Fiz parte dos fundadores  dos programas "
     ],
     "idiomas": [
-      "dd"
+      "Português",
+      "Inglês",
+      "Espanhol",
+      "Francês"
     ],
-    "email": "",
+    "email": "alvesjesus@gmail.com",
     "contactos": [
-      "ddd"
+      "923112356"
     ],
     "redes_sociais": [
-      "frrrr2"
+      "alves de jesus"
     ],
     "data_publicacao": "2025-07-15",
-    "descricao_foto_1": "dd",
-    "rotate_foto_1": "0",
-    "descricao_foto_2": "dd",
-    "rotate_foto_2": "0",
-    "descricao_foto_3": "ddd",
+    "descricao_foto_1": "no jornal",
+    "rotate_foto_1": "270",
+    "descricao_foto_2": "eu e meu colega",
+    "rotate_foto_2": "270",
+    "descricao_foto_3": "no jornal",
     "rotate_foto_3": "0",
-    "descricao_foto_4": "d",
+    "descricao_foto_4": "no jornal",
     "rotate_foto_4": "0",
-    "descricao_foto_5": "dd",
+    "descricao_foto_5": "no jornal",
     "rotate_foto_5": "0",
-    "descricao_foto_6": "dd",
+    "descricao_foto_6": "certificado",
     "rotate_foto_6": "0",
+    "descricao_foto_7": "eu e meus amigos",
+    "rotate_foto_7": "0",
+    "descricao_foto_8": "eu divertindo me com os meus amigos",
+    "rotate_foto_8": "0",
+    "descricao_foto_9": "andando em casa",
+    "rotate_foto_9": "0",
+    "descricao_foto_10": "eu e os meus amigos",
+    "rotate_foto_10": "0",
+    "descricao_foto_11": "eu e minha irmã",
+    "rotate_foto_11": "0",
+    "descricao_foto_12": "em familia",
+    "rotate_foto_12": "0",
+    "descricao_foto_13": "eu e o meu amigo",
+    "rotate_foto_13": "0",
+    "descricao_foto_14": "vejam me",
+    "rotate_foto_14": "0",
+    "descricao_foto_15": "na europa",
+    "rotate_foto_15": "0",
+    "descricao_foto_16": "na provincia",
+    "rotate_foto_16": "0",
+    "descricao_foto_17": "em viagem na provincia",
+    "rotate_foto_17": "0",
+    "descricao_foto_18": "sempre na provincia",
+    "rotate_foto_18": "0",
+    "descricao_foto_19": "na provincia do cuanza norte",
+    "rotate_foto_19": "0",
+    "descricao_foto_20": "no resturante",
+    "rotate_foto_20": "0",
+    "descricao_foto_21": "a caminho do escritorio",
+    "rotate_foto_21": "0",
+    "descricao_foto_22": "lembrancas",
+    "rotate_foto_22": "0",
+    "descricao_foto_23": "lembrancas",
+    "rotate_foto_23": "0",
+    "descricao_foto_24": " lembrancas de amigos",
+    "rotate_foto_24": "0",
     "fotos": [
-      "1752569588795-790373582-alvesjesus22.jpeg",
-      "1752569588795-923345918-alvesjesus23.jpeg",
-      "1752569588797-487339658-alvesjesus21.jpeg",
-      "1752569588797-64906061-alvesjesus20.jpeg",
-      "1752569588801-536855328-alvesjesus19.jpeg",
-      "1752569588802-40334174-alvesjesus17.jpeg"
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438427-109885150-alvesjesus24.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438430-387666971-alvesjesus24.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438432-907864164-alvesjesus22.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438434-214626162-alvesjesus23.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438439-804828652-alvesjesus21.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438440-987539413-alvesjesus20.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438443-66100256-alvesjesus19.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438446-736612596-alvesjesus17.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438446-665197495-alvesjesus18.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438447-737642010-alvesjesus15.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438448-699513155-alvesjesus14.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438448-596121143-alvesjesus12.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438451-559852438-alvesjesus16.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438452-4680644-alvesjesus13.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438452-535509232-alvesjesus10.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438452-231587255-alvesjesus9.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438453-909351272-alvesjesus11.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438492-945130603-alvesjesus8.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438493-473075315-alvesjesus7.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438494-262965059-alvesjesus6.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438496-461298978-alvesjesus5.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438496-48074749-alvesjesus4.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438496-650483711-alvesjesus3.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438497-385057304-alvesjesus2.jpeg",
+      "uploads/Manuel_da_Conceição_Alves_de_Jesus-1/1752583438497-837719807-alvesjesus.jpeg"
     ],
-    "data_cadastro": "2025-07-15T08:53:08.806Z"
+    "data_cadastro": "2025-07-15T12:43:58.516Z"
+  },
+  {
+    "id": 2,
+    "name": "Ana sampaio",
+    "link": "ana@gmail.com",
+    "idade": "11",
+    "nacionalidade": "Angola",
+    "ocupacao": "Reporter",
+    "nascimento": "2014-04-12",
+    "falecimento": "52006-04-12",
+    "cargo": "Jornalista",
+    "biografia": "Ao longo da minha carreira  estive na cobertura da guerra que devastou o país.\r\nO inesquecivel massacre de Camabatela. A abortada tentativa de sabotagem e destruição do Complexo Petrolífero do Malongo em Cabinda, em que morreram 9 comandos Sul Africanos. Vivo, ficou o capitão William Detriot, chefe do grupo. A guerra da Mavinga é outras das tristes recordações que a história jamais esconderá e fazem parte  da minha vida profissional e pessoal. \r\n",
+    "qualificacoes_academica": [
+      "2019 - Frequentou o Instituto de Telecomunicações - ITEL",
+      "2021 - Frequentou o Instituto de Telecomunicações - ITEL"
+    ],
+    "experiencias": [
+      "Estdou no estitulo de TI",
+      "Estdou no estitulo de Redes de computadores"
+    ],
+    "titulo": [
+      "Sonhos",
+      "Realidade"
+    ],
+    "descricao": [
+      "Bom estudante",
+      "Excelente"
+    ],
+    "premios": [
+      "Sonhar nao é mal",
+      "Se acredita"
+    ],
+    "idiomas": [
+      "Português",
+      "Francês"
+    ],
+    "email": "anasampaio@gmail.com",
+    "contactos": [
+      "923454113"
+    ],
+    "redes_sociais": [
+      "anasampaio"
+    ],
+    "data_publicacao": "2025-07-15",
+    "descricao_foto_1": "ana sampaio",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "ana de sampaio",
+    "rotate_foto_2": "0",
+    "descricao_foto_3": "minha ana",
+    "rotate_foto_3": "0",
+    "fotos": [
+      "uploads/Ana_sampaio-2/1752584068102-111197683-WhatsApp Image 2025-07-09 at 19.38.59.jpeg",
+      "uploads/Ana_sampaio-2/1752584068103-395072694-WhatsApp Image 2025-07-09 at 19.38.59.jpeg",
+      "uploads/Ana_sampaio-2/1752584068104-808483805-WhatsApp Image 2025-07-09 at 19.38.58.jpeg",
+      "uploads/Ana_sampaio-2/1752584068104-797522712-WhatsApp Image 2025-07-09 at 19.38.57.jpeg"
+    ],
+    "data_cadastro": "2025-07-15T12:54:28.114Z"
   }
 ]
