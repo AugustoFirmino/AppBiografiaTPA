@@ -33,7 +33,7 @@ function Inicio() {
             onChange={(e) => setBusca(e.target.value)}
             className="w-full max-w-md px-5 py-3 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-red-400 text-lg transition"
           />
-          <p><Link to={'/login'} >Login</Link></p>
+          <p><Link to={'/login'} >log in</Link></p>
         </div>
       </div>
 
