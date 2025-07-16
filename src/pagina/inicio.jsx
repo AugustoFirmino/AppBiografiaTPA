@@ -74,6 +74,7 @@ function Inicio() {
           </div>
         )}
       </div>
+      <Link to={'/login'} >Login Admin</Link>
     </div>
   )
 }
