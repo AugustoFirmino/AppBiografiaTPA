@@ -1,6 +1,8 @@
 [
   {
+    "id": 1,
     "username": "admin",
-    "password": "1234"
+    "password": "1234",
+    "logado": false
   }
 ]

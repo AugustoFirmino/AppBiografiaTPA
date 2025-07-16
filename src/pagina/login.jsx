@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // <-- importar o hook
+import { useNavigate } from 'react-router-dom';
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [mensagem, setMensagem] = useState('');
-  const navigate = useNavigate(); // <-- inicializar
+  const [successo, setSuccesso] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,9 +24,16 @@ function Login() {
 
       const data = await res.json();
       setMensagem(data.message);
+      setSuccesso(data.success);
 
+      // Esconde a mensagem após 10 segundos (em qualquer caso)
+      setTimeout(() => {
+        setMensagem('');
+        setSuccesso(null);
+      }, 10000);
+
+      // Se sucesso, redireciona após 2 segundos
       if (data.success) {
-        // Espera 2 segundos e redireciona para /biografia
         setTimeout(() => {
           navigate('/cadastrar_directores');
         }, 2000);
@@ -32,33 +41,40 @@ function Login() {
 
     } catch (error) {
       setMensagem('Erro ao conectar ao servidor');
+      setSuccesso(false);
+
+      // Esconde mensagem de erro após 10 segundos
+      setTimeout(() => {
+        setMensagem('');
+        setSuccesso(null);
+      }, 10000);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm">
-        <h2 className="text-2xl font-bold text-center mb-6 text-purple-700">Login</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-blue-700">Login</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nome de usuário</label>
+          <div className="flex flex-col text-left">
+            <label className="text-sm font-medium text-blue-700 mb-1">Nome de usuário</label>
             <input
               name="username"
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={form.username}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+          <div className="flex flex-col text-left">
+            <label className="text-sm font-medium text-blue-700 mb-1">Senha</label>
             <input
               name="password"
               type="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={form.password}
               onChange={handleChange}
               required
@@ -67,14 +83,18 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
           >
             Entrar
           </button>
         </form>
 
         {mensagem && (
-          <p className="mt-4 text-center text-sm text-gray-700">{mensagem}</p>
+          <p className={`mt-4 flex items-center justify-center gap-2 text-sm ${successo ? 'text-green-600' : 'text-red-600'}`}>
+            {successo === true && <AiOutlineCheckCircle size={20} />}
+            {successo === false && <AiOutlineCloseCircle size={20} />}
+            {mensagem}
+          </p>
         )}
       </div>
     </div>

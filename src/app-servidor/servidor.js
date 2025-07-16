@@ -4,6 +4,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import OpenAI from 'openai';
+import dotenv from 'dotenv';
 
 const app = express();
 app.use(cors());
@@ -11,6 +13,22 @@ app.use(express.json());
 
 
 const PORT = process.env.PORT || 3001;
+
+//caminho da databse json para admin user
+const USUARIOS_FILE = './usuarios.json';
+
+
+dotenv.config();
+
+
+
+
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+console.log("🔑 Chave OpenAI carregada:", process.env.OPENAI_API_KEY);
 // Diretório base
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -123,30 +141,101 @@ app.get('/api/directores/:id/imagens', (req, res) => {
   res.json(urls);
 });
 
-// Rota de login
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Lê o arquivo usuarios.json
-  fs.readFile('./usuarios.json', 'utf8', (err, data) => {
-    if (err) {
-      return res.status(500).json({ success: false, message: 'Erro ao acessar usuários' });
-    }
+  fs.readFile(USUARIOS_FILE, 'utf-8', (err, data) => {
+    if (err) return res.status(500).json({ success: false, message: 'Erro ao ler usuários' });
 
-    const usuarios = JSON.parse(data);
+    let usuarios = JSON.parse(data);
+    const index = usuarios.findIndex(user => user.username === username && user.password === password);
 
-    // Procura um usuário que corresponda
-    const user = usuarios.find(u => u.username === username && u.password === password);
+    if (index !== -1) {
+      // Atualiza estado de logado do usuário autenticado
+      usuarios = usuarios.map((user, i) => ({
+        ...user,
+        logado: i === index // só o usuário logado recebe true
+      }));
 
-    if (user) {
-      return res.json({ success: true, message: 'Login bem-sucedido' });
+      fs.writeFile(USUARIOS_FILE, JSON.stringify(usuarios, null, 2), err => {
+        if (err) return res.status(500).json({ success: false, message: 'Erro ao atualizar status de login' });
+
+        return res.json({ success: true, message: 'Login efectuado com sucesso!' });
+      });
+
     } else {
-      return res.status(401).json({ success: false, message: 'Usuário ou senha incorretos' });
+      return res.json({ success: false, message: 'Usuário ou senha inválidos' });
     }
   });
 });
 
 
+// ROTA DE LOGOUT — define logado: false para todos
+app.post('/logout', (req, res) => {
+  fs.readFile(USUARIOS_FILE, 'utf-8', (err, data) => {
+    if (err) return res.status(500).json({ message: 'Erro ao ler usuários' });
+
+    let usuarios = JSON.parse(data);
+
+    usuarios = usuarios.map(user => ({ ...user, logado: false }));
+
+    fs.writeFile(USUARIOS_FILE, JSON.stringify(usuarios, null, 2), err => {
+      if (err) return res.status(500).json({ message: 'Erro ao salvar logout' });
+      res.json({ success: true, message: 'Logout realizado com sucesso' });
+    });
+  });
+});
+
+
+//  ROTA PARA LISTAR TODOS OS USUÁRIOS
+app.get('/usuarios', (req, res) => {
+  fs.readFile(USUARIOS_FILE, 'utf-8', (err, data) => {
+    if (err) return res.status(500).json({ message: 'Erro ao ler usuários' });
+
+    try {
+      const usuarios = JSON.parse(data);
+      res.json(usuarios);
+    } catch (e) {
+      res.status(500).json({ message: 'Erro ao converter dados' });
+    }
+  });
+});
+
+
+
+
+app.post('/api/gerar-biografia', async (req, res) => {
+  const dados = req.body;
+
+  try {
+    const prompt = `
+Gere uma biografia em terceira pessoa, clara e formal, com base nas seguintes informações:
+
+Nome: ${dados.name}
+Nascimento: ${dados.nascimento}
+Nacionalidade: ${dados.nacionalidade}
+Ocupação: ${dados.ocupacao}
+Cargo: ${dados.cargo}
+Qualificações: ${dados.qualificacoes_academica?.join(', ')}
+Experiências: ${dados.experiencias?.join(', ')}
+Prémios: ${dados.premios?.join(', ')}
+Idiomas: ${dados.idiomas?.join(', ')}
+
+A biografia deve ter tom profissional e ser coesa.`;
+
+    const completion = await openai.chat.completions.create({
+     model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    });
+
+    const texto = completion.choices[0].message.content;
+    res.json({ biografia: texto });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ erro: "Falha ao gerar biografia com IA." });
+  }
+});
 
 // Servir arquivos estáticos da pasta uploads
 app.use('/uploads', express.static(baseUploadDir));

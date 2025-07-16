@@ -47,6 +47,9 @@ function Inicio() {
   }
 
   console.log('galeriaImages:', galeriaImages);
+
+
+
   return (
     <div className="fixed inset-0 min-h-screen bg-gray-50 flex overflow-x-hidden">
       {/* Sidebar */}
@@ -113,7 +116,7 @@ function Inicio() {
             ) : (
               <p className="text-gray-500">Nenhuma biografia disponível.</p>
             )}
-
+        
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Qualificações Acadêmicas */}
               <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 w-full md:col-span-2">
