@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LogoTPA from '../assets/imgs/tpa.png';
 import '../styles/listasdirectores.css';
+
+import { FiLogIn } from 'react-icons/fi'; // Ícone de login (Feather Icons)
+
 import { getDirectores } from '../dados/api';
 
 function Inicio() {
