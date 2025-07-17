@@ -53,7 +53,17 @@
     ],
     "data_publicacao": "2025-07-17",
     "depoimentos": [
-      "[object Object]"
+      {
+        "nome": "Eliza prata",
+        "cargo": "Directora Auxiliar",
+        "mensagem": " O director Augusto Firmino desempenha bem o seu trabalho"
+      },
+      {
+        "id": 2,
+        "nome": "Marcos José",
+        "cargo": "Directora Executiva",
+        "mensagem": "O melhor director da TPA neste ano"
+      }
     ],
     "descricao_foto_1": "No trabalho",
     "rotate_foto_1": "0",
@@ -170,5 +180,256 @@
       "uploads/Ladislau_Firmino-2/1752738482820-432810709-alvesjesus6.jpeg"
     ],
     "data_cadastro": "2025-07-17T07:48:02.825Z"
+  },
+  {
+    "id": 3,
+    "name": "Anselmo João",
+    "link": "anselmo.joao@gmail.com",
+    "idade": "24",
+    "nacionalidade": "Angola",
+    "ocupacao": "Atendimento ao público",
+    "nascimento": "2001-06-12",
+    "falecimento": "2001-06-12",
+    "cargo": "Tecnico Adminstrativo",
+    "biografia": "Manuel da Conceição Alves de Jesus. Filho de Henrique Alves de Jesus, homem que dedicou a sua vida as letras gráficas e de Madalena José da Costa, doméstica. \r\n\r\nNatural de Luanda. Nascido a 26 de Dezembro de 1961. Tenho 63 anos de idade. Signo capricórnio.  \r\n\r\nEstudei jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora,  Gabriela Antunes e fiz vários cursos no país e no Estrangeiro.\r\n\r\nO ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                      Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\nEm 1982 ainda nao havia direção de Informação. Era departamento, o chefe era o nosso saudoso mestre, Júlio Guerra. A redação era  assegurada pelo veterano e malogrado jornalista, Pedro Ramalhoso, que mais tarde foi Diretor do Instituto Nacional de Cinema.\r\n\r\nNa época, parecíamos filhos da mesma mãe. A solidariedade é fraternidade funcionava a toda dimensão. \r\n\r\nPor excesso de educação ou defeito de fabrico, eu, tratava todos por Tio. Até que no final de contas passei a ser tratado como o próprio  Tio e até hoje sou mais conhecido na tpa e não só, por TIO OH. \r\nTio começou com o Pedro Ramalhoso, Ramiro Matos, Nelson Rosa, José Maria, kota Baltazar e o Oh foi acrescentado pelo Luis Junior, o Barão, em homenagem ao Ochi Min que no Vietname é tratado de TIO OH.\r\n",
+    "qualificacoes_academica": [
+      "2001 - ITEL",
+      "2024 - ISPTEC"
+    ],
+    "experiencias": [
+      "2020 - Editor de Video"
+    ],
+    "titulo": [
+      "Lab",
+      "Windows"
+    ],
+    "descricao": [
+      "Melhor produtora infantil de Angola",
+      "Sistema Windows"
+    ],
+    "idiomas": [
+      "Português",
+      "Inglês",
+      "Francês"
+    ],
+    "email": "anselmo.joao@gmail.com",
+    "contactos": [
+      "942136745"
+    ],
+    "redes_sociais": [
+      "anselmo joao"
+    ],
+    "data_publicacao": "2025-07-17",
+    "depoimentos": [
+      {
+        "nome": "Dilma gonçalves",
+        "cargo": "Assistente Comercial",
+        "mensagem": "O director anselmo sempre a me encantar"
+      },
+      {
+        "id": 2,
+        "nome": "Quelcia Araújo",
+        "cargo": "Director Administrativo",
+        "mensagem": "Melhor  assistentet do mundo do Mundo"
+      },
+      {
+        "id": 3,
+        "nome": "Elsa Pascual",
+        "cargo": "Técnica Administrativa",
+        "mensagem": "O Director sempre  me encantou. Contigo aprendi com gerer um departamento"
+      }
+    ],
+    "descricao_foto_1": "bom dia",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "em dia",
+    "rotate_foto_2": "0",
+    "descricao_foto_3": "tudo bem",
+    "rotate_foto_3": "0",
+    "fotos": [
+      "uploads/Anselmo_João-3/1752742819409-31929093-alvesjesus21.jpeg",
+      "uploads/Anselmo_João-3/1752742819411-263180631-alvesjesus4.jpeg",
+      "uploads/Anselmo_João-3/1752742819412-591944678-alvesjesus6.jpeg",
+      "uploads/Anselmo_João-3/1752742819416-921291142-alvesjesus5.jpeg"
+    ],
+    "data_cadastro": "2025-07-17T09:00:19.431Z"
+  },
+  {
+    "id": 4,
+    "name": "Helder Domingos",
+    "link": "manuel@gmail.com",
+    "idade": "20",
+    "nacionalidade": "Angola",
+    "ocupacao": "Jornalista",
+    "nascimento": "2005-05-12",
+    "falecimento": "2005-05-12",
+    "cargo": "Jornalista",
+    "biografia": "Manuel da Conceição Alves de Jesus. Filho de Henrique Alves de Jesus, homem que dedicou a sua vida as letras gráficas e de Madalena José da Costa, doméstica. \r\n\r\nNatural de Luanda. Nascido a 26 de Dezembro de 1961. Tenho 63 anos de idade. Signo capricórnio.  \r\n\r\nEstudei jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora,  Gabriela Antunes e fiz vários cursos no país e no Estrangeiro.\r\n\r\nO ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                      Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\nEm 1982 ainda nao havia direção de Informação. Era departamento, o chefe era o nosso saudoso mestre, Júlio Guerra. A redação era  assegurada pelo veterano e malogrado jornalista, Pedro Ramalhoso, que mais tarde foi Diretor do Instituto Nacional de Cinema.\r\n\r\nNa época, parecíamos filhos da mesma mãe. A solidariedade é fraternidade funcionava a toda dimensão. \r\n\r\nPor excesso de educação ou defeito de fabrico, eu, tratava todos por Tio. Até que no final de contas passei a ser tratado como o próprio  Tio e até hoje sou mais conhecido na tpa e não só, por TIO OH. \r\nTio começou com o Pedro Ramalhoso, Ramiro Matos, Nelson Rosa, José Maria, kota Baltazar e o Oh foi acrescentado pelo Luis Junior, o Barão, em homenagem ao Ochi Min que no Vietname é tratado de TIO OH.\r\n",
+    "qualificacoes_academica": [
+      "2001 - ITEL",
+      "2003 - UCAN",
+      "2010 - ISPTEC"
+    ],
+    "experiencias": [
+      "2020 - Jornalista da TPA",
+      "2023 - Director da RNA",
+      "2024 - Acessor do PCA da TPA",
+      "20205 - Director executivo da TPA"
+    ],
+    "titulo": [
+      "Ranger",
+      "Lunda Capital",
+      "Vidas um ano"
+    ],
+    "descricao": [
+      "Melhor Startup de Angola",
+      "Melhor Canal Televisivo de Angola",
+      "Grandes perferência dos Angolanos"
+    ],
+    "idiomas": [
+      "Inglês",
+      "Português",
+      "Kikongo",
+      "Lingala"
+    ],
+    "email": "",
+    "contactos": [
+      "935463156"
+    ],
+    "redes_sociais": [
+      "helder.domingos"
+    ],
+    "data_publicacao": "2025-07-17",
+    "depoimentos": [
+      "",
+      {
+        "id": 2,
+        "nome": "Xaiver Damião",
+        "cargo": "Director de Unitel",
+        "mensagem": "Orgulho de ti."
+      }
+    ],
+    "descricao_foto_1": "eu no dubai",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "eu no dubai com meu amigo",
+    "rotate_foto_2": "0",
+    "fotos": [
+      "uploads/Helder_Domingos-4/1752743498066-310672650-alvesjesus.jpeg",
+      "uploads/Helder_Domingos-4/1752743498068-773003641-alvesjesus.jpeg",
+      "uploads/Helder_Domingos-4/1752743498068-65559102-alvesjesus2.jpeg"
+    ],
+    "data_cadastro": "2025-07-17T09:11:38.095Z"
+  },
+  {
+    "id": 5,
+    "name": "Nginga Kandimba",
+    "link": "ginga",
+    "idade": "25",
+    "nacionalidade": "Angola",
+    "ocupacao": "prograamdor",
+    "nascimento": "2000-05-12",
+    "falecimento": "2008-05-12",
+    "cargo": "Director de Produtos Digitas da TPA",
+    "biografia": "Manuel da Conceição Alves de Jesus. Filho de Henrique Alves de Jesus, homem que dedicou a sua vida as letras gráficas e de Madalena José da Costa, doméstica. \r\n\r\nNatural de Luanda. Nascido a 26 de Dezembro de 1961. Tenho 63 anos de idade. Signo capricórnio.  \r\n\r\nEstudei jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora,  Gabriela Antunes e fiz vários cursos no país e no Estrangeiro.\r\n\r\nO ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                      Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\nEm 1982 ainda nao havia direção de Informação. Era departamento, o chefe era o nosso saudoso mestre, Júlio Guerra. A redação era  assegurada pelo veterano e malogrado jornalista, Pedro Ramalhoso, que mais tarde foi Diretor do Instituto Nacional de Cinema.\r\n\r\nNa época, parecíamos filhos da mesma mãe. A solidariedade é fraternidade funcionava a toda dimensão. \r\n\r\nPor excesso de educação ou defeito de fabrico, eu, tratava todos por Tio. Até que no final de contas passei a ser tratado como o próprio  Tio e até hoje sou mais conhecido na tpa e não só, por TIO OH. \r\nTio começou com o Pedro Ramalhoso, Ramiro Matos, Nelson Rosa, José Maria, kota Baltazar e o Oh foi acrescentado pelo Luis Junior, o Barão, em homenagem ao Ochi Min que no Vietname é tratado de TIO OH.\r\n",
+    "qualificacoes_academica": [
+      "2000 - ITEL",
+      "2010 - ISTEC"
+    ],
+    "experiencias": [
+      "2015 - Administrador da TPA",
+      "2021 - PCA da TPA"
+    ],
+    "titulo": [
+      "weekend"
+    ],
+    "descricao": [
+      "Melhor PodCast de Angola"
+    ],
+    "idiomas": [
+      "Português",
+      "Kigongo"
+    ],
+    "email": "manueldiogo@gmail.com",
+    "contactos": [
+      "932567812"
+    ],
+    "redes_sociais": [
+      ""
+    ],
+    "data_publicacao": "2025-07-17",
+    "depoimentos": [
+      {
+        "nome": "Dilma gonçalves Manuel",
+        "mensagem": "A directora sempre a me encantar"
+      }
+    ],
+    "descricao_foto_1": "eu e os meus amigos no Huambo",
+    "rotate_foto_1": "0",
+    "fotos": [
+      "uploads/Nginga_Kandimba-5/1752743938375-839581833-alvesjesus6.jpeg",
+      "uploads/Nginga_Kandimba-5/1752743938377-472428370-alvesjesus6.jpeg"
+    ],
+    "data_cadastro": "2025-07-17T09:18:58.387Z"
+  },
+  {
+    "id": 6,
+    "name": "Augusto Firmino",
+    "link": "gugu@1firmino.com",
+    "idade": "20",
+    "nacionalidade": "Argentina",
+    "ocupacao": "Programador",
+    "nascimento": "2005-04-12",
+    "falecimento": "2005-04-12",
+    "cargo": "Tecnico Adminstrativo",
+    "biografia": "Manuel da Conceição Alves de Jesus. Filho de Henrique Alves de Jesus, homem que dedicou a sua vida as letras gráficas e de Madalena José da Costa, doméstica. \r\n\r\nNatural de Luanda. Nascido a 26 de Dezembro de 1961. Tenho 63 anos de idade. Signo capricórnio.  \r\n\r\nEstudei jornalismo de nível médio no Complexo Estudantil Karl Marx Makarenko, hoje IMIL, com a célebre professora,  Gabriela Antunes e fiz vários cursos no país e no Estrangeiro.\r\n\r\nO ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                      Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\nEm 1982 ainda nao havia direção de Informação. Era departamento, o chefe era o nosso saudoso mestre, Júlio Guerra. A redação era  assegurada pelo veterano e malogrado jornalista, Pedro Ramalhoso, que mais tarde foi Diretor do Instituto Nacional de Cinema.\r\n\r\nNa época, parecíamos filhos da mesma mãe. A solidariedade é fraternidade funcionava a toda dimensão. \r\n\r\nPor excesso de educação ou defeito de fabrico, eu, tratava todos por Tio. Até que no final de contas passei a ser tratado como o próprio  Tio e até hoje sou mais conhecido na tpa e não só, por TIO OH. \r\nTio começou com o Pedro Ramalhoso, Ramiro Matos, Nelson Rosa, José Maria, kota Baltazar e o Oh foi acrescentado pelo Luis Junior, o Barão, em homenagem ao Ochi Min que no Vietname é tratado de TIO OH.\r\n",
+    "qualificacoes_academica": [
+      "2020 - ITEL",
+      "2024 - UTANGA"
+    ],
+    "experiencias": [
+      "2020 - Frequentou o ITEL",
+      "2024 - Frequentou a UTANGA"
+    ],
+    "titulo": [
+      "Africell",
+      "Unitel"
+    ],
+    "descricao": [
+      "Melhor Operador de angola",
+      "Melhor Empresa de Angola"
+    ],
+    "idiomas": [
+      "Português",
+      "Francês"
+    ],
+    "email": "gugufirmino1@gmail.com",
+    "contactos": [
+      "925893412"
+    ],
+    "redes_sociais": [
+      "augustofirmino"
+    ],
+    "data_publicacao": "2025-07-17",
+    "depoimentos": [
+      {
+        "nome": "Dilma Gonçalves",
+        "cargo": "Assistente Comercial",
+        "mensagem": "Melhor Director do ITEL"
+      },
+      {
+        "id": 2,
+        "nome": "Elsa andrade",
+        "cargo": "Directora Comercial",
+        "mensagem": "O Director Augusto Firmino sempre foi excelência"
+      }
+    ],
+    "descricao_foto_1": "eu no jornal",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "eu no jornal",
+    "rotate_foto_2": "0",
+    "fotos": [
+      "uploads/Augusto_Firmino-6/1752747874352-265972673-alvesjesus21.jpeg",
+      "uploads/Augusto_Firmino-6/1752747874355-315545820-alvesjesus24.jpeg"
+    ],
+    "data_cadastro": "2025-07-17T10:24:34.368Z"
   }
 ]

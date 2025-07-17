@@ -24,7 +24,6 @@ const initialState = {
   experiencias: [''],
   titulo: [''],
   descricao: [''],
-  premios: [''],
   idiomas: [''],
   email: '',
   contactos: [''],
@@ -168,23 +167,27 @@ const handleRemoveDepoimento = (idx) => {
   };
 
   // Imagem (mantém seleção múltipla e preview)
-  const fileInputRef = useRef();
-  const handleImageChange = e => {
-    const files = Array.from(e.target.files);
-    const novas = files.map(file => ({
-      id: `${file.name}_${file.size}_${file.lastModified}`,
-      file,
-      url: URL.createObjectURL(file),
-      descricao: '',
-      rotate: 0,
-    }));
-    setImagens(prev => [...prev, ...novas]);
-    // Para o formulário, pega a primeira imagem como principal
-    if (files[0]) setForm(prev => ({ ...prev, image: files[0] }));
-    // Limpa o input file para permitir re-seleção do mesmo arquivo se necessário
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
+const fileInputRef = useRef();
 
+const handleImageChange = e => {
+  const files = Array.from(e.target.files);
+  const novas = files.map(file => ({
+    id: `${file.name}_${file.size}_${file.lastModified}`,
+    file,
+    url: URL.createObjectURL(file),
+    descricao: '',
+    rotate: 0,
+  }));
+
+  setImagens(prev => [...prev, ...novas]);
+
+  // Define imagem principal apenas se ainda não tiver uma
+  /*if (!form.image && files[0]) {
+    setForm(prev => ({ ...prev, image: files[0] }));
+  }
+*/
+  if (fileInputRef.current) fileInputRef.current.value = '';
+};
   // Handler para descrição de cada imagem
   const handleImageDescricaoChange = (id, value) => {
     setImagens(prev => prev.map(img => img.id === id ? { ...img, descricao: value } : img));
@@ -268,7 +271,7 @@ const handleRemoveDepoimento = (idx) => {
     }
   };
 
-  console.log('Depoimentos:'+initialState.depoimentos);
+  console.log('Imagens:'+imagens);
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
    <button
@@ -442,7 +445,7 @@ const handleRemoveDepoimento = (idx) => {
         </div>
         {/* Arrays dinâmicos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {['qualificacoes_academica','experiencias','titulo','descricao','premios','idiomas','contactos','redes_sociais'].map(field => (
+          {['qualificacoes_academica','experiencias','titulo','descricao','idiomas','contactos','redes_sociais'].map(field => (
             <div key={field}>
               <label className="block font-semibold capitalize">{field.replace(/_/g,' ')}</label>
               {form[field].map((item, idx) => (
