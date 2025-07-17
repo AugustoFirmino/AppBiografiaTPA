@@ -19,7 +19,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} /> {/* Rota para Home */}
-        <Route path="/biografia/:nome/:id" element={<Biografia />} /> {/* Rota para Biografia */}
+        <Route path="/biografia/:id" element={<Biografia />} /> {/* Rota para Biografia */}
        <Route path="/cadastrar_directores" element={<Cadastro_Directores/>} /> {/* Rota para Cadastro pelo admin */}
         <Route path="/login" element={<Login/>} /> {/* Rota para login pelo admin */}
       </Routes>

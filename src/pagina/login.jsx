@@ -97,14 +97,16 @@ function Login() {
             {mensagem}
           </p>
         )}
+<Link
+  to="/"
+  className="flex items-center mt-[10px] gap-2 bg-transparent text-blue-600  hover:text-blue-500 font-semibold py-2 px-4 rounded-full transition duration-200"
+>
+  <FiLogIn className="text-lg" />
+  voltar
+</Link>
+
       </div>
-        <Link
-        to="/"
-        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition"
-      >
-        <FiLogIn className="text-lg" />
-        voltar
-      </Link>
+    
     </div>
   );
 }

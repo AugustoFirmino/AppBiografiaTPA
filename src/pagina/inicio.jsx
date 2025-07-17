@@ -68,7 +68,7 @@ function Inicio() {
               return (
                 <Link
                   key={dir.id}
-                  to={`/biografia/${dir.name}/${dir.id}`}
+                  to={`/biografia/${dir.id}`}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 flex flex-col items-center p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-red-50 hover:to-blue-50"
                 >
                   <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-red-600 shadow mb-4 group-hover:scale-105 transition-transform duration-300 bg-gray-100 flex items-center justify-center">
