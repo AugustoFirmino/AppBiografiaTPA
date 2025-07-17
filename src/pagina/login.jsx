@@ -99,7 +99,7 @@ function Login() {
         )}
       </div>
         <Link
-        to="/login"
+        to="/"
         className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition"
       >
         <FiLogIn className="text-lg" />
