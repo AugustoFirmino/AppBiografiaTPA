@@ -339,7 +339,7 @@ const handleImageChange = e => {
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Falecimento</label>
-                <input type="date" name="falecimento" value={form.falecimento} onChange={handleChange}  className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de falecimento (opcional)" />
+                <input type="date" name="falecimento" value={form.falecimento} onChange={handleChange} required className="input input-bordered w-full rounded-lg border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 p-3 bg-white" placeholder="Data de falecimento (opcional)" />
               </div>
               <div>
                 <label className="block font-semibold text-blue-800 mb-1">Cargo</label>
@@ -361,7 +361,7 @@ const handleImageChange = e => {
 
       setMensagem("Gerando biografia com IA...");
       try {
-        const res = await fetch("http://localhost:3001/api/directores", {
+        const res = await fetch("http://localhost:3001/api/gerar-biografia", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

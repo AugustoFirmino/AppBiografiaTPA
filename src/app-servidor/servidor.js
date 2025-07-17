@@ -8,12 +8,8 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 
 const app = express();
-app.use(cors({
-  origin: 'https://app-biografia-tpa.vercel.app',
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
-
 
 
 const PORT = process.env.PORT || 3001;

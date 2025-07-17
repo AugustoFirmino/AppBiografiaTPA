@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: backend-biografia
+    env: node
+    plan: free
+    rootDir: src/app-servidor
+    buildCommand: npm install
+    startCommand: node servidor.js
+    envVars:
+      - key: PORT
+        value: 10000
