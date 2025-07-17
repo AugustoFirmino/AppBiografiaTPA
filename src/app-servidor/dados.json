@@ -335,5 +335,162 @@
       "uploads/Augusto_Firmino-4/1752668767227-436090081-alvesjesus11.jpeg"
     ],
     "data_cadastro": "2025-07-16T12:26:07.233Z"
+  },
+  {
+    "id": 5,
+    "name": "Angelo Ngola",
+    "link": "Angelo Ngola",
+    "idade": "25",
+    "nacionalidade": "Angola",
+    "ocupacao": "Programador",
+    "nascimento": "2000-06-12",
+    "falecimento": "2025-06-04",
+    "cargo": "Director Geral da Televisão Pública de Angola",
+    "biografia": "O ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.             \r\n Nos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\n",
+    "qualificacoes_academica": [
+      "1990 / 1992 - Instituto de telecomunicações - ITEL",
+      "1992 / 2000 - Universidade Católica de Angola"
+    ],
+    "experiencias": [
+      "2007 - Professor de programação do ITEL",
+      "2021 - Director do Hospital Lucrecia pain"
+    ],
+    "titulo": [
+      "Sonhar"
+    ],
+    "descricao": [
+      "Professor altamente qualificado",
+      "Director segundo o despacho presidencial de Angola"
+    ],
+    "premios": [
+      "Sonhar porque juntos vencemos"
+    ],
+    "idiomas": [
+      "Português",
+      "Espanhol",
+      "Russo"
+    ],
+    "email": "",
+    "contactos": [
+      ""
+    ],
+    "redes_sociais": [
+      "Angelo ngola"
+    ],
+    "data_publicacao": "2025-07-16",
+    "depoimentos": [],
+    "descricao_foto_1": "em casa",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "em viagem",
+    "rotate_foto_2": "0",
+    "fotos": [
+      "uploads/Angelo_Ngola-5/1752671321500-820268320-alvesjesus10.jpeg",
+      "uploads/Angelo_Ngola-5/1752671321501-755399569-alvesjesus10.jpeg",
+      "uploads/Angelo_Ngola-5/1752671321502-206538217-alvesjesus11.jpeg"
+    ],
+    "data_cadastro": "2025-07-16T13:08:41.509Z"
+  },
+  {
+    "id": 6,
+    "name": "Sónia António Diombo",
+    "link": "sonia diombo",
+    "idade": "20",
+    "nacionalidade": "Angola",
+    "ocupacao": "Reporter",
+    "nascimento": "2005-05-14",
+    "falecimento": "2004-04-12",
+    "cargo": "Jornalista",
+    "biografia": "O ensino primário  na escola dos padres capuchinhos, o histórico e famoso Sao Domingos, o secundário  na segunda secção  da Escola, Geraldo Geraldo de Antônio Victor, por detrás da Liga Nacional Africana, atual Ngola Nzinga. Depois estudei nas escolas, Juventude e Luta e Mutu Ya kevela, aonde fiz a sétima e oitava classes.\r\n\r\nO meu percurso no jornalismo televisivo tem 42 anos. Entrei para a TPA a 15 de Outubro de 1982.\r\n\r\nPessoa simples, humilde, honesta, respeitadora, que se pauta sempre pela dignidade.\r\n\r\nUm dos maiores dons deste homem que nasceu a 63 anos no Bairro Indígena aonde está a cidadela desportiva, é o de ser prestavel. Vive na realidade para servir. O amor ao próximo é profundo. Socorreu muita gente nos hospitais e arranjou sem interesse centenas de cadeiras de rodas e muletas para inúmeros necessitados.\r\n\r\nCasado a 39 anos, com Mariana de Deus Fernandes Gaspar da Costa Alves, tem três filhos.\r\n\r\nNunca teve outro emprego ou profissão, embora tivesse sonhado em querer ser comandante de navios de longo curso.                    \r\nNos 42 anos de TPA, estive sempre na direção de informação tendo feito no início um curso básico de jornalismo. \r\n\r\n",
+    "qualificacoes_academica": [
+      "1990 - UCAN",
+      "2005 - INABE"
+    ],
+    "experiencias": [
+      "1995 - JORNALISTA",
+      "2000 - CONTABILISTA"
+    ],
+    "titulo": [
+      "Kandengue Luanda"
+    ],
+    "descricao": [
+      "Actuei como jornalista da RNA",
+      "Trabalhei como contabilista no BFA"
+    ],
+    "premios": [
+      "Prémio Nobel Kandengue Luanda"
+    ],
+    "idiomas": [
+      "Português",
+      "Ingês"
+    ],
+    "email": "Sonia.antonio@gmail.com",
+    "contactos": [
+      "985345678"
+    ],
+    "redes_sociais": [
+      "sonia antonio"
+    ],
+    "data_publicacao": "2025-07-16",
+    "depoimentos": [],
+    "descricao_foto_1": "no meu escritorio",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "com o meu amigo",
+    "rotate_foto_2": "0",
+    "fotos": [
+      "uploads/Sónia_António_Diombo-6/1752672219923-549872295-20241219_181541.jpg",
+      "uploads/Sónia_António_Diombo-6/1752672219941-482178519-20241219_181541.jpg",
+      "uploads/Sónia_António_Diombo-6/1752672219957-860276004-20241219_221825.jpg"
+    ],
+    "data_cadastro": "2025-07-16T13:23:40.012Z"
+  },
+  {
+    "id": 7,
+    "name": "wer",
+    "link": "gugu@1firmino.com",
+    "idade": "20",
+    "nacionalidade": "Algeria",
+    "ocupacao": "Director",
+    "nascimento": "2005-05-12",
+    "falecimento": "2020-05-03",
+    "cargo": "Director de Produtos Digitas da TPA",
+    "biografia": "sgfhvnbvbvbcv",
+    "qualificacoes_academica": [
+      "2020 - ITEL"
+    ],
+    "experiencias": [
+      "2020 - Televisao Publica de Angola"
+    ],
+    "titulo": [
+      "Xingar"
+    ],
+    "descricao": [
+      "Director"
+    ],
+    "premios": [
+      "Estudar bem"
+    ],
+    "idiomas": [
+      "Portugues",
+      "Espanhol"
+    ],
+    "email": "alem@gmail.com",
+    "contactos": [
+      ""
+    ],
+    "redes_sociais": [
+      "al em"
+    ],
+    "data_publicacao": "2025-07-16",
+    "depoimentos": [],
+    "descricao_foto_1": "dsd",
+    "rotate_foto_1": "0",
+    "descricao_foto_2": "ddd",
+    "rotate_foto_2": "0",
+    "fotos": [
+      "uploads/wer-7/1752673686277-41615889-Alves de Jesus.jpeg",
+      "uploads/wer-7/1752673686279-253495452-Alves de Jesus.jpeg",
+      "uploads/wer-7/1752673686279-172911811-alvesjesus5.jpeg"
+    ],
+    "data_cadastro": "2025-07-16T13:48:06.285Z"
   }
 ]

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
+import { FiLogIn } from 'react-icons/fi'; // Ícone de login (Feather Icons)
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -97,6 +98,13 @@ function Login() {
           </p>
         )}
       </div>
+        <Link
+        to="/login"
+        className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full shadow-md transition"
+      >
+        <FiLogIn className="text-lg" />
+        voltar
+      </Link>
     </div>
   );
 }

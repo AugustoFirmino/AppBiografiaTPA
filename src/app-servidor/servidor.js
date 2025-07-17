@@ -99,24 +99,12 @@ app.post('/api/directores', upload.any(), (req, res) => {
       return path.join('uploads', pasta, file.filename);
     });
 
-    // 🟡 Processar depoimentos
-    const depoimentos = [];
-    let i = 0;
-    while (req.body[`depoimentos[${i}][nome]`] !== undefined) {
-      depoimentos.push({
-        id: i + 1,
-        nome: req.body[`depoimentos[${i}][nome]`],
-        cargo: req.body[`depoimentos[${i}][cargo]`],
-        mensagem: req.body[`depoimentos[${i}][mensagem]`]
-      });
-      i++;
-    }
-
+    
     const cadastro = {
       ...req.body,
       id,
       fotos,
-      depoimentos,
+      
       data_cadastro: new Date().toISOString()
     };
 

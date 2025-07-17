@@ -7,6 +7,7 @@ import ReactCountryFlag from 'react-country-flag';
 import { useNavigate } from 'react-router-dom';
 
 import { FiLogOut } from "react-icons/fi";
+import { depoimentos } from '../dados/depoimentos';
 const initialState = {
   
   id: null,
@@ -29,6 +30,7 @@ const initialState = {
   contactos: [''],
   redes_sociais: [''],
   data_publicacao: '',
+  depoimentos: ['']
 };
 
 function App() {
@@ -40,6 +42,38 @@ function App() {
    const navigate = useNavigate();
 
 
+
+
+const handleDepoimentoChange = (idx, field, value) => {
+  setForm(prev => {
+    const novos = prev.depoimentos.map((d, i) => i === idx ? { ...d, [field]: value } : d);
+    return { ...prev, depoimentos: novos };
+  });
+};
+
+const handleAddDepoimento = () => {
+  setForm(prev => ({
+    ...prev,
+    depoimentos: [
+      ...prev.depoimentos,
+      {
+        id: prev.depoimentos.length + 1,
+        nome: '',
+        cargo: '',
+        mensagem: ''
+      }
+    ]
+  }));
+};
+
+const handleRemoveDepoimento = (idx) => {
+  setForm(prev => ({
+    ...prev,
+    depoimentos: prev.depoimentos.filter((_, i) => i !== idx)
+  }));
+};
+
+   //sessao para depoimentos
 
   const handleToggleSelectImage = (id) => {
     setSelectedImagesToDelete((prev) =>
@@ -230,6 +264,8 @@ function App() {
       console.error('Erro ao fazer logout', error);
     }
   };
+
+  console.log(depoimentos);
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
    <button
@@ -440,6 +476,52 @@ function App() {
           </div>
 
         </div>
+
+       
+  <div className="mt-6">
+  <label className="block font-semibold">Depoimentos</label>
+  {form.depoimentos.map((dep, idx) => (
+    <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
+      <input
+        type="text"
+        placeholder="Nome"
+        value={dep.nome}
+        onChange={(e) => handleDepoimentoChange(idx, 'nome', e.target.value)}
+        className="input input-bordered w-full rounded border-gray-300 p-2"
+      />
+      <input
+        type="text"
+        placeholder="Cargo"
+        value={dep.cargo}
+        onChange={(e) => handleDepoimentoChange(idx, 'cargo', e.target.value)}
+        className="input input-bordered w-full rounded border-gray-300 p-2"
+      />
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="Mensagem"
+          value={dep.mensagem}
+          onChange={(e) => handleDepoimentoChange(idx, 'mensagem', e.target.value)}
+          className="input input-bordered w-full rounded border-gray-300 p-2"
+        />
+        <button
+          type="button"
+          onClick={() => handleRemoveDepoimento(idx)}
+          className="text-red-500 font-bold"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+  ))}
+  <button
+    type="button"
+    onClick={handleAddDepoimento}
+    className="text-blue-600 font-bold mt-2"
+  >
+    Adicionar Depoimento
+  </button>
+</div>
         <div className="flex flex-col items-center mt-8 gap-2">
           <button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg transition-all" disabled={enviando}>
             {enviando ? 'Enviando...' : 'Salvar Cadastro'}
