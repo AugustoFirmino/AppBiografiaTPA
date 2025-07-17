@@ -7,7 +7,7 @@ import ReactCountryFlag from 'react-country-flag';
 import { useNavigate } from 'react-router-dom';
 
 import { FiLogOut } from "react-icons/fi";
-import { depoimentos } from '../dados/depoimentos';
+
 const initialState = {
   
   id: null,
@@ -220,15 +220,18 @@ const handleRemoveDepoimento = (idx) => {
     try {
       const formData = new FormData();
       // Campos simples
-      Object.entries(form).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((v, idx) => {
-            formData.append(`${key}[${idx}]`, v);
-          });
-        } else {
-          formData.append(key, value);
-        }
-      });
+    Object.entries(form).forEach(([key, value]) => {
+  if (key === 'depoimentos') {
+    formData.append('depoimentos', JSON.stringify(value)); //  serializa o array de objetos
+  } else if (Array.isArray(value)) {
+    value.forEach((v, idx) => {
+      formData.append(`${key}[${idx}]`, v);
+    });
+  } else {
+    formData.append(key, value);
+  }
+});
+
       // Imagens
       imagens.forEach((img, idx) => {
         formData.append('fotos', img.file);
@@ -265,7 +268,7 @@ const handleRemoveDepoimento = (idx) => {
     }
   };
 
-  console.log(depoimentos);
+  console.log('Depoimentos:'+initialState.depoimentos);
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
    <button

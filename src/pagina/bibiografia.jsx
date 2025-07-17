@@ -1,7 +1,7 @@
 
 import { Link, useParams } from 'react-router-dom';
 import LogoTPA from '../assets/imgs/tpa.png';
-import { depoimentos } from "../dados/depoimentos";
+//import { depoimentos } from "../dados/depoimentos";
 import { useState, useEffect } from 'react';
 import { getDirectorById } from '../dados/api';
 
@@ -15,7 +15,7 @@ function Inicio() {
   const { id } = useParams();
   const [director, setDirector] = useState(null);
   const [loading, setLoading] = useState(true);
-  const DepoimentosPessoa = depoimentos.filter(p => p.id === parseInt(id));
+  //const DepoimentosPessoa = depoimentos.filter(p => p.id === parseInt(id));
 
   const navItems = [
     { key: "biografia", label: "Biografia" },
@@ -48,7 +48,7 @@ function Inicio() {
 
   console.log('galeriaImages:', galeriaImages);
 
-
+ console.log('depoimentos:', director.depoimentos);
 
   return (
     <div className="fixed inset-0 min-h-screen bg-gray-50 flex overflow-x-hidden">
@@ -288,11 +288,11 @@ function Inicio() {
             <h2 className="text-3xl font-extrabold mb-8 text-center tracking-tight drop-shadow-lg">
               <span className="text-black">Depoimentos</span>
             </h2>
-            {Array.isArray(DepoimentosPessoa) && DepoimentosPessoa.length > 0 ? (
+            {Array.isArray(director.depoimentos) && director.depoimentos.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                {DepoimentosPessoa.map((depoimento, index) => (
+                {director.depoimentos.map((depoimento, index) => (
                   <div
-                    key={index}
+                    key={depoimento.id}
                     className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100 p-8 flex flex-col gap-6"
                   >
                     <div className="flex items-center gap-4 mb-2">
