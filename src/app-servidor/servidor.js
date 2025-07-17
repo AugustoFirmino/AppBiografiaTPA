@@ -100,13 +100,25 @@ app.post('/api/directores', upload.any(), (req, res) => {
     });
 
     
-    const cadastro = {
-      ...req.body,
-      id,
-      fotos,
-      
-      data_cadastro: new Date().toISOString()
-    };
+  // Parseia depoimentos
+let depoimentos = [];
+try {
+  if (req.body.depoimentos) {
+    depoimentos = JSON.parse(req.body.depoimentos);
+  }
+} catch (e) {
+  console.warn('Erro ao parsear depoimentos:', e.message);
+}
+
+// Cria objeto de cadastro
+const cadastro = {
+  ...req.body,
+  id,
+  fotos,
+  depoimentos, // agora é array de objetos, não string
+  data_cadastro: new Date().toISOString()
+};
+
 
     dados.push(cadastro);
     fs.writeFileSync(dadosPath, JSON.stringify(dados, null, 2));
