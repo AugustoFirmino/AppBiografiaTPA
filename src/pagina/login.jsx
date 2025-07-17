@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { FiLogIn } from 'react-icons/fi'; // Ícone de login (Feather Icons)
-
+import { Link } from 'react-router-dom';
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [mensagem, setMensagem] = useState('');
