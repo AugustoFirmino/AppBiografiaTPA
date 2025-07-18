@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "servidor.js",
   "type": "module",
-  "engine":"v22.17.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "nodemon servidor.js",
     "start": "node servidor.js",
