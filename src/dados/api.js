@@ -1,6 +1,6 @@
 // Funções utilitárias para consumir a API de directores
 
-const BASE_URL = 'https://tpaonline-001-site2.ntempurl.com';
+const BASE_URL = 'https://appbiografiatpa.onrender.com';
 
 export async function getDirectores() {
   const resp = await fetch(`${BASE_URL}/api/listar/directores`);
