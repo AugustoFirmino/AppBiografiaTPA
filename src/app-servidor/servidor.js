@@ -6,7 +6,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3001;
 const USUARIOS_FILE = './usuarios.json';
 
 
-dotenv.config();
+
 
 
 
