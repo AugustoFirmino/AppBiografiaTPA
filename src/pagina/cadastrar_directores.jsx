@@ -252,9 +252,11 @@ const handleImageChange = e => {
         setImagemModal(null);
       } else {
         setMensagem('Erro ao cadastrar. Tente novamente.');
+        console.log(err);
       }
     } catch (err) {
       setMensagem('Erro de conexão com o servidor.');
+      console.log(err);
     }
     setEnviando(false);
   };
@@ -354,37 +356,7 @@ const handleImageChange = e => {
 
             <div>
   
-  <button
-    type="button"
-    onClick={async () => {
-      if (!form.biografia.trim()) return;
-
-      setMensagem("Gerando biografia com IA...");
-      try {
-        const res = await fetch("http://localhost:3001/api/directores", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ biografia: form.biografia })
-        });
-
-        const data = await res.json();
-        if (data.resultado) {
-          setForm(prev => ({ ...prev, biografia: data.resultado }));
-          setMensagem("Biografia gerada com sucesso!");
-        } else {
-          setMensagem("Erro ao gerar biografia.");
-        }
-      } catch (err) {
-        console.error(err);
-        setMensagem("Erro de conexão com o servidor de IA.");
-      }
-    }}
-    className="mt-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow transition"
-  >
-    Gerar Biografia com IA
-  </button>
+  
 </div>
             {/* Imagens */}
             <div className="mt-6">

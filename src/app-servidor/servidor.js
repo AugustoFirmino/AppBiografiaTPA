@@ -6,7 +6,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-dotenv.config();
+
 const app = express();
 app.use(cors());
 app.use(express.json());

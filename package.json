@@ -10,15 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.0",
+    "fs": "^0.0.1-security",
+    "multer": "^2.0.2",
     "openai": "^5.10.1",
+    "path": "^0.12.7",
     "react": "^19.1.0",
     "react-country-flag": "^3.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3",
     "react-select": "^5.10.2",
-    "react-select-country-list": "^2.2.3"
+    "react-select-country-list": "^2.2.3",
+    "url": "^0.11.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

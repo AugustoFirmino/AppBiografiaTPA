@@ -45,20 +45,20 @@
       "augusto firmino"
     ],
     "data_publicacao": "2025-07-17",
-      "depoimentos": [
-    {
-      "id": 1,
-      "nome": "Begave da Silva",
-      "cargo": "Estudante do Instituto de Telecomunicações - ITEL",
-      "mensagem": "Sempre sonhei conhecer e ser como o Augusto Firmino!"
-    },   
-    {
-      "id": 2,
-      "nome": "Augusto Firmino",
-      "cargo": "Estudante do Instituto de Telecomunicações - ITEL",
-      "mensagem": "Estou aprendendo e praticando o máximo com o Director Augusto Firmino!"
-    }
-  ],
+    "depoimentos": [
+      {
+        "id": 1,
+        "nome": "Begave da Silva",
+        "cargo": "Estudante do Instituto de Telecomunicações - ITEL",
+        "mensagem": "Sempre sonhei conhecer e ser como o Augusto Firmino!"
+      },
+      {
+        "id": 2,
+        "nome": "Augusto Firmino",
+        "cargo": "Estudante do Instituto de Telecomunicações - ITEL",
+        "mensagem": "Estou aprendendo e praticando o máximo com o Director Augusto Firmino!"
+      }
+    ],
     "descricao_foto_1": "Eu na minha Startup",
     "rotate_foto_1": "0",
     "descricao_foto_2": "eu programando",
@@ -89,5 +89,50 @@
       "uploads/Augusto_Afonso_Firmino-1/1752758022870-966822194-AugustoFirmino9.jpeg"
     ],
     "data_cadastro": "2025-07-17T13:13:42.883Z"
+  },
+  {
+    "id": 2,
+    "name": "Augusto Afonso Firmino",
+    "link": "gugu@1firmino.com",
+    "idade": "25",
+    "nacionalidade": "Angola",
+    "ocupacao": "Programador",
+    "nascimento": "2000-06-14",
+    "falecimento": "",
+    "cargo": "Jornalista",
+    "biografia": "jvcjdsjdsjds",
+    "qualificacoes_academica": [
+      "2020 - ITEL",
+      "2024 - IMEL"
+    ],
+    "experiencias": [
+      "2020 - Estudou Medicina"
+    ],
+    "titulo": [
+      "Kembo"
+    ],
+    "descricao": [
+      "Melhor Kembo de Angola"
+    ],
+    "idiomas": [
+      "Portugues"
+    ],
+    "email": "kembo@gmail.com",
+    "contactos": [
+      "923561245"
+    ],
+    "redes_sociais": [
+      "kembo@gmail.com"
+    ],
+    "data_publicacao": "2025-07-18",
+    "depoimentos": [
+      {
+        "nome": "Elsa João",
+        "cargo": "Director",
+        "mensagem": "Grande Mestre"
+      }
+    ],
+    "fotos": [],
+    "data_cadastro": "2025-07-18T09:48:03.845Z"
   }
 ]
