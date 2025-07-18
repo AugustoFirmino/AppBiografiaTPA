@@ -241,7 +241,7 @@ const handleImageChange = e => {
         formData.append(`descricao_foto_${idx+1}`, img.descricao || "");
         formData.append(`rotate_foto_${idx+1}`, img.rotate || 0);
       });
-      const resp = await fetch('http://localhost:3001/api/diretores', {
+      const resp = await fetch('https://tpaonline-001-site2.ntempurl.com/api/diretores', {
         method: 'POST',
         body: formData
       });
