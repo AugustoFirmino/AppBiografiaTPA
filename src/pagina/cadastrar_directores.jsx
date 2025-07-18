@@ -241,7 +241,7 @@ const handleImageChange = e => {
         formData.append(`descricao_foto_${idx+1}`, img.descricao || "");
         formData.append(`rotate_foto_${idx+1}`, img.rotate || 0);
       });
-      const resp = await fetch('http://localhost:3001/api/directores', {
+      const resp = await fetch('http://localhost:3001/api/diretores', {
         method: 'POST',
         body: formData
       });
@@ -260,7 +260,7 @@ const handleImageChange = e => {
   };
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:3001/logout', {
+      await fetch('https://appbiografiatpa.onrender.com/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
