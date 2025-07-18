@@ -190,31 +190,57 @@ router.get('/api/directores/:id/imagens', (req, res) => {
   res.json(urls);
 });
 
+// Rota de login
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  fs.readFile(USUARIOS_FILE, 'utf-8', (err, data) => {
-    if (err) return res.status(500).json({ success: false, message: 'Erro ao ler usuários' });
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: 'Usuário e senha são obrigatórios' });
+  }
 
-    let usuarios = JSON.parse(data);
-    const index = usuarios.findIndex(user => user.username === username && user.password === password);
+  // Verifica se usuário existe com essa senha
+  const sqlSelect = `SELECT * FROM contas WHERE nome = ? AND psenha = ? LIMIT 1`;
 
-    if (index !== -1) {
-      // Atualiza estado de logado do usuário autenticado
-      usuarios = usuarios.map((user, i) => ({
-        ...user,
-        logado: i === index // só o usuário logado recebe true
-      }));
+  connection.query(sqlSelect, [username, password], (err, results) => {
+    if (err) {
+      console.error('Erro ao consultar usuários:', err);
+      return res.status(500).json({ success: false, message: 'Erro ao acessar o banco de dados' });
+    }
 
-      fs.writeFile(USUARIOS_FILE, JSON.stringify(usuarios, null, 2), err => {
-        if (err) return res.status(500).json({ success: false, message: 'Erro ao atualizar status de login' });
-
-        return res.json({ success: true, message: 'Login efectuado com sucesso!' });
-      });
-
-    } else {
+    if (results.length === 0) {
       return res.json({ success: false, message: 'Usuário ou senha inválidos' });
     }
+
+    const usuarioLogado = results[0];
+
+    // Zera logado em todos
+    const sqlLogoutAll = `UPDATE usuarios SET logado = 0`;
+    connection.query(sqlLogoutAll, (err) => {
+      if (err) {
+        console.error('Erro ao atualizar logado para todos:', err);
+        return res.status(500).json({ success: false, message: 'Erro ao atualizar status de login' });
+      }
+
+      // Marca este como logado
+      const sqlUpdateLogin = `UPDATE usuarios SET logado = 1 WHERE id = ?`;
+      connection.query(sqlUpdateLogin, [usuarioLogado.id], (err) => {
+        if (err) {
+          console.error('Erro ao marcar usuário como logado:', err);
+          return res.status(500).json({ success: false, message: 'Erro ao confirmar login' });
+        }
+
+        return res.json({
+          success: true,
+          message: 'Login efectuado com sucesso!',
+          usuario: {
+            id: usuarioLogado.id,
+            nome: usuarioLogado.nome,
+            admin: usuarioLogado.admin === 1,
+            logado: true
+          }
+        });
+      });
+    });
   });
 });
 
