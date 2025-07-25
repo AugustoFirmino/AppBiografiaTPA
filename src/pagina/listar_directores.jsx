@@ -56,7 +56,7 @@ function Inicio() {
               // Mostra a primeira foto da galeria, se houver
               let imgUrl = '';
               if (Array.isArray(dir.fotos) && dir.fotos.length > 0) {
-           imgUrl = `http://localhost:3001/${dir.fotos[0]}`;
+           imgUrl = `https://appbiografiatpa.onrender.com/${dir.fotos[0]}`;
 
               }
 
