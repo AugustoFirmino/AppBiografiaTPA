@@ -1088,7 +1088,7 @@ setForm(prev => ({
 const imagensDoBanco = Array.isArray(data.fotos)
       ? data.fotos.map(foto => ({
           id: foto.id, // 👈 ID REAL do banco (INT)
-          url: `http://localhost:3001/${foto.caminho}`,
+          url: `https://appbiografiatpa.onrender.com/${foto.caminho}`,
           descricao: foto.descricao || '',
           file: null,
           rotate: 0,
