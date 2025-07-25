@@ -13,6 +13,7 @@ const app = express();
 
 
 app.use(cors({
+  
   origin: 'http://tpaonline-001-site2.ntempurl.com',
   credentials: true
 }));
