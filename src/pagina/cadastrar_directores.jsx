@@ -549,7 +549,7 @@ const enviarIdiomas = async (id_director, idiomas) => {
 
     const data = await response.json();
     if (data.sucesso) {
-      console.log('Idiomas cadastrados com sucesso!');
+
     } else {
   
     }
