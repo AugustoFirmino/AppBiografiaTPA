@@ -12,7 +12,10 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://tpaonline-001-site2.ntempurl.com',
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 
