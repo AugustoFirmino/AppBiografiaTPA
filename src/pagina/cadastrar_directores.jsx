@@ -286,7 +286,7 @@ const handleDeleteSelectedImages = async () => {
   // 1. Remover imagens do banco de dados (chamar API DELETE)
   if (imagensDoBanco.length > 0) {
     try {
-      const response = await fetch('http://localhost:3001/api/remover/imagens', {
+      const response = await fetch('https://appbiografiatpa.onrender.com/api/remover/imagens', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -409,7 +409,7 @@ const handleRemoveImage = async (id) => {
     
 
     try {
-      const response = await fetch(`http://localhost:3001/api/deletar/imagem/${imagem.id}`, {
+      const response = await fetch(`https://appbiografiatpa.onrender.com/api/deletar/imagem/${imagem.id}`, {
         method: 'DELETE',
       });
 
@@ -468,7 +468,7 @@ const handleRemoveImage = async (id) => {
       formData.append(`descricao_foto_${idx + 1}`, img.descricao || "");
     });
 
-    const resp = await fetch('http://localhost:3001/api/cadastrar/imagens', {
+    const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/imagens', {
       method: 'POST',
       body: formData
     });
@@ -489,7 +489,7 @@ const enviarQualificacoes = async (id_director) => {
   try {
     const qualificacoesFiltradas = qualificacoes.filter(q => q.descricao && q.descricao.trim() !== '');
 
-    const response = await fetch('http://localhost:3001/api/cadastrar/qualificacoes', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/qualificacoes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -514,7 +514,7 @@ const enviarQualificacoes = async (id_director) => {
 
 const enviarExperiencias = async (id_director, experiencias) => {
   try {
-    const response = await fetch('http://localhost:3001/api/cadastrar/experiencias', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/experiencias', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, experiencias })
@@ -536,7 +536,7 @@ const enviarExperiencias = async (id_director, experiencias) => {
   // Após receber o ID do diretor criado:
 const enviarIdiomas = async (id_director, idiomas) => {
   try {
-    const response = await fetch('http://localhost:3001/api/cadastrar/idiomas', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/idiomas', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -564,7 +564,7 @@ const enviarIdiomas = async (id_director, idiomas) => {
 // funcao para contactos
 const enviarContactos = async (id_director, contactos) => {
   try {
-    const response = await fetch('http://localhost:3001/api/cadastrar/contactos', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/contactos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -589,7 +589,7 @@ const enviarContactos = async (id_director, contactos) => {
 
 const enviarPremios = async (id_director, premios) => {
   try {
-    const response = await fetch('http://localhost:3001/api/cadastrar/premios', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/premios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, premios })
@@ -610,7 +610,7 @@ const enviarPremios = async (id_director, premios) => {
   // Após receber o ID do diretor criado:
 const enviarDepoimentos = async (id_director) => {
   try {
-    const response = await fetch('http://localhost:3001/api/cadastrar/depoimentos', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/depoimentos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -690,7 +690,7 @@ formData.append("data_publicacao", form.data_publicacao);
 
 
     // Envia o formulário
-     const response = await fetch(`http://localhost:3001/api/actualizar/directores/${idDirector}`, {
+     const response = await fetch(`https://appbiografiatpa.onrender.com/api/actualizar/directores/${idDirector}`, {
       method: 'PUT',
 
       body: formData
@@ -750,7 +750,7 @@ formData.append("data_publicacao", form.data_publicacao);
 //funcao para actualizar idiomas
 const atualizarIdiomas = async (id_director, idiomas) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/idiomas', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/idiomas', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, idiomas })
@@ -770,7 +770,7 @@ const atualizarIdiomas = async (id_director, idiomas) => {
 // funcao para actualizar experiencias
 const atualizarExperiencias = async (id_director, experiencias) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/experiencias', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/experiencias', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, experiencias })
@@ -790,7 +790,7 @@ const atualizarExperiencias = async (id_director, experiencias) => {
 // funcao para actualizar qualificacoes
 const atualizarQualificacoes = async (id_director, qualificacoes) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/qualificacoes', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/qualificacoes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, qualificacoes })
@@ -810,7 +810,7 @@ const atualizarQualificacoes = async (id_director, qualificacoes) => {
 // funcao para actualizar contactos
 const atualizarContactos = async (id_director, contactos) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/contactos', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/contactos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, contactos })
@@ -830,7 +830,7 @@ const atualizarContactos = async (id_director, contactos) => {
 //funcao para actualizar premios
 const atualizarPremios = async (id_director, premios) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/premios', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/premios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, premios })
@@ -850,7 +850,7 @@ const atualizarPremios = async (id_director, premios) => {
 //funcao para actualizar os depoimentos
 const atualizarDepoimentos = async (id_director, depoimentos) => {
   try {
-    const response = await fetch('http://localhost:3001/api/actualizar/depoimentos', {
+    const response = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/depoimentos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_director, depoimentos })
@@ -872,7 +872,7 @@ const atualizarImagens = async (id_director, imagens) => {
     // 1. Atualizar descrições das imagens EXISTENTES (já têm id)
     const imagensExistentes = imagens.filter(img => !img.file && img.id);
     if (imagensExistentes.length > 0) {
-      const response1 = await fetch('http://localhost:3001/api/actualizar/imagens', {
+      const response1 = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/imagens', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -900,7 +900,7 @@ const atualizarImagens = async (id_director, imagens) => {
         formData.append('descricoes', img.descricao || '');
       });
 
-      const response2 = await fetch('http://localhost:3001/api/actualizar/novas-imagens', {
+      const response2 = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/novas-imagens', {
         method: 'PUT',
         body: formData
       });
@@ -959,7 +959,7 @@ const handleSubmit = async e => {
    }
 
     // Envia o formulário
-    const resp = await fetch('http://localhost:3001/api/cadastrar/directores', {
+    const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/directores', {
       method: 'POST',
       body: formData
     });
@@ -1027,7 +1027,7 @@ const handleSubmit = async e => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/logout', {
+      const res = await fetch('https://appbiografiatpa.onrender.com/api/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id })
@@ -1047,7 +1047,7 @@ const handleSubmit = async e => {
 // funcao para buscar todos os dados do director selecionado
 const carregarDadosDoDirector = async (id) => {
   try {
-   const resp = await fetch(`http://localhost:3001/api/directores/${id}`);
+   const resp = await fetch(`https://appbiografiatpa.onrender.com/api/directores/${id}`);
 const data = await resp.json();
 
 
