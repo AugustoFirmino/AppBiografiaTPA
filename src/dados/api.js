@@ -1,14 +1,15 @@
 // Funções utilitárias para consumir a API de directores
 
-const BASE_URL = 'https://appbiografiatpa.onrender.com';
-
 export async function getDirectores() {
-  const resp = await fetch(`${BASE_URL}/api/listar/directores`);
-  if (!resp.ok) throw new Error('Erro ao buscar directores');
-  return await resp.json();
+  const res = await fetch('http://localhost:3001/api/listar/directores');
+  if (!res.ok) throw new Error('Erro ao buscar diretores');
+  return res.json();
 }
 
+
+
 export async function getDirectorById(id) {
-  const directores = await getDirectores();
-  return directores.find(d => String(d.id) === String(id));
+  const res = await fetch(`http://localhost:3001/api/directores/${id}`);
+  if (!res.ok) throw new Error('Erro ao buscar diretor por ID');
+  return res.json();
 }

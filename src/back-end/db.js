@@ -1,14 +1,22 @@
 // db.js
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+dotenv.config();
 
-export const connection = mysql.createConnection({
-  host: 'MYSQL1003.site4now.net',
-  user: 'aba4cf_50anos',
-  password: 'tp@onlin3',
-  database: 'db_aba4cf_50anos'
+console.log('Conectando ao MySQL com:');
+console.log({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
-connection.connect(err => {
-  if (err) throw err;
-  console.log('MySQL conectado!');
+export const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });

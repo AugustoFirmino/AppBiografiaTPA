@@ -20,7 +20,7 @@ function Inicio() {
   }, []);
 
   const filtrados = directores.filter((dir) =>
-    (dir.name || '').toLowerCase().includes(busca.toLowerCase())
+    (dir.nome || '').toLowerCase().includes(busca.toLowerCase())
   );
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 flex flex-col items-center py-10 px-2 animate-fade-in">
@@ -62,7 +62,7 @@ function Inicio() {
               // Mostra a primeira foto da galeria, se houver
               let imgUrl = '';
               if (Array.isArray(dir.fotos) && dir.fotos.length > 0) {
-           imgUrl = `https://localhost:3001/${dir.fotos[0]}`;
+           imgUrl = `http://localhost:3001/${dir.fotos[0]}`;
 
               }
 

@@ -17,7 +17,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch('https://appbiografiatpa.onrender.com/login', {
+      const res = await fetch('https://appbiografiatpa.onrender.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -34,11 +34,13 @@ function Login() {
       }, 10000);
 
       // Se sucesso, redireciona após 2 segundos
-      if (data.success) {
-        setTimeout(() => {
-          navigate('/cadastrar_directores');
-        }, 2000);
-      }
+   if (data.success) {
+  setTimeout(() => {
+  navigate(`/cadastrar_directores/${data.usuario.id}`);
+
+  }, 2000);
+}
+
 
     } catch (error) {
       setMensagem('Erro ao conectar ao servidor');
@@ -67,6 +69,10 @@ function Login() {
               value={form.username}
               onChange={handleChange}
               required
+                   onClick={()=>   setTimeout(() => {
+                              setMensagem('');
+                         setSuccesso(null);
+                               }, 5)}
             />
           </div>
 
@@ -79,6 +85,10 @@ function Login() {
               value={form.password}
               onChange={handleChange}
               required
+              onClick={()=>   setTimeout(() => {
+                              setMensagem('');
+                         setSuccesso(null);
+                               }, 5)}
             />
           </div>
 

@@ -39,16 +39,12 @@ function Inicio() {
 
   // Para galeria: fotos e descrições
   const galeriaImages = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `https://localhost:3001/${f}`)
+    ? director.fotos.map(f => `http://localhost:3001/${f.caminho}`)
     : [];
-  const galeriaDescricoes = [];
-  for (let i = 1; i <= galeriaImages.length; i++) {
-    galeriaDescricoes.push(director[`descricao_foto_${i}`] || '');
-  }
+  const galeriaDescricoes = Array.isArray(director.fotos)
+    ? director.fotos.map(f => `${f.descricao}`)
+    : [];
 
-  console.log('galeriaImages:', galeriaImages);
-
- console.log('depoimentos:', director.depoimentos);
 
   return (
     <div className="fixed inset-0 min-h-screen bg-gray-50 flex overflow-x-hidden">
@@ -66,7 +62,7 @@ function Inicio() {
           ) : (
             <div className="w-28 h-28 rounded-full bg-gray-200 border-4 border-red-600 shadow mb-4 flex items-center justify-center text-3xl text-gray-400">?</div>
           )}
-          <h2 className="text-lg font-bold text-gray-800 mb-1 text-center">{director?.name}</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-1 text-center">{director?.nome}</h2>
           <p className="text-sm text-gray-500 mb-4 text-center">{director?.cargo}</p>
           <nav className="w-full">
             {navItems.map(item => (
@@ -86,7 +82,7 @@ function Inicio() {
           <div className="mt-6 w-full">
             <h3 className="text-xs font-semibold text-gray-400 uppercase mb-2">Info</h3>
             <div className="text-sm text-gray-700 mb-1"><span className="font-semibold">Ocupação:</span> {director?.ocupacao}</div>
-            <div className="text-sm text-gray-700"><span className="font-semibold">Nascimento:</span> {director?.nascimento}</div>
+            <div className="text-sm text-gray-700"><span className="font-semibold">Nascimento:</span> {director?.nascimento.split('T')[0]}</div>
           </div>
           <Link to="/" className="mt-8 inline-block text-red-600 font-semibold hover:underline transition">← Voltar</Link>
         </div>
@@ -109,7 +105,7 @@ function Inicio() {
           <section className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-8 mt-10 md:mt-16">
             <h1 className="text-3xl font-extrabold mb-4 text-center tracking-tight">
               <span className="text-black">Biografia de </span>
-              <span className="text-red-700">{director?.name}</span>
+              <span className="text-red-700">{director?.nome}</span>
             </h1>
             {director?.biografia ? (
               <div className="prose max-w-none mb-6 text-justify text-gray-800" style={{textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: director.biografia }} />
@@ -119,14 +115,23 @@ function Inicio() {
         
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Qualificações Acadêmicas */}
-              <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 w-full md:col-span-2">
-                <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Qualificações Académicas</h3>
-                {Array.isArray(director?.qualificacoes_academica) && director.qualificacoes_academica.length > 0 ? (
-                  <ul className="list-disc list-inside text-gray-600 text-justify">
-                    {director.qualificacoes_academica.map((q, i) => <li key={i}>{q}</li>)}
-                  </ul>
-                ) : <p className="text-gray-400">Nenhuma qualificação disponível.</p>}
-              </div>
+             {/* Qualificações Acadêmicas */}
+<div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-100 w-full md:col-span-2">
+  <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2">
+    <span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+    Qualificações Académicas
+  </h3>
+  {Array.isArray(director?.qualificacoes_academica) && director.qualificacoes_academica.length > 0 ? (
+    <ul className="list-disc list-inside text-gray-600 text-justify">
+      {director.qualificacoes_academica.map((q, i) => (
+        <li key={i}>{q}</li>
+      ))}
+    </ul>
+  ) : (
+    <p className="text-gray-400">Nenhuma qualificação disponível.</p>
+  )}
+</div>
+
               
               {/* Experiência Profissional */}
               <div className="bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 shadow-xl flex flex-col gap-4 border border-red-100 md:col-span-2">
@@ -147,7 +152,7 @@ function Inicio() {
                 {/* Idiomas */}
                 <div className="bg-gray-50 rounded-xl p-6 shadow flex-1 flex flex-col gap-2 border border-gray-100">
                   <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Idiomas</h3>
-                  {Array.isArray(director?.idiomas) && director.idiomas.length > 0 ? (
+                  {Array.isArray(director?.idiomas) && director.idiomas?.length  > 0 ? (
                     <ul className="list-disc list-inside text-gray-600 text-justify">
                       {director.idiomas.map((idioma, i) => <li key={i}>{idioma}</li>)}
                     </ul>
@@ -163,27 +168,41 @@ function Inicio() {
 
             <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow border border-gray-100">
               <h3 className="font-bold text-gray-700 mb-2 flex items-center gap-2"><span className="inline-block w-2 h-2 bg-red-600 rounded-full"></span> Obras Notáveis</h3>
-              {Array.isArray(director?.titulo) && director.titulo.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {director.titulo.map((titulo, i) => (
-                    <div key={i} className="group relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-2xl shadow-lg p-6 flex flex-col gap-2 hover:shadow-2xl transition-all duration-300">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-200 transition">
-                          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-6" /></svg>
-                        </div>
-                        <span className="font-bold text-lg text-blue-800 group-hover:text-blue-900 transition">{titulo}</span>
-                      </div>
-                      <span className="block text-gray-700 text-justify text-sm">{director.descricao?.[i] || "Sem descrição disponível"}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : <p className="text-gray-400">Nenhuma obra disponível.</p>}
+          
+          
+              {Array.isArray(director?.premios) && director.premios.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {director.premios.map((premio, i) => (
+        <div
+          key={i}
+          className="group relative bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-2xl shadow-lg p-6 flex flex-col gap-2 hover:shadow-2xl transition-all duration-300"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-200 transition">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 20l9-5-9-5-9 5 9 5zm0 0V10m0 10v-6" />
+              </svg>
+            </div>
+            <span className="font-bold text-lg text-blue-800 group-hover:text-blue-900 transition">
+              {premio.titulo || "Título não disponível"}
+            </span>
+          </div>
+          <span className="block text-gray-700 text-justify text-sm">
+            {premio.descricao || "Sem descrição disponível"}
+          </span>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-400">Nenhuma obra disponível.</p>
+  )}
+
             </div>
 
             <div className="mt-10 flex justify-end">
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-blue-100 px-4 py-2 rounded-full shadow text-xs font-semibold text-blue-700 border border-blue-200">
                 <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                Publicado em {director?.data_publicacao}
+                Publicado em {director?.data_publicacao.split('T')[0]}
               </div>
             </div>
           </section>
@@ -193,7 +212,7 @@ function Inicio() {
         {secaoAtiva === "galeria" && (
           <section className="w-full max-w-5xl mx-auto">
             <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow-lg">
-              Galeria de <span className="text-red-700">{director?.name}</span>
+              Galeria de <span className="text-red-700">{director?.nome}</span>
             </h2>
             {galeriaImages.length > 0 ? (
               <>
@@ -206,7 +225,7 @@ function Inicio() {
                       <div className="overflow-hidden h-64 flex items-center justify-center bg-gray-100">
                         <img
                           src={img}
-                          alt={`Imagem ${index + 1} de ${director.name}`}
+                          alt={`Imagem ${index + 1} de ${director.nome}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           loading="lazy"
                         />
@@ -292,7 +311,7 @@ function Inicio() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                 {director.depoimentos.map((depoimento, index) => (
                   <div
-                    key={depoimento.id}
+                    key={depoimento.id || index}
                     className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100 p-8 flex flex-col gap-6"
                   >
                     <div className="flex items-center gap-4 mb-2">
