@@ -1104,6 +1104,9 @@ const imagensDoBanco = Array.isArray(data.fotos)
   };
 
 const limparFormulario = () => {
+
+  try{
+
   setForm({
     name: '',
     nacionalidade: '',
@@ -1127,7 +1130,13 @@ const limparFormulario = () => {
   setImagemModal(null);
 
   if (fileInputRef.current) fileInputRef.current.value = '';
-};
+}
+ catch(error){
+
+}
+
+}
+;
 
 
 
@@ -1163,7 +1172,11 @@ const deletarDirector = async (id) => {
 };
 
 
-
+   useEffect(() => {
+  if (imagemModal && !imagens.find(img => img.id === imagemModal.id)) {
+    setImagemModal(null);
+  }
+}, [imagens, imagemModal]);
 
 
   useEffect(() => {
@@ -1174,15 +1187,13 @@ const deletarDirector = async (id) => {
 
   
 
-   useEffect(() => {
-  if (imagemModal && !imagens.find(img => img.id === imagemModal.id)) {
-    setImagemModal(null);
-  }
-}, [imagens, imagemModal]);
+
 
 
 
   return (
+
+    <div>
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
 
       {/* Barra de Navegação */}
@@ -2101,8 +2112,7 @@ const deletarDirector = async (id) => {
           </div>
         )}
 
-     {/* Modal de visualização de imagem */}
-{imagemModal && (
+ {imagemModal && (
   <div
     className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
     onClick={() => setImagemModal(null)}
@@ -2111,6 +2121,7 @@ const deletarDirector = async (id) => {
       className="bg-white p-6 rounded-2xl shadow-2xl relative max-w-lg w-full flex flex-col items-center animate-fadeIn"
       onClick={e => e.stopPropagation()}
     >
+      {/* Navegação de Imagens */}
       <div className="flex flex-row items-center w-full justify-center relative">
         {/* Botão Anterior */}
         <button
@@ -2126,9 +2137,10 @@ const deletarDirector = async (id) => {
           disabled={imagens.findIndex(img => img.id === imagemModal.id) === 0}
           aria-label="Anterior"
         >
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20 }}>&#8592;</span>
+          <span style={{ width: 20, height: 20 }}>&#8592;</span>
         </button>
 
+        {/* Imagem */}
         <img
           src={imagemModal.url}
           style={{ transform: `rotate(${imagemModal.rotate}deg)` }}
@@ -2152,69 +2164,91 @@ const deletarDirector = async (id) => {
           disabled={imagens.findIndex(img => img.id === imagemModal.id) === imagens.length - 1}
           aria-label="Próxima"
         >
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20 }}>&#8594;</span>
+          <span style={{ width: 20, height: 20 }}>&#8594;</span>
         </button>
       </div>
 
+      {/* Descrição */}
       <div className="text-gray-600 text-xs mt-2 max-w-xs text-center truncate">
         {imagens.find(img => img.id === imagemModal.id)?.descricao || 'Sem descrição'}
       </div>
 
+      {/* Botões de Ação */}
       <div className="flex flex-wrap gap-3 mt-6 justify-center w-full">
+        {/* Rotacionar -90° */}
         <button
           type="button"
           className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition"
-          onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate - 90 + 360) % 360 }))}
+          onClick={() =>
+            setImagemModal(imagemModal => ({
+              ...imagemModal,
+              rotate: (imagemModal.rotate - 90 + 360) % 360
+            }))
+          }
         >
           Rotacionar -90°
         </button>
+
+        {/* Rotacionar +90° */}
         <button
           type="button"
           className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-semibold transition"
-          onClick={() => setImagemModal(imagemModal => ({ ...imagemModal, rotate: (imagemModal.rotate + 90) % 360 }))}
+          onClick={() =>
+            setImagemModal(imagemModal => ({
+              ...imagemModal,
+              rotate: (imagemModal.rotate + 90) % 360
+            }))
+          }
         >
           Rotacionar +90°
         </button>
 
-        {/* 🧠 Correção aqui */}
-      <button
-  type="button"
-  className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
-  onClick={() => {
-    const idx = imagens.findIndex(img => img.id === imagemModal.id);
-    const idParaExcluir = imagemModal.id;
+        {/* Excluir com correção definitiva */}
+        <button
+          type="button"
+          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
+          onClick={() => {
+            const idx = imagens.findIndex(img => img.id === imagemModal.id);
+            const idParaExcluir = imagemModal.id;
 
-    // Define próximo modal ANTES de atualizar o estado das imagens
-    let proximaImagem = null;
-    const restantes = imagens.filter(img => img.id !== idParaExcluir);
-    if (restantes.length > 0) {
-      if (idx < restantes.length) {
-        proximaImagem = restantes[idx]; // próxima
-      } else if (idx - 1 >= 0) {
-        proximaImagem = restantes[idx - 1]; // anterior
-      }
-    }
+            setImagemModal(null); // fecha modal primeiro
 
-    // Primeiro: fecha modal para evitar conflito DOM
-    setImagemModal(null);
+            setTimeout(() => {
+              setImagens(prev => {
+                const restantes = prev.filter(img => img.id !== idParaExcluir);
+                const proximaImagem =
+                  restantes.length > 0
+                    ? idx < restantes.length
+                      ? restantes[idx]
+                      : restantes[idx - 1] || null
+                    : null;
 
-    // Aguarda o DOM reagir antes de atualizar imagens
-    setTimeout(() => {
-      setImagens(prev => prev.filter(img => img.id !== idParaExcluir));
-      handleRemoveImage(idParaExcluir);
-      if (proximaImagem) {
-        setTimeout(() => setImagemModal(proximaImagem), 50); // reabre com nova imagem
-      }
-    }, 50); // tempo suficiente para desmontar o modal
-  }}
->
-    Excluir
-    </button>
+                if (proximaImagem) {
+                  setTimeout(() => {
+                    setImagemModal({ ...proximaImagem, rotate: proximaImagem.rotate || 0 });
+                  }, 50);
+                }
+
+                return restantes;
+              });
+
+              handleRemoveImage(idParaExcluir); // remove do backend/banco
+            }, 50);
+          }}
+        >
+          Excluir
+        </button>
+
+        {/* Salvar rotação */}
         <button
           type="button"
           className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-semibold transition"
           onClick={() => {
-            setImagens(prev => prev.map(img => img.id === imagemModal.id ? { ...img, rotate: imagemModal.rotate } : img));
+            setImagens(prev =>
+              prev.map(img =>
+                img.id === imagemModal.id ? { ...img, rotate: imagemModal.rotate } : img
+              )
+            );
             setImagemModal(null);
           }}
         >
@@ -2222,6 +2256,7 @@ const deletarDirector = async (id) => {
         </button>
       </div>
 
+      {/* Botão Fechar */}
       <button
         type="button"
         className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -2233,6 +2268,7 @@ const deletarDirector = async (id) => {
     </div>
   </div>
 )}
+
 
 
           {/* Modal de Confirmação */}
@@ -2283,7 +2319,7 @@ const deletarDirector = async (id) => {
 )}
 
     </div>
-  );
+ </div> );
 }
 
 export default App;

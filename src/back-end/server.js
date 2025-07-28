@@ -12,10 +12,20 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 
+const whitelist = [
+  'http://localhost:5173',
+  'http://tpaonline-001-site2.ntempurl.com',
+  'https://appbiografiatpa.onrender.com'
+];
+
 app.use(cors({
-  
-  origin: 'http://tpaonline-001-site2.ntempurl.com',
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
 app.use(bodyParser.json());
 
