@@ -280,14 +280,14 @@ const handleDepoimentoChange = (idx, field, value) => {
 
 const handleDeleteSelectedImages = async () => {
   const imagensParaDeletar = imagens.filter(img => selectedImagesToDelete.includes(img.id));
-  const imagensDoBanco = imagensParaDeletar.filter(img => !img.file && img.id); // só banco
+  const imagensDoBanco = imagensParaDeletar.filter(img => !img.file && img.id); // imagens já salvas no banco
 
-  // 1. Se a imagem do modal for uma das selecionadas, feche o modal ANTES de tudo
+  // 1. Fecha o modal se a imagem estiver nele
   if (imagemModal && selectedImagesToDelete.includes(imagemModal.id)) {
     setImagemModal(null);
   }
 
-  // 2. Remover imagens do banco de dados (API DELETE)
+  // 2. Remove imagens do banco via API
   if (imagensDoBanco.length > 0) {
     try {
       const response = await fetch('https://appbiografiatpa.onrender.com/api/remover/imagens', {
@@ -300,29 +300,25 @@ const handleDeleteSelectedImages = async () => {
 
       const data = await response.json();
       if (!data.sucesso) {
-        // Você pode mostrar um alerta ou toast aqui
+        // Aqui você pode mostrar uma notificação
+        console.warn("Erro ao excluir imagens do banco:", data.mensagem);
       }
     } catch (err) {
-      // Lidar com erro de rede
+      console.error("Erro na requisição de exclusão:", err);
     }
   }
 
-  // 3. Atualiza o estado de imagens no React
+  // 3. Atualiza o estado de imagens
   const novasImagens = imagens.filter((img) => !selectedImagesToDelete.includes(img.id));
   setImagens(novasImagens);
   setSelectedImagesToDelete([]);
 
-  // 4. Atualiza input file (deve ser feito DEPOIS do estado atualizado)
+  // 4. Apenas limpa o input file (não usa DataTransfer para evitar conflitos no DOM)
   if (fileInputRef.current) {
-    const dt = new DataTransfer();
-    novasImagens.forEach((img) => {
-      if (img.file) {
-        dt.items.add(img.file);
-      }
-    });
-    fileInputRef.current.files = dt.files;
+    fileInputRef.current.value = '';
   }
 };
+
 
 
 
