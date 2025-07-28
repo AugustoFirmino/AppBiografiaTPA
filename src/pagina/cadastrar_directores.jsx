@@ -1135,29 +1135,33 @@ const limparFormulario = () => {
 
 
 const deletarDirector = async (id) => {
-
   try {
     const response = await fetch(`https://appbiografiatpa.onrender.com/api/deletar/director/${id}`, {
       method: 'DELETE',
     });
 
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+
     const data = await response.json();
 
     if (data.sucesso) {
-
       setMostrarConfirmacaoDeletar(false);
-      handleNavegacao('listar'); 
-      // Aqui você pode atualizar a lista ou redirecionar
-      // Ex: atualizarListaDeDirectores();
+      handleNavegacao('listar');
+      // Atualizar a lista ou mostrar feedback
+      // Exemplo: setMensagem_actualizar("Diretor deletado com sucesso.");
     } else {
-     setTipoMensagem("erro");
-      setMensagem_actualizar("Erro ao deletar o diretor.");
+      setTipoMensagem("erro");
+      setMensagem_actualizar(data.mensagem || "Erro ao deletar o diretor.");
     }
   } catch (error) {
-      setTipoMensagem("erro");
-      setMensagem_actualizar("Erro ao deletar o diretor.");
+    console.error("Erro ao deletar diretor:", error);
+    setTipoMensagem("erro");
+    setMensagem_actualizar("Erro de conexão ou servidor ao deletar o diretor.");
   }
 };
+
 
 
 
