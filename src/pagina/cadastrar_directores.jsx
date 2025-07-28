@@ -882,27 +882,27 @@ const atualizarImagens = async (id_director, imagens) => {
 };
 
 
-const handleSubmit = async e => {
+const handleSubmit = async (e) => {
   e.preventDefault();
   setEnviando(true);
+  setCarregando(true); // Ativa spinner
   setMensagem("");
+  setTipoMensagem("");
 
-
-   // limpa mensagem anterior
-    
-  setTipoMensagem(""); 
-
+  // Validação da data de nascimento
   if (!validarData(form.nascimento)) {
-  setErroNascimento("Data de nascimento inválida! Use o formato AAAA-MM-DD.");
-  return;
-} else {
-  setErroNascimento(""); // limpa erro se a data for válida
-}
+    setErroNascimento("Data de nascimento inválida! Use o formato AAAA-MM-DD.");
+    setEnviando(false);
+    setCarregando(false);
+    return;
+  } else {
+    setErroNascimento("");
+  }
 
   try {
     const formData = new FormData();
 
-    // Serializar os campos do formulário
+    // Serializa os campos do formulário
     Object.entries(form).forEach(([key, value]) => {
       if (key === 'depoimentos') {
         formData.append('depoimentos', JSON.stringify(value));
@@ -915,78 +915,53 @@ const handleSubmit = async e => {
       }
     });
 
-    //funcao para garantir que envia sempre uma data valida
-    if (form.data_publicacao) {
-  formData.append('data_publicacao', form.data_publicacao);
-   } else {
-  formData.append('data_publicacao', new Date().toISOString().slice(0, 19).replace('T', ' '));
-   }
+    // Garante que a data_publicacao seja válida
+    if (!form.data_publicacao) {
+      formData.append('data_publicacao', new Date().toISOString().slice(0, 19).replace('T', ' '));
+    }
 
-    // Envia o formulário
+    // Envio do formulário principal
     const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/directores', {
       method: 'POST',
       body: formData
     });
 
-    const data = await resp.json(); // 👈 pega o JSON da resposta
+    const data = await resp.json();
 
     if (resp.ok && data.sucesso) {
-      const idDiretor = data.id; // 👈 aqui está o ID do novo cadastro
-   
-      // Aqui você pode fazer outro fetch para cadastrar os depoimentos, se quiser separado:
-      // await enviarDepoimentos(idDiretor);
+      const idDiretor = data.id;
+
+      // Envia todas as partes associadas
+      await Promise.all([
+        enviarImagens(idDiretor, imagens),
+        enviarQualificacoes(idDiretor),
+        enviarExperiencias(idDiretor, experiencias),
+        enviarIdiomas(idDiretor, idiomas),
+        enviarContactos(idDiretor, contactos),
+        enviarPremios(idDiretor, premios),
+        enviarDepoimentos(idDiretor)
+      ]);
+
+      // Mensagem de sucesso
       setTipoMensagem("sucesso");
-      setMensagem('Cadastro realizado com sucesso!');
-     
-      //funcao para enviar imagens
-       enviarImagens(idDiretor,imagens);
+      setMensagem("Cadastro realizado com sucesso!");
 
-      //funcao para enviar qualificacoes
-       enviarQualificacoes(idDiretor);
-
-       //funcao para enviar experiencias
-       enviarExperiencias(idDiretor,experiencias);
-
-      //funcao para enviar ediomas
-      enviarIdiomas (idDiretor,idiomas);
-
-
-      //função para enviar contactos
-      enviarContactos(idDiretor, contactos);
-
-
-      //funcao para premios
-      enviarPremios(idDiretor,premios);
-
-
-      //funcao para enviar depoimentos
-      enviarDepoimentos(idDiretor);
-
-
-      setForm({ ...initialState, data_publicacao: getTodayDate() });
-      setImagens([]);
-      setImagemModal(null);
-
-      //funcao para limpar todos registo dos campos input
-
-      
+      // Limpa formulário e imagens
       limparFormulario();
-    } else {
-      setTipoMensagem("erro"); 
-      setMensagem('Erro ao cadastrar. Tente novamente.');
 
+    } else {
+      setTipoMensagem("erro");
+      setMensagem("Erro ao cadastrar. Tente novamente.");
     }
 
   } catch (err) {
-     setTipoMensagem("erro");
-    setMensagem('Erro de conexão com o servidor.');
+    setTipoMensagem("erro");
+    setMensagem("Erro de conexão com o servidor.");
+  } finally {
+    setEnviando(false);
+    setCarregando(false);
+    setTimeout(() => setMensagem(""), 3000); // Limpa mensagem após 3s
   }
-   finally {
-    setCarregando(false); // esconde spinner
-    setTimeout(() => setMensagem(""), 3000); // limpa msg
-  }
-
-  setEnviando(false);
 };
 
   const handleLogout = async () => {
