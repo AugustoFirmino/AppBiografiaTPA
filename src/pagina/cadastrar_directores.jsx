@@ -164,6 +164,8 @@ useEffect(() => {
 
 
 
+
+
    //para qualificacoes
    const handleChangeQualificacao = (index, value) => {
   const novas = [...qualificacoes];
@@ -277,17 +279,16 @@ const handleDepoimentoChange = (idx, field, value) => {
   };
 
 
-
 const handleDeleteSelectedImages = async () => {
   const imagensParaDeletar = imagens.filter(img => selectedImagesToDelete.includes(img.id));
-  const imagensDoBanco = imagensParaDeletar.filter(img => !img.file && img.id); // imagens já salvas no banco
+  const imagensDoBanco = imagensParaDeletar.filter(img => !img.file && img.id);
 
-  // 1. Fecha o modal se a imagem estiver nele
+  // 1. Fecha o modal de imagem ANTES de alterar o estado
   if (imagemModal && selectedImagesToDelete.includes(imagemModal.id)) {
     setImagemModal(null);
   }
 
-  // 2. Remove imagens do banco via API
+  // 2. Remove imagens do banco (se houver)
   if (imagensDoBanco.length > 0) {
     try {
       const response = await fetch('https://appbiografiatpa.onrender.com/api/remover/imagens', {
@@ -300,7 +301,6 @@ const handleDeleteSelectedImages = async () => {
 
       const data = await response.json();
       if (!data.sucesso) {
-        // Aqui você pode mostrar uma notificação
         console.warn("Erro ao excluir imagens do banco:", data.mensagem);
       }
     } catch (err) {
@@ -308,16 +308,22 @@ const handleDeleteSelectedImages = async () => {
     }
   }
 
-  // 3. Atualiza o estado de imagens
-  const novasImagens = imagens.filter((img) => !selectedImagesToDelete.includes(img.id));
-  setImagens(novasImagens);
+  // 3. Atualiza o estado de imagens com segurança
+  setImagens(prev => {
+    const novas = prev.filter(img => !selectedImagesToDelete.includes(img.id));
+    return novas;
+  });
+
+  // 4. Limpa seleção
   setSelectedImagesToDelete([]);
 
-  // 4. Apenas limpa o input file (não usa DataTransfer para evitar conflitos no DOM)
+  // 5. Limpa input file de forma segura (sem DataTransfer)
   if (fileInputRef.current) {
+    // Apenas limpa o valor
     fileInputRef.current.value = '';
   }
 };
+
 
 
 
@@ -1214,6 +1220,11 @@ const deletarDirector = async (id) => {
 
   
 
+   useEffect(() => {
+  if (imagemModal && !imagens.find(img => img.id === imagemModal.id)) {
+    setImagemModal(null);
+  }
+}, [imagens, imagemModal]);
 
 
 
