@@ -80,6 +80,7 @@ function App() {
   const dataMax = new Date(hoje.getFullYear() - 18, hoje.getMonth(), hoje.getDate()).toISOString().split('T')[0];
   const dataMin = new Date(hoje.getFullYear() - 120, hoje.getMonth(), hoje.getDate()).toISOString().split('T')[0];
 
+ const [erro, setErro] = useState(null);
   // funcao para direcionar a pagina actualizacao de dados para o director selecionado
    const handleSelecionarDirector = (id) => {
 
@@ -444,6 +445,7 @@ const handleRemoveImage = async (id) => {
   const [tipoMensagem, setTipoMensagem] = useState("");
   const [carregando, setCarregando] = useState(false);  
   
+  const [dadosCarregados, setDadosCarregados] = useState(false);
   const [mostrarConfirmacaoDeletar, setMostrarConfirmacaoDeletar] = useState(false);
 
   const enviarImagens = async (id_director, imagens) => {
@@ -983,50 +985,54 @@ const handleSubmit = async (e) => {
   };
 
 
-// funcao para buscar todos os dados do director selecionado
+// função para buscar todos os dados do director selecionado
 const carregarDadosDoDirector = async (id) => {
   try {
-   const resp = await fetch(`https://appbiografiatpa.onrender.com/api/directores/${id}`);
-const data = await resp.json();
+    const resp = await fetch(`https://appbiografiatpa.onrender.com/api/directores/${id}`);
+    
+    if (!resp.ok) throw new Error("Erro ao buscar dados do director");
 
+    const data = await resp.json();
 
-// Calcular idade com base na data de nascimento
-let idade = '';
-if (data.nascimento) {
-  const hoje = new Date();
-  const dataNasc = new Date(data.nascimento);
-  let anos = hoje.getFullYear() - dataNasc.getFullYear();
-  const m = hoje.getMonth() - dataNasc.getMonth();
-  if (m < 0 || (m === 0 && hoje.getDate() < dataNasc.getDate())) {
-    anos--;
-  }
-  idade = anos >= 0 ? String(anos) : '';
-}
+    if (!data || typeof data !== 'object') {
+      console.warn('Dados inválidos recebidos do backend:', data);
+      return;
+    }
 
-// Preencher o formulário principal com idade incluída
-setForm(prev => ({
-  ...prev,
-  id: data.id || null,
-  name: data.nome || '',
-  nacionalidade: data.nacionalidade || '',
-  nascimento: data.nascimento ? data.nascimento.split('T')[0] : '',
-  falecimento: data.falecimento ? data.falecimento.split('T')[0] : '',
-  email: data.email || '',
-  cargo: data.cargo || '',
-  ocupacao: data.ocupacao || '',
-  link: data.link || '',
-  biografia: data.biografia || '',
-  data_publicacao: data.data_publicacao || getTodayDate(),
-  idade: idade // 
-}));
+    // Calcular idade com base na data de nascimento
+    let idade = '';
+    if (data.nascimento) {
+      const hoje = new Date();
+      const dataNasc = new Date(data.nascimento);
+      let anos = hoje.getFullYear() - dataNasc.getFullYear();
+      const m = hoje.getMonth() - dataNasc.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < dataNasc.getDate())) {
+        anos--;
+      }
+      idade = anos >= 0 ? String(anos) : '';
+    }
 
-
-
+    // Preencher o formulário principal
+    setForm(prev => ({
+      ...prev,
+      id: data.id || null,
+      name: data.nome || '',
+      nacionalidade: data.nacionalidade || '',
+      nascimento: data.nascimento ? data.nascimento.split('T')[0] : '',
+      falecimento: data.falecimento ? data.falecimento.split('T')[0] : '',
+      email: data.email || '',
+      cargo: data.cargo || '',
+      ocupacao: data.ocupacao || '',
+      link: data.link || '',
+      biografia: data.biografia || '',
+      data_publicacao: data.data_publicacao || getTodayDate(),
+      idade: idade
+    }));
 
     // Fotos
-const imagensDoBanco = Array.isArray(data.fotos)
+    const imagensDoBanco = Array.isArray(data.fotos)
       ? data.fotos.map(foto => ({
-          id: foto.id, // 👈 ID REAL do banco (INT)
+          id: foto.id,
           url: `https://appbiografiatpa.onrender.com/${foto.caminho}`,
           descricao: foto.descricao || '',
           file: null,
@@ -1078,17 +1084,15 @@ const imagensDoBanco = Array.isArray(data.fotos)
         : [{ titulo: '', descricao: '' }]
     );
 
-    // Contactos (caso esteja no retorno)
-    if (data.contactos && Array.isArray(data.contactos)) {
-      setContactos(
-        data.contactos.map(c => ({ telefone: c.telefone }))
-      );
+    // Contactos
+    if (Array.isArray(data.contactos)) {
+      setContactos(data.contactos.map(c => ({ telefone: c.telefone })));
     } else {
       setContactos([{ telefone: '' }]);
     }
 
   } catch (error) {
-
+    console.error('Erro ao carregar dados do director:', error);
   }
 };
 
@@ -1172,28 +1176,71 @@ const deletarDirector = async (id) => {
 };
 
 
-   useEffect(() => {
-  if (imagemModal && !imagens.find(img => img.id === imagemModal.id)) {
-    setImagemModal(null);
-  }
-}, [imagens, imagemModal]);
+ 
+const LoaderOverlay = () => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-none backdrop-blur-sm pointer-events-none">
+      <div className="relative w-32 h-32">
+        {[...Array(10)].map((_, i) => {
+          const angle = (i * 360) / 10;
+          const radius = 40;
+          const x = radius * Math.cos((angle * Math.PI) / 180);
+          const y = radius * Math.sin((angle * Math.PI) / 180);
+
+          return (
+            <span
+              key={i}
+              className="absolute w-4 h-4 bg-blue-500 rounded-full animate-ping"
+              style={{
+                top: `calc(50% + ${y}px - 0.5rem)`,
+                left: `calc(50% + ${x}px - 0.5rem)`,
+                animationDelay: `${i * 0.1}s`
+              }}
+            ></span>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 
-  useEffect(() => {
-  if (idDirector) {
-    carregarDadosDoDirector(idDirector);
-  }
+
+useEffect(() => {
+  if (!idDirector) return;
+
+  const carregar = async () => {
+    setCarregando(true);
+    setErro(null);
+    setDadosCarregados(false);
+
+    try {
+      await carregarDadosDoDirector(idDirector);
+      setDadosCarregados(true);
+    } catch (err) {
+      console.error('Erro ao carregar dados:', err);
+      setErro('Erro ao carregar dados do director.');
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  carregar();
 }, [idDirector]);
-
-  
-
-
 
 
 
   return (
 
     <div>
+      {carregando ? (
+      <div>{carregando && <LoaderOverlay />}</div>
+) : erro ? (
+  <p className="text-red-500">{erro}</p>
+) : (
+  <div>
+  
+
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 mt-8 mb-8">
 
       {/* Barra de Navegação */}
@@ -1687,7 +1734,11 @@ const deletarDirector = async (id) => {
       <form onSubmit={handleSubmitActualizarDados} className="space-y-6">
         <button
   className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium py-1.5 px-4 rounded-lg shadow-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1"
-  onClick={() =>  setMostrarConfirmacaoDeletar(true)}
+  onClick={() =>  
+    {setImagemModal(null); 
+   setMostrarConfirmacaoDeletar(true)}
+   
+   }
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -2112,7 +2163,7 @@ const deletarDirector = async (id) => {
           </div>
         )}
 
- {imagemModal && (
+ {imagemModal && imagens.some(img => img.id === imagemModal.id) && (
   <div
     className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
     onClick={() => setImagemModal(null)}
@@ -2131,10 +2182,11 @@ const deletarDirector = async (id) => {
           onClick={() => {
             const idx = imagens.findIndex(img => img.id === imagemModal.id);
             if (idx > 0) {
-              setImagemModal({ ...imagens[idx - 1], rotate: imagens[idx - 1].rotate || 0 });
+              const anterior = imagens[idx - 1];
+              setImagemModal({ ...anterior, rotate: anterior.rotate || 0 });
             }
           }}
-          disabled={imagens.findIndex(img => img.id === imagemModal.id) === 0}
+          disabled={imagens.findIndex(img => img.id === imagemModal.id) <= 0}
           aria-label="Anterior"
         >
           <span style={{ width: 20, height: 20 }}>&#8592;</span>
@@ -2157,11 +2209,14 @@ const deletarDirector = async (id) => {
           style={{ fontSize: 20, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => {
             const idx = imagens.findIndex(img => img.id === imagemModal.id);
-            if (idx < imagens.length - 1) {
-              setImagemModal({ ...imagens[idx + 1], rotate: imagens[idx + 1].rotate || 0 });
+            if (idx !== -1 && idx < imagens.length - 1) {
+              const proxima = imagens[idx + 1];
+              setImagemModal({ ...proxima, rotate: proxima.rotate || 0 });
             }
           }}
-          disabled={imagens.findIndex(img => img.id === imagemModal.id) === imagens.length - 1}
+          disabled={
+            imagens.findIndex(img => img.id === imagemModal.id) === imagens.length - 1
+          }
           aria-label="Próxima"
         >
           <span style={{ width: 20, height: 20 }}>&#8594;</span>
@@ -2203,7 +2258,7 @@ const deletarDirector = async (id) => {
           Rotacionar +90°
         </button>
 
-        {/* Excluir com correção definitiva */}
+        {/* Excluir com segurança */}
         <button
           type="button"
           className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
@@ -2211,28 +2266,15 @@ const deletarDirector = async (id) => {
             const idx = imagens.findIndex(img => img.id === imagemModal.id);
             const idParaExcluir = imagemModal.id;
 
-            setImagemModal(null); // fecha modal primeiro
+            setImagemModal(null); // fecha o modal antes de remover
 
             setTimeout(() => {
               setImagens(prev => {
                 const restantes = prev.filter(img => img.id !== idParaExcluir);
-                const proximaImagem =
-                  restantes.length > 0
-                    ? idx < restantes.length
-                      ? restantes[idx]
-                      : restantes[idx - 1] || null
-                    : null;
-
-                if (proximaImagem) {
-                  setTimeout(() => {
-                    setImagemModal({ ...proximaImagem, rotate: proximaImagem.rotate || 0 });
-                  }, 50);
-                }
-
                 return restantes;
               });
 
-              handleRemoveImage(idParaExcluir); // remove do backend/banco
+              handleRemoveImage(idParaExcluir); // chamar API ou função do backend
             }, 50);
           }}
         >
@@ -2319,6 +2361,8 @@ const deletarDirector = async (id) => {
 )}
 
     </div>
+      </div>
+)}
  </div> );
 }
 
