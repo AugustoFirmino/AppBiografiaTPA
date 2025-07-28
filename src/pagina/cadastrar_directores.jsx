@@ -2177,38 +2177,39 @@ const deletarDirector = async (id) => {
         </button>
 
         {/* 🧠 Correção aqui */}
-        <button
-          type="button"
-          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
-          onClick={() => {
-            const idx = imagens.findIndex(img => img.id === imagemModal.id);
-            const idParaExcluir = imagemModal.id;
+      <button
+  type="button"
+  className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-semibold transition"
+  onClick={() => {
+    const idx = imagens.findIndex(img => img.id === imagemModal.id);
+    const idParaExcluir = imagemModal.id;
 
-            // Remove e atualiza estado de forma segura
-            setImagens(prev => {
-              const novas = prev.filter(img => img.id !== idParaExcluir);
+    // Define próximo modal ANTES de atualizar o estado das imagens
+    let proximaImagem = null;
+    const restantes = imagens.filter(img => img.id !== idParaExcluir);
+    if (restantes.length > 0) {
+      if (idx < restantes.length) {
+        proximaImagem = restantes[idx]; // próxima
+      } else if (idx - 1 >= 0) {
+        proximaImagem = restantes[idx - 1]; // anterior
+      }
+    }
 
-              if (novas.length > 0) {
-                if (idx < novas.length) {
-                  setImagemModal(novas[idx]); // próxima
-                } else if (idx - 1 >= 0) {
-                  setImagemModal(novas[idx - 1]); // anterior
-                } else {
-                  setImagemModal(null);
-                }
-              } else {
-                setImagemModal(null);
-              }
+    // Primeiro: fecha modal para evitar conflito DOM
+    setImagemModal(null);
 
-              // Executa a função de remoção
-              handleRemoveImage(idParaExcluir);
-              return novas;
-            });
-          }}
-        >
-          Excluir
-        </button>
-
+    // Aguarda o DOM reagir antes de atualizar imagens
+    setTimeout(() => {
+      setImagens(prev => prev.filter(img => img.id !== idParaExcluir));
+      handleRemoveImage(idParaExcluir);
+      if (proximaImagem) {
+        setTimeout(() => setImagemModal(proximaImagem), 50); // reabre com nova imagem
+      }
+    }, 50); // tempo suficiente para desmontar o modal
+  }}
+>
+    Excluir
+    </button>
         <button
           type="button"
           className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-semibold transition"
