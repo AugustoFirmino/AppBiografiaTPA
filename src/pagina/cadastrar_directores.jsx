@@ -401,45 +401,34 @@ const handleImageChange = e => {
 const handleRemoveImage = async (id) => {
   const imagem = imagens.find(img => img.id === id);
 
-  // Caso a imagem seja antiga (veio do backend e já tem ID no banco)
+  // Se imagem antiga (já no banco)
   if (imagem && !imagem.file && imagem.id) {
-    
-
     try {
       const response = await fetch(`https://appbiografiatpa.onrender.com/api/deletar/imagem/${imagem.id}`, {
         method: 'DELETE',
       });
 
       const data = await response.json();
-      if (!data.sucesso) {
-    
-        return;
-      }
+      if (!data.sucesso) return;
     } catch (error) {
-     
       return;
     }
   }
 
-  // Atualiza o estado e input file
-  setImagens(prev => {
-    const novas = prev.filter(img => img.id !== id);
+  // Atualiza o estado
+  setImagens(prev => prev.filter(img => img.id !== id));
 
-    if (fileInputRef.current) {
-      const dt = new DataTransfer();
-      novas.forEach(img => {
-        if (img.file) dt.items.add(img.file);
-      });
-      fileInputRef.current.files = dt.files;
-    }
+  // Limpa o file input (opcional)
+  if (fileInputRef.current) {
+    fileInputRef.current.value = '';
+  }
 
-    return novas;
-  });
-
+  // Fecha o modal se estiver aberto
   if (imagemModal?.id === id) {
     setImagemModal(null);
   }
 };
+
 
 
   // Salvar (envio real para o servidor)
