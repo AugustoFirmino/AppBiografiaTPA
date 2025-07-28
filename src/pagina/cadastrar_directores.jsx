@@ -278,12 +278,16 @@ const handleDepoimentoChange = (idx, field, value) => {
 
 
 
-  //funcao para deletar várias imagens do banco de dados
 const handleDeleteSelectedImages = async () => {
   const imagensParaDeletar = imagens.filter(img => selectedImagesToDelete.includes(img.id));
   const imagensDoBanco = imagensParaDeletar.filter(img => !img.file && img.id); // só banco
 
-  // 1. Remover imagens do banco de dados (chamar API DELETE)
+  // 1. Se a imagem do modal for uma das selecionadas, feche o modal ANTES de tudo
+  if (imagemModal && selectedImagesToDelete.includes(imagemModal.id)) {
+    setImagemModal(null);
+  }
+
+  // 2. Remover imagens do banco de dados (API DELETE)
   if (imagensDoBanco.length > 0) {
     try {
       const response = await fetch('https://appbiografiatpa.onrender.com/api/remover/imagens', {
@@ -296,34 +300,27 @@ const handleDeleteSelectedImages = async () => {
 
       const data = await response.json();
       if (!data.sucesso) {
-      
+        // Você pode mostrar um alerta ou toast aqui
       }
     } catch (err) {
-      
+      // Lidar com erro de rede
     }
   }
 
-
-
-
-  // 2. Remover do estado do React
-  setImagens((prev) => prev.filter((img) => !selectedImagesToDelete.includes(img.id)));
+  // 3. Atualiza o estado de imagens no React
+  const novasImagens = imagens.filter((img) => !selectedImagesToDelete.includes(img.id));
+  setImagens(novasImagens);
   setSelectedImagesToDelete([]);
 
-  // 3. Atualiza o input file para manter apenas os restantes
+  // 4. Atualiza input file (deve ser feito DEPOIS do estado atualizado)
   if (fileInputRef.current) {
     const dt = new DataTransfer();
-    imagens.forEach((img) => {
-      if (!selectedImagesToDelete.includes(img.id) && img.file) {
+    novasImagens.forEach((img) => {
+      if (img.file) {
         dt.items.add(img.file);
       }
     });
     fileInputRef.current.files = dt.files;
-  }
-
-  // 4. Fecha modal se a imagem modal foi deletada
-  if (imagemModal && selectedImagesToDelete.includes(imagemModal.id)) {
-    setImagemModal(null);
   }
 };
 
@@ -1199,7 +1196,7 @@ const limparFormulario = () => {
 const deletarDirector = async (id) => {
 
   try {
-    const response = await fetch(`http://localhost:3001/api/deletar/director/${id}`, {
+    const response = await fetch(`https://appbiografiatpa.onrender.com/api/deletar/director/${id}`, {
       method: 'DELETE',
     });
 
