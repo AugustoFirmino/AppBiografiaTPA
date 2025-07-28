@@ -641,97 +641,73 @@ const validarData = (data) => {
 
 
 
-const handleSubmitActualizarDados = async e => {
+const handleSubmitActualizarDados = async (e) => {
   e.preventDefault();
   setEnviando(true);
-  setCarregando(true); // inicia spinner
-
+  setCarregando(true);
   setMensagem("");
-   // limpa mensagem anterior
-    
-  setTipoMensagem("");  
+  setTipoMensagem("");
 
-
+  // Validação da data de nascimento
   if (!validarData(form.nascimento)) {
-  setErroNascimento("Data de nascimento inválida! Use o formato AAAA-MM-DD.");
-  return;
-} else {
-  setErroNascimento(""); // limpa erro se a data for válida
-}
+    setErroNascimento("Data de nascimento inválida! Use o formato AAAA-MM-DD.");
+    setEnviando(false);
+    setCarregando(false);
+    return;
+  } else {
+    setErroNascimento("");
+  }
 
   try {
-   const formData = new FormData();
+    const formData = new FormData();
 
-   
-formData.append("name", form.name);
-formData.append("nacionalidade", form.nacionalidade);
-formData.append("nascimento", form.nascimento);
-formData.append("falecimento", form.falecimento);
-formData.append("email", form.email);
-formData.append("cargo", form.cargo);
-formData.append("ocupacao", form.ocupacao);
-formData.append("link", form.link);
-formData.append("biografia", form.biografia);
-formData.append("data_publicacao", form.data_publicacao);
+    // Campos do formulário
+    formData.append("name", form.name);
+    formData.append("nacionalidade", form.nacionalidade);
+    formData.append("nascimento", form.nascimento);
+    formData.append("falecimento", form.falecimento);
+    formData.append("email", form.email);
+    formData.append("cargo", form.cargo);
+    formData.append("ocupacao", form.ocupacao);
+    formData.append("link", form.link);
+    formData.append("biografia", form.biografia);
+    formData.append("data_publicacao", form.data_publicacao);
 
-
-
-
-    // Envia o formulário
-     const response = await fetch(`https://appbiografiatpa.onrender.com/api/actualizar/directores/${idDirector}`, {
+    // Envio principal
+    const response = await fetch(`https://appbiografiatpa.onrender.com/api/actualizar/directores/${idDirector}`, {
       method: 'PUT',
-
       body: formData
     });
-    const data = await response.json(); // 👈 pega o JSON da resposta
+
+    const data = await response.json();
 
     if (response.ok && data.sucesso) {
-     
-  setMensagem('');
+      // Atualizações relacionadas (não precisam aguardar sequencialmente)
+      await Promise.all([
+        atualizarImagens(idDirector, imagens),
+        atualizarQualificacoes(idDirector, qualificacoes),
+        atualizarExperiencias(idDirector, experiencias),
+        atualizarIdiomas(idDirector, idiomas),
+        atualizarContactos(idDirector, contactos),
+        atualizarPremios(idDirector, premios),
+        atualizarDepoimentos(idDirector, depoimentos),
+      ]);
 
-      //funcao para enviar imagens
-       atualizarImagens(idDirector,imagens);
-
-      //funcao para enviar qualificacoes
-       atualizarQualificacoes(idDirector,qualificacoes);
-
-       //funcao para enviar experiencias
-       atualizarExperiencias(idDirector,experiencias);
-
-      //funcao para enviar ediomas
-      atualizarIdiomas(idDirector,idiomas);
-
-
-      //função para enviar contactos
-      atualizarContactos(idDirector, contactos);
-
-
-      //funcao para premios
-      atualizarPremios(idDirector,premios);
-
-
-      //funcao para enviar depoimentos
-      atualizarDepoimentos(idDirector,depoimentos);
-
-     setMensagem_actualizar('Dados actualizados com sucesso');
+      setMensagem_actualizar("Dados atualizados com sucesso");
       setTipoMensagem("sucesso");
-  
     } else {
+      setMensagem_actualizar("Erro ao atualizar dados. Tente novamente.");
       setTipoMensagem("erro");
-      setMensagem_actualizar('Erro ao actualizar dados. Tente novamente.');
-      
     }
 
   } catch (err) {
+    setMensagem_actualizar("Erro de conexão com o servidor.");
     setTipoMensagem("erro");
-    setMensagem_actualizar('Erro de conexão com o servidor.');
+  } finally {
+    setCarregando(false);
+    setEnviando(false);
+    setTimeout(() => setMensagem_actualizar(""), 3000);
   }
-   finally {
-    setCarregando(false); // esconde spinner
-    setTimeout(() => setMensagem_actualizar(""), 3000); // limpa msg
-  }
-
-  setEnviando(false);
 };
 
 
@@ -1152,7 +1128,6 @@ const imagensDoBanco = Array.isArray(data.fotos)
     setMostrarConfirmacao(false);
   };
 
-
 const limparFormulario = () => {
   setForm({
     name: '',
@@ -1164,8 +1139,7 @@ const limparFormulario = () => {
     ocupacao: '',
     link: '',
     biografia: '',
-    data_publicacao: '',
-    // e qualquer outro campo que você esteja usando
+    data_publicacao: getTodayDate(),
   });
 
   setIdiomas([]);
@@ -1179,6 +1153,7 @@ const limparFormulario = () => {
 
   if (fileInputRef.current) fileInputRef.current.value = '';
 };
+
 
 
 
