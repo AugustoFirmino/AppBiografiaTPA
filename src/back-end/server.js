@@ -21,6 +21,11 @@ const whitelist = [
   'https://appbiografiatpa.onrender.com'
 ];
 
+
+// Caminho absoluto até a raiz do projeto (ex: /app)
+const raizProjeto = path.join(__dirname, '..', '..', '..');
+
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || whitelist.includes(origin)) {
@@ -36,7 +41,10 @@ app.use(bodyParser.json());
 
 app.use('/api', diretorRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// ✅ Tornar /uploads acessível publicamente
+app.use('/uploads', express.static(path.join(raizProjeto, 'uploads')));
+
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
