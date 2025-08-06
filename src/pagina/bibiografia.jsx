@@ -39,7 +39,7 @@ function Inicio() {
 
   // Para galeria: fotos e descrições
   const galeriaImages = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `https://appbiografiatpa.onrender.com/${f.caminho}`)
+    ? director.fotos.map(f => `http://localhost:3001${f.caminho}`)
     : [];
   const galeriaDescricoes = Array.isArray(director.fotos)
     ? director.fotos.map(f => `${f.descricao}`)

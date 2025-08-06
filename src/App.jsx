@@ -15,7 +15,7 @@ import Ver_Biografia from './pagina/ver_biografia'
 import Listar_Directores from './pagina/listar_directores'
 import Login from './pagina/login'
 
-import Teste from './pagina/teste'
+
 import './App.css';
 function App() {
   return (
@@ -29,7 +29,6 @@ function App() {
         <Route path="/" element={<Home />} /> {/* Rota para Home */}
         <Route path="/biografia/:id" element={<Biografia />} /> {/* Rota para Biografia para ususarios */}
 
-      <Route path="/teste" element={<Teste />} /> {/* Rota para Biografia para ususarios */}
 
      <Route path="/visualizar_biografia/:id" element={<Ver_Biografia />} /> {/* Rota para Biografia o admim visualizar */}
         <Route path="/listar_directores/:id" element={<Listar_Directores />} /> {/* Rota para Biografia o admim listar */}

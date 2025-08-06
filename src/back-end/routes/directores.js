@@ -1,32 +1,26 @@
 // routes/diretores.js
 import express from 'express';
-
-import { storage, cloudinary } from '../cloudinary.js'; // ou caminho relativo correto
 import multer from 'multer';
-
-
 import path from 'path';
 import fs from 'fs';
-
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
 import { fileURLToPath } from 'url';
-
 import dotenv from 'dotenv';
-
-dotenv.config(); 
-
 import { pool } from '../db.js';
 
 
 
-// Diretório base
-const upload = multer({ storage });
+dotenv.config();
+
 const router = express.Router();
 
+// Configuração de armazenamento em memória
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-
+// Resolver __dirname com ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const raizProjeto = path.resolve(__dirname, '..');
 
 
 router.post('/', (req, res) => {
@@ -69,20 +63,6 @@ router.post('/', (req, res) => {
 
 
 
-
-
-router.post('/teste', upload.single('imagem'), async (req, res) => {
-  try {
-    const file = req.file;
-    if (!file) return res.status(400).json({ erro: 'Nenhuma imagem enviada.' });
-
-    res.status(200).json({ sucesso: true, url: file.path }); // file.path = URL da imagem no Cloudinary
-  } catch (error) {
-    console.error('Erro no upload:', error);
-    console.log(error);
-    res.status(500).json({ erro: 'Erro ao enviar imagem.' });
-  }
-});
 
 
 
@@ -274,8 +254,7 @@ router.post('/cadastrar/depoimentos', async (req, res) => {
   }
 });
 
-
-// rotas para cadastrar as imagens
+// POST para salvar imagens localmente
 router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
   try {
     const { id_director } = req.body;
@@ -285,23 +264,38 @@ router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
       return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
     }
 
+    // Criar pasta: /uploads/directores/{id_director}
+    const pastaDestino = path.join(raizProjeto, 'uploads', id_director);
+    fs.mkdirSync(pastaDestino, { recursive: true });
+
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
       const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
+      const timestamp = Date.now();
+      const nomeImagem = `${timestamp}_${file.originalname}`;
+      const caminhoFinal = path.join(pastaDestino, nomeImagem);
+
+      // Salvar no disco
+      fs.writeFileSync(caminhoFinal, file.buffer);
+
+      // URL pública para acessar
+      const urlImagem = `/uploads/${id_director}/${nomeImagem}`;
+
+      // Salvar no banco
       await pool.query(
         `INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)`,
-        [id_director, file.path, descricao] // Cloudinary retorna file.path com a URL pública
+        [id_director, urlImagem, descricao]
       );
     }
 
-    res.status(200).json({ sucesso: true, mensagem: 'Imagens salvas no Cloudinary!' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao salvar imagens no Cloudinary.' });
+    res.status(200).json({ sucesso: true, mensagem: 'Imagens salvas com sucesso!' });
+
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: 'Erro ao salvar as imagens.' });
   }
 });
-
 
 // Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
@@ -631,45 +625,59 @@ router.put('/actualizar/imagens', async (req, res) => {
 
 // Supondo que 'upload' já foi definido com: const upload = multer({ storage });
 
+// Atualiza imagens no storage e banco — substituindo as existentes
 router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res) => {
   try {
     const { id_director } = req.body;
     const arquivos = req.files;
-    const descricoes = req.body.descricoes || [];
 
-    if (!id_director) {
-      return res.status(400).json({ erro: "ID do diretor não fornecido." });
+    if (!id_director || !arquivos || arquivos.length === 0) {
+      return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
     }
 
-    if (!arquivos || arquivos.length === 0) {
-      return res.status(400).json({ erro: "Nenhuma imagem enviada." });
-    }
+    // Criar pasta se não existir
+    const pastaDestino = path.join(raizProjeto, 'uploads', id_director);
+    fs.mkdirSync(pastaDestino, { recursive: true });
 
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
-      const descricao = Array.isArray(descricoes) ? descricoes[i] : descricoes;
+      const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
-      // ✅ Cloudinary armazena a imagem e retorna URL em file.path
-      const cloudUrl = file?.path;
+      const nomeImagem = file.originalname; // mesmo nome do arquivo enviado
+      const caminhoFinal = path.join(pastaDestino, nomeImagem);
 
-      if (!cloudUrl) {
-        console.log(`⚠️ file.path não definido para imagem: ${file.originalname}`);
-        continue;
-      }
+      // ✅ Substituir imagem antiga por nova (mesmo nome)
+      fs.writeFileSync(caminhoFinal, file.buffer);
 
-      // ✅ Salva no banco de dados a URL da imagem no Cloudinary
-      await pool.query(
-        "INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)",
-        [id_director, cloudUrl, descricao || ""]
+      const urlImagem = `/uploads/${id_director}/${nomeImagem}`;
+
+      // ✅ Verifica se já existe imagem com esse caminho
+      const [rows] = await pool.query(
+        "SELECT id FROM imagens WHERE id_director = ? AND caminho = ?",
+        [id_director, urlImagem]
       );
+
+      if (rows.length > 0) {
+        // ✅ Atualiza descrição se já existir
+        await pool.query(
+          "UPDATE imagens SET descricao = ? WHERE id_director = ? AND caminho = ?",
+          [descricao, id_director, urlImagem]
+        );
+      } else {
+        // ✅ Insere nova imagem no banco
+        await pool.query(
+          "INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)",
+          [id_director, urlImagem, descricao]
+        );
+      }
     }
 
-    res.json({ sucesso: true, mensagem: "Imagens adicionadas com sucesso no Cloudinary!" });
+    res.json({ sucesso: true, mensagem: "Imagens atualizadas com sucesso." });
 
   } catch (err) {
-    console.error('Erro no servidor ao enviar imagens:', err);
+    console.error('❌ Erro ao atualizar imagens:', err);
     res.status(500).json({
-      erro: "Erro interno ao adicionar imagens no Cloudinary.",
+      erro: "Erro interno ao atualizar imagens.",
       detalhe: err.message
     });
   }
@@ -678,72 +686,80 @@ router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res
 
 
 //rota para deletar a imagem selecionada
+// ✅ ROTA PARA DELETAR IMAGEM POR ID
 router.delete('/deletar/imagem/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Buscar caminho da imagem
+    // 1. Buscar o caminho da imagem no banco
     const [rows] = await pool.query("SELECT caminho FROM imagens WHERE id = ?", [id]);
+
     if (rows.length === 0) {
-      return res.status(404).json({ erro: 'Imagem não encontrada' });
+      return res.status(404).json({ erro: 'Imagem não encontrada no banco de dados.' });
     }
 
-    const caminhoImagem = path.join(__dirname, '..', rows[0].caminho);
+    const caminhoRelativo = rows[0].caminho; // Ex: /uploads/37/imagem.jpg
+    const caminhoAbsoluto = path.join(__dirname, '..', caminhoRelativo);
 
-    // Remover arquivo físico se existir
-    if (fs.existsSync(caminhoImagem)) {
-      fs.unlinkSync(caminhoImagem);
+    // 2. Deletar arquivo físico se existir
+    if (fs.existsSync(caminhoAbsoluto)) {
+      fs.unlinkSync(caminhoAbsoluto);
+      console.log('🗑️ Imagem removida da pasta uploads:', caminhoAbsoluto);
+    } else {
+      console.warn('⚠️ Arquivo não encontrado na pasta:', caminhoAbsoluto);
     }
 
-    // Remover registro do banco
+    // 3. Remover registro do banco
     await pool.query("DELETE FROM imagens WHERE id = ?", [id]);
 
-    res.json({ sucesso: true });
-  } catch (error) {
-    
-    res.status(500).json({ erro: "Erro interno ao deletar imagem" });
+    res.json({ sucesso: true, mensagem: 'Imagem deletada com sucesso.' });
+
+  } catch (err) {
+    console.error('❌ Erro ao deletar imagem:', err);
+    res.status(500).json({ erro: 'Erro interno ao deletar imagem.' });
   }
 });
 
 
-
-
-// DELETE /api/remover/imagens
+// ✅ DELETE /api/remover/imagens
 router.delete('/remover/imagens', async (req, res) => {
-  const { ids } = req.body; // array de ids de imagens
+  const { ids } = req.body; // espera: { ids: [12, 13, 14] }
 
   if (!Array.isArray(ids) || ids.length === 0) {
     return res.status(400).json({ erro: "Nenhuma imagem selecionada para remoção." });
   }
 
   try {
-    // Buscar os caminhos das imagens a serem deletadas
+    // 1. Buscar caminhos das imagens no banco
     const [imagens] = await pool.query(
       `SELECT caminho FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
       ids
     );
 
-    // Deletar os arquivos do sistema
+    // 2. Remover arquivos do sistema
     for (const img of imagens) {
-      const caminho = path.join(__dirname, '..', img.caminho);
-      if (fs.existsSync(caminho)) fs.unlinkSync(caminho);
+      const caminhoFisico = path.join(__dirname, '..', img.caminho);
+      if (fs.existsSync(caminhoFisico)) {
+        fs.unlinkSync(caminhoFisico);
+        console.log('🗑️ Imagem deletada:', caminhoFisico);
+      } else {
+        console.warn('⚠️ Imagem não encontrada:', caminhoFisico);
+      }
     }
 
-    // Remover do banco de dados
+    // 3. Remover do banco de dados
     await pool.query(
       `DELETE FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
       ids
     );
 
-    res.json({ sucesso: true });
-  } catch (error) {
+    res.json({ sucesso: true, mensagem: 'Imagens removidas com sucesso.' });
 
+  } catch (error) {
+    console.error('❌ Erro ao remover imagens:', error);
     res.status(500).json({ erro: "Erro interno ao remover imagens." });
   }
 });
-
-
-
 
 
 

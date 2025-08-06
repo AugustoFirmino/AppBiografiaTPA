@@ -292,7 +292,7 @@ const handleDeleteSelectedImages = async () => {
   // 2. Remove imagens do banco (se houver)
   if (imagensDoBanco.length > 0) {
     try {
-      const response = await fetch('https://appbiografiatpa.onrender.com/api/remover/imagens', {
+      const response = await fetch('http://localhost:3001/api/remover/imagens', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -407,7 +407,7 @@ const handleRemoveImage = async (id) => {
   // Se imagem antiga (já no banco)
   if (imagem && !imagem.file && imagem.id) {
     try {
-      const response = await fetch(`https://appbiografiatpa.onrender.com/api/deletar/imagem/${imagem.id}`, {
+      const response = await fetch(`http://localhost:3001/api/deletar/imagem/${imagem.id}`, {
         method: 'DELETE',
       });
 
@@ -449,24 +449,37 @@ const handleRemoveImage = async (id) => {
   const [mostrarConfirmacaoDeletar, setMostrarConfirmacaoDeletar] = useState(false);
 
 const enviarImagens = async (id_director, imagens) => {
-  const formData = new FormData();
-  formData.append('id_director', id_director);
+  try {
+    const formData = new FormData();
 
-  imagens.forEach((img, i) => {
-    formData.append('imagens', img.file); // mesmo nome usado no backend
-    formData.append(`descricao_foto_${i + 1}`, img.descricao || "");
-  });
+    // Adiciona o ID do diretor
+    formData.append('id_director', id_director);
 
-  const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/imagens', {
-    method: 'POST',
-    body: formData
-  });
+    // Adiciona as imagens e descrições
+    imagens.forEach((img, i) => {
+      if (img.file) {
+        formData.append('imagens', img.file); // precisa ser o mesmo nome usado no backend: 'imagens'
+        formData.append(`descricao_foto_${i + 1}`, img.descricao || "");
+      }
+    });
 
-  const data = await resp.json();
-  if (data.sucesso) {
-    console.log("✅ Imagens cadastradas com sucesso!");
-  } else {
-    console.warn("⚠️ Erro:", data.erro);
+    // Faz a requisição
+    const resp = await fetch('http://localhost:3001/api/cadastrar/imagens', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await resp.json();
+
+    // Verificação do resultado
+    if (resp.ok && data.sucesso) {
+      console.log("✅ Imagens cadastradas com sucesso!");
+      return data; // retorna os dados para uso posterior
+    } else {
+      console.warn("⚠️ Erro no cadastro de imagens:", data.erro || 'Erro desconhecido');
+    }
+  } catch (err) {
+    console.error("❌ Erro de rede ou servidor:", err);
   }
 };
 
@@ -836,7 +849,7 @@ const atualizarImagens = async (id_director, imagens) => {
     // 1. Atualizar descrições das imagens EXISTENTES (já têm id)
     const imagensExistentes = imagens.filter(img => !img.file && img.id);
     if (imagensExistentes.length > 0) {
-      const response1 = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/imagens', {
+      const response1 = await fetch('http://localhost:3001/api/actualizar/imagens', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -864,7 +877,7 @@ const atualizarImagens = async (id_director, imagens) => {
         formData.append('descricoes', img.descricao || '');
       });
 
-      const response2 = await fetch('https://appbiografiatpa.onrender.com/api/actualizar/novas-imagens', {
+      const response2 = await fetch('http://localhost:3001/api/actualizar/novas-imagens', {
         method: 'PUT',
         body: formData
       });
@@ -1031,7 +1044,7 @@ const carregarDadosDoDirector = async (id) => {
     const imagensDoBanco = Array.isArray(data.fotos)
       ? data.fotos.map(foto => ({
           id: foto.id,
-          url: `https://appbiografiatpa.onrender.com/${foto.caminho}`,
+          url: `http://localhost:3001${foto.caminho}`,
           descricao: foto.descricao || '',
           file: null,
           rotate: 0,
