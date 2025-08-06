@@ -1,7 +1,10 @@
 // routes/diretores.js
 import express from 'express';
 
+import { storage, cloudinary } from '../cloudinary.js'; // ou caminho relativo correto
 import multer from 'multer';
+
+
 import path from 'path';
 import fs from 'fs';
 
@@ -18,7 +21,13 @@ import { pool } from '../db.js';
 
 
 
+// Diretório base
+const upload = multer({ storage });
 const router = express.Router();
+
+
+
+
 
 router.post('/', (req, res) => {
   const {
@@ -62,85 +71,53 @@ router.post('/', (req, res) => {
 
 
 
+router.post('/teste', upload.single('imagem'), async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) return res.status(400).json({ erro: 'Nenhuma imagem enviada.' });
 
-
-
-// Diretório base
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const baseUploadDir = path.join(__dirname, 'uploads');
-
-if (!fs.existsSync(baseUploadDir)) {
-  fs.mkdirSync(baseUploadDir);
-}
-
-const tempUploadDir = path.join(baseUploadDir, 'temp');
-fs.mkdirSync(tempUploadDir, { recursive: true });
-
-
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const tempPath = 'uploads/tmp';
-    fs.mkdirSync(tempPath, { recursive: true });
-    cb(null, tempPath);
-  },
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const ext = path.extname(file.originalname);
-    cb(null, `${timestamp}-${file.originalname}`);
+    res.status(200).json({ sucesso: true, url: file.path }); // file.path = URL da imagem no Cloudinary
+  } catch (error) {
+    console.error('Erro no upload:', error);
+    console.log(error);
+    res.status(500).json({ erro: 'Erro ao enviar imagem.' });
   }
 });
-const upload = multer({ storage });
 
 
-router.post('/cadastrar/directores', upload.array('fotos'), async (req, res) => {
+
+
+router.post('/cadastrar/directores', async (req, res) => {
   try {
-    const form = req.body;
+    const {
+      name, link, nacionalidade, ocupacao, nascimento, falecimento,
+      cargo, biografia, email
+    } = req.body;
 
-    // 1. Insere o diretor para obter o ID
-const [result] = await pool.query(
-  `INSERT INTO usuarios (
-    nome, link, nacionalidade, ocupacao, nascimento, falecimento,
-    cargo, biografia,  email, data_publicacao,
-   data_actualizacao
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
-  [
-    form.name,
-    form.link,
-    form.nacionalidade,
-    form.ocupacao,
-    form.nascimento || null,
-    form.falecimento || null,
-    form.cargo,
-    form.biografia,
-    
-    form.email,
-    
-    new Date(), // data_publicacao
-    new Date(), // data_actualizacao
-     
-  ]
-);
+    const [result] = await pool.query(
+      `INSERT INTO usuarios (
+        nome, link, nacionalidade, ocupacao, nascimento, falecimento,
+        cargo, biografia, email, data_publicacao, data_actualizacao
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        name,
+        link,
+        nacionalidade,
+        ocupacao,
+        nascimento || null,
+        falecimento || null,
+        cargo,
+        biografia,
+        email,
+        new Date(), // data_publicacao
+        new Date()  // data_actualizacao
+      ]
+    );
 
     const diretorId = result.insertId;
-    const pastaFinal = `uploads/${form.name.replace(/\s/g, "_")}-${diretorId}`;
-    fs.mkdirSync(pastaFinal, { recursive: true });
-
-    // 2. Move as fotos da pasta temporária para a final
-    const novasFotos = [];
-    req.files.forEach((file, index) => {
-      const novaPath = path.join(pastaFinal, path.basename(file.path));
-      fs.renameSync(file.path, novaPath);
-      novasFotos.push(novaPath);
-    });
-
-   
-
-    res.status(200).json({ sucesso: true, id: diretorId });
+    res.status(200).json({ sucesso: true, id: diretorId, mensagem: 'Diretor cadastrado com sucesso!' });
   } catch (err) {
-  
+    console.error(err);
     res.status(500).json({ erro: "Erro ao cadastrar diretor." });
   }
 });
@@ -308,31 +285,22 @@ router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
       return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
     }
 
-    const pastaFinal = `uploads/${id_director}`;
-    fs.mkdirSync(pastaFinal, { recursive: true });
-
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
-      const novaPath = path.join(pastaFinal, file.originalname);
-      fs.renameSync(file.path, novaPath);
-
       const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
       await pool.query(
         `INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)`,
-        [id_director, novaPath, descricao]
+        [id_director, file.path, descricao] // Cloudinary retorna file.path com a URL pública
       );
     }
 
-    res.status(200).json({ sucesso: true, mensagem: 'Imagens cadastradas com sucesso!' });
-
+    res.status(200).json({ sucesso: true, mensagem: 'Imagens salvas no Cloudinary!' });
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao cadastrar imagens.' });
+    console.error(err);
+    res.status(500).json({ erro: 'Erro ao salvar imagens no Cloudinary.' });
   }
 });
-
-
-
 
 
 // Rota GET /api/listar/directores
@@ -661,31 +629,51 @@ router.put('/actualizar/imagens', async (req, res) => {
 
 
 
+// Supondo que 'upload' já foi definido com: const upload = multer({ storage });
+
 router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res) => {
-  const { id_director } = req.body;
-  const arquivos = req.files;
-  const descricoes = req.body.descricoes || [];
-
   try {
-    // 🔁 NÃO excluir imagens antigas aqui!
+    const { id_director } = req.body;
+    const arquivos = req.files;
+    const descricoes = req.body.descricoes || [];
 
-    // Insere as novas imagens
+    if (!id_director) {
+      return res.status(400).json({ erro: "ID do diretor não fornecido." });
+    }
+
+    if (!arquivos || arquivos.length === 0) {
+      return res.status(400).json({ erro: "Nenhuma imagem enviada." });
+    }
+
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
       const descricao = Array.isArray(descricoes) ? descricoes[i] : descricoes;
+
+      // ✅ Cloudinary armazena a imagem e retorna URL em file.path
+      const cloudUrl = file?.path;
+
+      if (!cloudUrl) {
+        console.log(`⚠️ file.path não definido para imagem: ${file.originalname}`);
+        continue;
+      }
+
+      // ✅ Salva no banco de dados a URL da imagem no Cloudinary
       await pool.query(
         "INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)",
-        [id_director, file.path.replace(/\\/g, '/'), descricao || ""]
+        [id_director, cloudUrl, descricao || ""]
       );
     }
 
-    res.json({ sucesso: true });
-  } catch (error) {
+    res.json({ sucesso: true, mensagem: "Imagens adicionadas com sucesso no Cloudinary!" });
 
-    res.status(500).json({ erro: "Erro interno ao adicionar imagens" });
+  } catch (err) {
+    console.error('Erro no servidor ao enviar imagens:', err);
+    res.status(500).json({
+      erro: "Erro interno ao adicionar imagens no Cloudinary.",
+      detalhe: err.message
+    });
   }
 });
-
 
 
 
@@ -792,7 +780,6 @@ router.delete('/deletar/director/:id', async (req, res) => {
 });
 
 
-// Servir arquivos estáticos da pasta uploads
-router.use('/uploads', express.static(baseUploadDir));
+
 
 export default router;

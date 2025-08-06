@@ -448,31 +448,29 @@ const handleRemoveImage = async (id) => {
   const [dadosCarregados, setDadosCarregados] = useState(false);
   const [mostrarConfirmacaoDeletar, setMostrarConfirmacaoDeletar] = useState(false);
 
-  const enviarImagens = async (id_director, imagens) => {
-  try {
-    const formData = new FormData();
-    formData.append('id_director', id_director);
+const enviarImagens = async (id_director, imagens) => {
+  const formData = new FormData();
+  formData.append('id_director', id_director);
 
-    imagens.forEach((img, idx) => {
-      formData.append('imagens', img.file); // img.file = File
-      formData.append(`descricao_foto_${idx + 1}`, img.descricao || "");
-    });
+  imagens.forEach((img, i) => {
+    formData.append('imagens', img.file); // mesmo nome usado no backend
+    formData.append(`descricao_foto_${i + 1}`, img.descricao || "");
+  });
 
-    const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/imagens', {
-      method: 'POST',
-      body: formData
-    });
+  const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/imagens', {
+    method: 'POST',
+    body: formData
+  });
 
-    const data = await resp.json();
-    if (data.sucesso) {
-      
-    } else {
-     
-    }
-  } catch (err) {
-   
+  const data = await resp.json();
+  if (data.sucesso) {
+    console.log("✅ Imagens cadastradas com sucesso!");
+  } else {
+    console.warn("⚠️ Erro:", data.erro);
   }
 };
+
+
 
 
 const enviarQualificacoes = async (id_director) => {

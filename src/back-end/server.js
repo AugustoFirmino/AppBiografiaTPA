@@ -30,7 +30,7 @@ app.use(cors({
 app.use(bodyParser.json());
 
 
-app.use('/uploads', express.static('uploads')); // para servir fotos
+
 app.use('/api', diretorRoutes);
 
 
