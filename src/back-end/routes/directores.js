@@ -373,39 +373,30 @@ router.get('/imagens/:id', async (req, res) => {
 // Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
   try {
-    // Busca todos os usuários
     const [usuarios] = await pool.query('SELECT id, nome, cargo FROM usuarios ORDER BY id DESC');
+    const [fotos] = await pool.query('SELECT id, id_director, imagem_base64 FROM imagens');
 
-    // Busca uma imagem por usuário (usando subquery para pegar só uma imagem por diretor)
-    const [fotos] = await pool.query(`
-      SELECT i.id_director, i.imagem_base64
-      FROM imagens i
-      INNER JOIN (
-        SELECT id_director, MIN(id) AS min_id
-        FROM imagens
-        GROUP BY id_director
-      ) AS primeira_imagem ON i.id_director = primeira_imagem.id_director AND i.id = primeira_imagem.min_id
-    `);
-
-    // Junta usuários com suas imagens
-    const directores = usuarios.map(dir => {
-      const foto = fotos.find(f => f.id_director === dir.id);
+    const directoresComFotos = usuarios.map(dir => {
+      const fotosDoDiretor = fotos
+        .filter(f => f.id_director === dir.id)
+        .map(f => `data:image/jpeg;base64,${f.imagem_base64}`); // monta o caminho base64 completo
 
       return {
         id: dir.id,
         nome: dir.nome,
         cargo: dir.cargo,
-        imagem: foto ? `data:image/jpeg;base64,${foto.imagem_base64}` : null
+        fotos: fotosDoDiretor
       };
     });
 
-    res.json(directores);
+    res.json(directoresComFotos);
 
   } catch (err) {
-    console.error('Erro ao listar diretores:', err);
-    res.status(500).json({ erro: 'Erro ao listar diretores' });
+    console.error('Erro ao buscar directores:', err);
+    res.status(500).json({ erro: "Erro ao buscar directores." });
   }
 });
+
 
 
 

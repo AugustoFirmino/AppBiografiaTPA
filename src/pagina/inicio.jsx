@@ -21,6 +21,7 @@ function Inicio() {
     (dir.nome || '').toLowerCase().includes(busca.toLowerCase())
   );
 
+  console.log(filtrados);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 flex flex-col items-center py-10 px-2 animate-fade-in">
       <div className="w-full max-w-2xl flex flex-col items-center mb-8">

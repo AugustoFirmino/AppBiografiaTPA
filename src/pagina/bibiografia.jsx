@@ -37,13 +37,18 @@ function Inicio() {
     return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-red-700">Diretor não encontrado.</div>;
   }
 
+
+
+
   // Para galeria: fotos e descrições
-  const galeriaImages = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `http://localhost:3001${f.caminho}`)
-    : [];
-  const galeriaDescricoes = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `${f.descricao}`)
-    : [];
+  // Para galeria: fotos e descrições (com base64)
+const galeriaImages = Array.isArray(director.fotos)
+  ? director.fotos.map(f => `data:image/jpeg;base64,${f.imagem_base64}`)
+  : [];
+
+const galeriaDescricoes = Array.isArray(director.fotos)
+  ? director.fotos.map(f => f.descricao || '')
+  : [];
 
 
   return (
