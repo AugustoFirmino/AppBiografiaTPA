@@ -289,6 +289,60 @@ router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
 });
 
 
+
+// Ex: GET /api/imagens
+router.get('/imagens', async (req, res) => {
+  try {
+    const [imagens] = await pool.query(`
+      SELECT id, id_director, imagem_base64, descricao 
+      FROM imagens
+      ORDER BY id DESC
+      LIMIT 20
+    `);
+
+    res.json(imagens);
+  } catch (erro) {
+    res.status(500).json({ erro: 'Erro ao buscar imagens' });
+  }
+});
+
+
+
+// Rota GET /api/listar/directores
+router.get('/listar/imagens', async (req, res) => {
+  try {
+    // Busca todos os usuários (diretores)
+    const [usuarios] = await pool.query('SELECT * FROM usuarios ORDER BY id DESC');
+
+    // Para cada usuário, busca as imagens relacionadas a ele
+    const directoresComImagens = await Promise.all(
+      usuarios.map(async (diretor) => {
+        const [imagens] = await pool.query(
+          'SELECT imagem_base64, descricao FROM imagens WHERE id_director = ?',
+          [diretor.id]
+        );
+
+        const fotos = imagens.map(img => ({
+          base64: `data:image/jpeg;base64,${img.imagem_base64}`,
+          descricao: img.descricao
+        }));
+
+        return {
+          ...diretor,
+          fotos
+        };
+      })
+    );
+
+    res.json(directoresComImagens);
+
+  } catch (err) {
+    console.error('Erro ao buscar directores:', err);
+    res.status(500).json({ erro: "Erro ao buscar directores." });
+  }
+});
+
+
 router.get('/imagens/:id', async (req, res) => {
   try {
     const [resultado] = await pool.query(
@@ -316,31 +370,42 @@ router.get('/imagens/:id', async (req, res) => {
 
 
 // Rota GET /api/listar/directores
+// Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
   try {
-    const [usuarios] = await pool.query('SELECT * FROM usuarios  ORDER BY id DESC');
-    const [fotos] = await pool.query('SELECT * FROM imagens');
+    // Busca todos os usuários
+    const [usuarios] = await pool.query('SELECT id, nome, cargo FROM usuarios ORDER BY id DESC');
 
-    // Agrupa as fotos por id_director
-    const fotosPorDirector = {};
-    fotos.forEach(f => {
-      if (!fotosPorDirector[f.id_director]) fotosPorDirector[f.id_director] = [];
-      fotosPorDirector[f.id_director].push(f.caminho);
+    // Busca uma imagem por usuário (usando subquery para pegar só uma imagem por diretor)
+    const [fotos] = await pool.query(`
+      SELECT i.id_director, i.imagem_base64
+      FROM imagens i
+      INNER JOIN (
+        SELECT id_director, MIN(id) AS min_id
+        FROM imagens
+        GROUP BY id_director
+      ) AS primeira_imagem ON i.id_director = primeira_imagem.id_director AND i.id = primeira_imagem.min_id
+    `);
+
+    // Junta usuários com suas imagens
+    const directores = usuarios.map(dir => {
+      const foto = fotos.find(f => f.id_director === dir.id);
+
+      return {
+        id: dir.id,
+        nome: dir.nome,
+        cargo: dir.cargo,
+        imagem: foto ? `data:image/jpeg;base64,${foto.imagem_base64}` : null
+      };
     });
 
-    // Une os dados
-    const directoresComFotos = usuarios.map(dir => ({
-      ...dir,
-      fotos: fotosPorDirector[dir.id] || []
-    }));
-
-    res.json(directoresComFotos);
+    res.json(directores);
 
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao buscar directores." });
+    console.error('Erro ao listar diretores:', err);
+    res.status(500).json({ erro: 'Erro ao listar diretores' });
   }
 });
-
 
 
 
