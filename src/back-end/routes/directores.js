@@ -843,16 +843,7 @@ router.delete('/deletar/director/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // 1. Buscar caminhos das imagens para deletar do disco
-    const [imagens] = await pool.query('SELECT caminho FROM imagens WHERE id_director = ?', [id]);
-    for (const img of imagens) {
-      const caminho = path.join(__dirname, '..', img.caminho);
-      if (fs.existsSync(caminho)) {
-        fs.unlinkSync(caminho); // Remove o arquivo do disco
-      }
-    }
-
-    // 2. Deletar de todas as tabelas relacionadas
+    // Deletar dados relacionados
     await pool.query('DELETE FROM imagens WHERE id_director = ?', [id]);
     await pool.query('DELETE FROM idiomas WHERE id_director = ?', [id]);
     await pool.query('DELETE FROM experiencias WHERE id_director = ?', [id]);
@@ -861,14 +852,17 @@ router.delete('/deletar/director/:id', async (req, res) => {
     await pool.query('DELETE FROM premios WHERE id_director = ?', [id]);
     await pool.query('DELETE FROM depoimentos WHERE id_director = ?', [id]);
 
-    // 3. Finalmente, deletar o próprio usuário
+    // Deletar o usuário principal
     await pool.query('DELETE FROM usuarios WHERE id = ?', [id]);
 
-    res.json({ sucesso: true, mensagem: "Director e todos os dados relacionados foram deletados com sucesso." });
+    res.json({ sucesso: true, mensagem: "Director e dados relacionados deletados com sucesso." });
+
   } catch (erro) {
-    res.status(500).json({ erro: "Erro ao deletar director e dados relacionados." });
+    console.error("Erro ao deletar diretor:", erro); // Mostra o erro real no terminal
+    res.status(500).json({ erro: "Erro ao deletar diretor e dados relacionados." });
   }
 });
+
 
 
 
