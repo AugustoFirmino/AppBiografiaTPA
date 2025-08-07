@@ -388,7 +388,7 @@ router.get('/listar/directores', async (req, res) => {
         fotos: fotosDoDiretor
       };
     });
-
+   
     res.json(directoresComFotos);
 
   } catch (err) {

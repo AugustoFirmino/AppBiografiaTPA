@@ -7,10 +7,6 @@ import { getDirectorById } from '../dados/api';
 
 
 
-//icon para actualizaçao de dados
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
-
-
 function Inicio() {
   
   const [isOpen, setIsOpen] = useState(false);
@@ -27,33 +23,6 @@ function Inicio() {
     { key: "galeria", label: "Galeria de Fotos" },
   ];
 
- const LoaderOverlay = () => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-none backdrop-blur-sm pointer-events-none">
-      <div className="relative w-32 h-32">
-        {[...Array(10)].map((_, i) => {
-          const angle = (i * 360) / 10;
-          const radius = 40;
-          const x = radius * Math.cos((angle * Math.PI) / 180);
-          const y = radius * Math.sin((angle * Math.PI) / 180);
-
-          return (
-            <span
-              key={i}
-              className="absolute w-4 h-4 bg-blue-500 rounded-full animate-ping"
-              style={{
-                top: `calc(50% + ${y}px - 0.5rem)`,
-                left: `calc(50% + ${x}px - 0.5rem)`,
-                animationDelay: `${i * 0.1}s`
-              }}
-            ></span>
-          );
-        })}
-      </div>
-    </div>
-  );
-}; 
-
   useEffect(() => {
     setLoading(true);
     getDirectorById(id)
@@ -62,19 +31,24 @@ function Inicio() {
   }, [id]);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-blue-700"><LoaderOverlay /></div>;
+    return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-blue-700">Carregando...</div>;
   }
   if (!director) {
     return <div className="flex items-center justify-center min-h-screen text-xl font-bold text-red-700">Diretor não encontrado.</div>;
   }
 
+
+
+
   // Para galeria: fotos e descrições
-  const galeriaImages = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `http://localhost:3001${f.caminho}`)
-    : [];
-  const galeriaDescricoes = Array.isArray(director.fotos)
-    ? director.fotos.map(f => `${f.descricao}`)
-    : [];
+  // Para galeria: fotos e descrições (com base64)
+const galeriaImages = Array.isArray(director.fotos)
+  ? director.fotos.map(f => `data:image/jpeg;base64,${f.imagem_base64}`)
+  : [];
+
+const galeriaDescricoes = Array.isArray(director.fotos)
+  ? director.fotos.map(f => f.descricao || '')
+  : [];
 
 
   return (
@@ -115,11 +89,7 @@ function Inicio() {
             <div className="text-sm text-gray-700 mb-1"><span className="font-semibold">Ocupação:</span> {director?.ocupacao}</div>
             <div className="text-sm text-gray-700"><span className="font-semibold">Nascimento:</span> {director?.nascimento.split('T')[0]}</div>
           </div>
-       
-          <Link to="/cadastrar_directores/1" className="mt-8 inline-block text-red-600 font-semibold hover:underline transition">← Voltar</Link>
-        
-        
-        
+          <Link to={`/cadastrar_directores/${id}`} className="mt-8 inline-block text-red-600 font-semibold hover:underline transition">← Voltar</Link>
         </div>
       </aside>
 
@@ -305,7 +275,6 @@ function Inicio() {
                           ‹
                         </button>
                         <img
-                        
                           src={galeriaImages[slideIndex]}
                           alt={`Imagem ${slideIndex + 1} de ${director.name}`}
                           className="max-h-96 max-w-full object-contain rounded-xl mx-auto"
@@ -347,14 +316,13 @@ function Inicio() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                 {director.depoimentos.map((depoimento, index) => (
                   <div
-                   key={depoimento.id || index}
-
+                    key={depoimento.id || index}
                     className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100 p-8 flex flex-col gap-6"
                   >
                     <div className="flex items-center gap-4 mb-2">
                       <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-blue-400 bg-blue-100 flex items-center justify-center shadow-lg">
                         {depoimento.avatar ? (
-                          <img  src={depoimento.avatar} alt={depoimento.nome} className="w-full h-full object-cover" />
+                          <img src={depoimento.avatar} alt={depoimento.nome} className="w-full h-full object-cover" />
                         ) : (
                           <svg className="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         )}
