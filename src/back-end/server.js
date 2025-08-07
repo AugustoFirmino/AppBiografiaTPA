@@ -23,7 +23,7 @@ const whitelist = [
 
 
 // Caminho absoluto até a raiz do projeto (ex: /app)
-const raizProjeto = path.join(__dirname, '..', '..', '..');
+const raizProjeto = path.join(__dirname, '..', '..','..', 'public', 'uploads');
 
 
 app.use(cors({
@@ -42,8 +42,11 @@ app.use(bodyParser.json());
 app.use('/api', diretorRoutes);
 
 // ✅ Tornar /uploads acessível publicamente
-app.use('/uploads', express.static(path.join(raizProjeto, 'uploads')));
+app.use('/uploads', express.static(path.join(raizProjeto)));
 
+app.get(/^\/(?!api|uploads).*/, (req, res) => {
+  res.sendFile(path.join(raizProjeto, 'public', 'build', 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

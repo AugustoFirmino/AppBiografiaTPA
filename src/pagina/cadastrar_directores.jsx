@@ -898,7 +898,7 @@ const atualizarImagens = async (id_director, imagens) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   setEnviando(true);
-  setCarregando(true); // Ativa spinner
+  setCarregando(true);
   setMensagem("");
   setTipoMensagem("");
 
@@ -913,30 +913,19 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const formData = new FormData();
+    // Cria objeto com os dados do formulário
+    const payload = {
+      ...form,
+      data_publicacao: form.data_publicacao || new Date().toISOString().slice(0, 19).replace('T', ' ')
+    };
 
-    // Serializa os campos do formulário
-    Object.entries(form).forEach(([key, value]) => {
-      if (key === 'depoimentos') {
-        formData.append('depoimentos', JSON.stringify(value));
-      } else if (Array.isArray(value)) {
-        value.forEach((v, idx) => {
-          formData.append(`${key}[${idx}]`, v);
-        });
-      } else {
-        formData.append(key, value);
-      }
-    });
-
-    // Garante que a data_publicacao seja válida
-    if (!form.data_publicacao) {
-      formData.append('data_publicacao', new Date().toISOString().slice(0, 19).replace('T', ' '));
-    }
-
-    // Envio do formulário principal
+    // Envio dos dados como JSON
     const resp = await fetch('https://appbiografiatpa.onrender.com/api/cadastrar/directores', {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     });
 
     const data = await resp.json();
@@ -944,7 +933,7 @@ const handleSubmit = async (e) => {
     if (resp.ok && data.sucesso) {
       const idDiretor = data.id;
 
-      // Envia todas as partes associadas
+      // Envia as partes associadas (essas sim podem ter arquivos, como imagens)
       await Promise.all([
         enviarImagens(idDiretor, imagens),
         enviarQualificacoes(idDiretor),
@@ -958,8 +947,6 @@ const handleSubmit = async (e) => {
       // Mensagem de sucesso
       setTipoMensagem("sucesso");
       setMensagem("Cadastro realizado com sucesso!");
-
-      // Limpa formulário e imagens
       limparFormulario();
 
     } else {
@@ -968,14 +955,17 @@ const handleSubmit = async (e) => {
     }
 
   } catch (err) {
+    console.error(err);
     setTipoMensagem("erro");
     setMensagem("Erro de conexão com o servidor.");
   } finally {
     setEnviando(false);
     setCarregando(false);
-    setTimeout(() => setMensagem(""), 3000); // Limpa mensagem após 3s
+    setTimeout(() => setMensagem(""), 3000);
   }
 };
+
+
 
   const handleLogout = async () => {
     try {
@@ -1041,17 +1031,19 @@ const carregarDadosDoDirector = async (id) => {
     }));
 
     // Fotos
-    const imagensDoBanco = Array.isArray(data.fotos)
-      ? data.fotos.map(foto => ({
-          id: foto.id,
-          url: `http://localhost:3001${foto.caminho}`,
-          descricao: foto.descricao || '',
-          file: null,
-          rotate: 0,
-        }))
-      : [];
+ // Fotos
+const imagensDoBanco = Array.isArray(data.fotos)
+  ? data.fotos.map(foto => ({
+      id: foto.id,
+      url: `data:image/jpeg;base64,${foto.imagem_base64}`, // monta o base64
+      descricao: foto.descricao || '',
+      file: null,
+      rotate: 0,
+    }))
+  : [];
 
-    setImagens(imagensDoBanco);
+setImagens(imagensDoBanco);
+
 
     // Idiomas
     setIdiomas(

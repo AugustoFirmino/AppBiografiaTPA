@@ -20,8 +20,9 @@ const upload = multer({ storage });
 // Resolver __dirname com ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const raizProjeto = path.resolve(__dirname, '..');
 
+// Caminho absoluto até a raiz do projeto
+const raizProjeto = path.join(__dirname, '..', '..','..', 'public', 'uploads')// sobe 3 níveis
 
 router.post('/', (req, res) => {
   const {
@@ -254,7 +255,8 @@ router.post('/cadastrar/depoimentos', async (req, res) => {
   }
 });
 
-// POST para salvar imagens localmente
+
+// POST para salvar imagens diretamente no banco em Base64
 router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
   try {
     const { id_director } = req.body;
@@ -264,43 +266,59 @@ router.post('/cadastrar/imagens', upload.array('imagens'), async (req, res) => {
       return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
     }
 
-    // Criar pasta: /uploads/directores/{id_director}
-    const pastaDestino = path.join(raizProjeto, 'uploads', id_director);
-    fs.mkdirSync(pastaDestino, { recursive: true });
-
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
       const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
-      const timestamp = Date.now();
-      const nomeImagem = `${timestamp}_${file.originalname}`;
-      const caminhoFinal = path.join(pastaDestino, nomeImagem);
+      // Converter buffer para base64
+      const imagemBase64 = file.buffer.toString('base64');
 
-      // Salvar no disco
-      fs.writeFileSync(caminhoFinal, file.buffer);
-
-      // URL pública para acessar
-      const urlImagem = `/uploads/${id_director}/${nomeImagem}`;
-
-      // Salvar no banco
+      // Salvar diretamente na tabela com a base64
       await pool.query(
-        `INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)`,
-        [id_director, urlImagem, descricao]
+        `INSERT INTO imagens (id_director, imagem_base64, descricao) VALUES (?, ?, ?)`,
+        [id_director, imagemBase64, descricao]
       );
     }
 
-    res.status(200).json({ sucesso: true, mensagem: 'Imagens salvas com sucesso!' });
+    res.status(200).json({ sucesso: true, mensagem: 'Imagens salvas na base de dados com sucesso!' });
 
   } catch (erro) {
     console.error(erro);
-    res.status(500).json({ erro: 'Erro ao salvar as imagens.' });
+    res.status(500).json({ erro: 'Erro ao salvar as imagens na base de dados.' });
   }
 });
+
+
+router.get('/imagens/:id', async (req, res) => {
+  try {
+    const [resultado] = await pool.query(
+      `SELECT imagem_base64, descricao FROM imagens WHERE id = ?`,
+      [req.params.id]
+    );
+
+    if (resultado.length === 0) {
+      return res.status(404).json({ erro: 'Imagem não encontrada.' });
+    }
+
+    const { imagem_base64, descricao } = resultado[0];
+
+    // Você pode devolver como um data URL (para exibir no <img src="...">)
+    res.json({
+      descricao,
+      base64: imagem_base64,
+      dataUrl: `data:image/jpeg;base64,${imagem_base64}`
+    });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: 'Erro ao buscar imagem.' });
+  }
+});
+
 
 // Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
   try {
-    const [usuarios] = await pool.query('SELECT * FROM usuarios ORDER BY id DESC');
+    const [usuarios] = await pool.query('SELECT * FROM usuarios where id=45 ORDER BY id DESC');
     const [fotos] = await pool.query('SELECT * FROM imagens');
 
     // Agrupa as fotos por id_director
@@ -329,36 +347,37 @@ router.get('/listar/directores', async (req, res) => {
 // GET /api/directores/:id
 // Buscar dados completos de 1 diretor
 router.get('/directores/:id', async (req, res) => {
-const { id } = req.params;
+  const { id } = req.params;
 
   try {
-    // Dados principais do diretor
-    const [rows] = await pool.query("SELECT * FROM usuarios WHERE id = ?", [id]);
+    // Buscar dados principais
+    const [rows] = await pool.query("SELECT * FROM usuarios WHERE id = 45", [id]);
     if (rows.length === 0) return res.status(404).json({ erro: "Diretor não encontrado" });
 
     const diretor = rows[0];
 
-    // Buscar dados das tabelas associadas
+    // Buscar dados relacionados
     const [idiomas] = await pool.query("SELECT idioma FROM idiomas WHERE id_director = ?", [id]);
     const [experiencias] = await pool.query("SELECT descricao FROM experiencias WHERE id_director = ?", [id]);
     const [qualificacoes] = await pool.query("SELECT descricao FROM qualificacoes_academicas WHERE id_director = ?", [id]);
-    const [fotos] = await pool.query("SELECT id, caminho , descricao FROM imagens WHERE id_director = ?", [id]);
+    const [fotos] = await pool.query("SELECT id, imagem_base64, descricao FROM imagens WHERE id_director = ?", [id]);
     const [depoimentos] = await pool.query("SELECT nome, cargo, mensagem FROM depoimentos WHERE id_director = ?", [id]);
     const [premios] = await pool.query("SELECT titulo, descricao FROM premios WHERE id_director = ?", [id]);
     const [contactos] = await pool.query("SELECT telefone FROM contactos WHERE id_director = ?", [id]);
 
-    // Inserir no objeto final
-    diretor.idiomas = idiomas.map(i => i.idioma);
-    diretor.experiencias = experiencias.map(e => e.descricao);
-    diretor.qualificacoes_academica = Array.isArray(qualificacoes) ? qualificacoes.map(q => q.descricao) : [];
-
-    diretor.fotos = fotos;
-    diretor.depoimentos = depoimentos;
-    diretor.premios = premios;
-    diretor.contactos = contactos;
+    // Montar objeto final
+    diretor.idiomas = (idiomas || []).map(i => i.idioma);
+    diretor.experiencias = (experiencias || []).map(e => e.descricao);
+    diretor.qualificacoes_academica = (qualificacoes || []).map(q => q.descricao);
+    diretor.fotos = fotos || [];
+    diretor.depoimentos = depoimentos || [];
+    diretor.premios = premios || [];
+    diretor.contactos = contactos || [];
 
     res.json(diretor);
+
   } catch (erro) {
+    console.error("Erro ao buscar diretor:", erro);
     res.status(500).json({ erro: "Erro interno do servidor" });
   }
 });
@@ -636,7 +655,7 @@ router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res
     }
 
     // Criar pasta se não existir
-    const pastaDestino = path.join(raizProjeto, 'uploads', id_director);
+    const pastaDestino = path.join(raizProjeto, id_director);
     fs.mkdirSync(pastaDestino, { recursive: true });
 
     for (let i = 0; i < arquivos.length; i++) {
@@ -699,7 +718,7 @@ router.delete('/deletar/imagem/:id', async (req, res) => {
     }
 
     const caminhoRelativo = rows[0].caminho; // Ex: /uploads/37/imagem.jpg
-    const caminhoAbsoluto = path.join(__dirname, '..', caminhoRelativo);
+    const caminhoAbsoluto = path.join(__dirname, '..','..' ,caminhoRelativo);
 
     // 2. Deletar arquivo físico se existir
     if (fs.existsSync(caminhoAbsoluto)) {
