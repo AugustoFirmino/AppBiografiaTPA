@@ -318,7 +318,7 @@ router.get('/imagens/:id', async (req, res) => {
 // Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
   try {
-    const [usuarios] = await pool.query('SELECT * FROM usuarios where id=45 ORDER BY id DESC');
+    const [usuarios] = await pool.query('SELECT * FROM usuarios  ORDER BY id DESC');
     const [fotos] = await pool.query('SELECT * FROM imagens');
 
     // Agrupa as fotos por id_director
@@ -351,7 +351,7 @@ router.get('/directores/:id', async (req, res) => {
 
   try {
     // Buscar dados principais
-    const [rows] = await pool.query("SELECT * FROM usuarios WHERE id = 45", [id]);
+    const [rows] = await pool.query("SELECT * FROM usuarios where id=?", [id]);
     if (rows.length === 0) return res.status(404).json({ erro: "Diretor não encontrado" });
 
     const diretor = rows[0];
