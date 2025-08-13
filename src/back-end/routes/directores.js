@@ -701,46 +701,55 @@ router.put('/actualizar/imagens', async (req, res) => {
 
 // Supondo que 'upload' já foi definido com: const upload = multer({ storage });
 
-// Atualiza imagens no storage e banco — substituindo as existentes
+// 🔄 Atualiza imagens no storage e banco — substituindo as existentes
 router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res) => {
   try {
     const { id_director } = req.body;
     const arquivos = req.files;
 
+    // 🚫 Verifica parâmetros obrigatórios
     if (!id_director || !arquivos || arquivos.length === 0) {
       return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
     }
 
-    // Criar pasta se não existir
+    // 📂 Criar pasta do diretor se não existir
     const pastaDestino = path.join(raizProjeto, id_director);
-    fs.mkdirSync(pastaDestino, { recursive: true });
+    if (!fs.existsSync(pastaDestino)) {
+      fs.mkdirSync(pastaDestino, { recursive: true });
+    }
 
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
       const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
-      const nomeImagem = file.originalname; // mesmo nome do arquivo enviado
+      const nomeImagem = file.originalname;
       const caminhoFinal = path.join(pastaDestino, nomeImagem);
 
-      // ✅ Substituir imagem antiga por nova (mesmo nome)
-      fs.writeFileSync(caminhoFinal, file.buffer);
+      // 💾 Salva arquivo — se for memoryStorage usamos file.buffer, se for diskStorage usamos file.path
+      if (file.buffer) {
+        fs.writeFileSync(caminhoFinal, file.buffer);
+      } else if (file.path) {
+        fs.copyFileSync(file.path, caminhoFinal);
+      } else {
+        throw new Error(`Arquivo ${nomeImagem} não contém buffer nem path.`);
+      }
 
       const urlImagem = `/uploads/${id_director}/${nomeImagem}`;
 
-      // ✅ Verifica se já existe imagem com esse caminho
+      // 🔍 Verifica se já existe imagem com esse caminho
       const [rows] = await pool.query(
         "SELECT id FROM imagens WHERE id_director = ? AND caminho = ?",
         [id_director, urlImagem]
       );
 
       if (rows.length > 0) {
-        // ✅ Atualiza descrição se já existir
+        // ✏️ Atualiza descrição se já existir
         await pool.query(
           "UPDATE imagens SET descricao = ? WHERE id_director = ? AND caminho = ?",
           [descricao, id_director, urlImagem]
         );
       } else {
-        // ✅ Insere nova imagem no banco
+        // ➕ Insere nova imagem no banco
         await pool.query(
           "INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)",
           [id_director, urlImagem, descricao]
@@ -751,13 +760,12 @@ router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res
     res.json({ sucesso: true, mensagem: "Imagens atualizadas com sucesso." });
 
   } catch (err) {
-    console.error('❌ Erro ao atualizar imagens:', err);
+    console.error('❌ Erro ao atualizar imagens:', err.stack || err);
     res.status(500).json({
       erro: "Erro interno ao atualizar imagens.",
       detalhe: err.message
     });
   }
-});
 
 
 
