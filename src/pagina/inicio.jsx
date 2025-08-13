@@ -22,7 +22,35 @@ function Inicio() {
   const filtrados = directores.filter((dir) =>
     (dir.nome || '').toLowerCase().includes(busca.toLowerCase())
   );
-console.log(filtrados);
+const LoaderOverlay = () => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-none backdrop-blur-sm pointer-events-none">
+      <div className="relative w-32 h-32">
+        {[...Array(10)].map((_, i) => {
+          const angle = (i * 360) / 10;
+          const radius = 40;
+          const x = radius * Math.cos((angle * Math.PI) / 180);
+          const y = radius * Math.sin((angle * Math.PI) / 180);
+
+          return (
+            <span
+              key={i}
+              className="absolute w-4 h-4 bg-blue-500 rounded-full animate-ping"
+              style={{
+                top: `calc(50% + ${y}px - 0.5rem)`,
+                left: `calc(50% + ${x}px - 0.5rem)`,
+                animationDelay: `${i * 0.1}s`
+              }}
+            ></span>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br flex flex-col items-center py-10 px-2 animate-fade-in">
@@ -52,7 +80,7 @@ console.log(filtrados);
 
       <div className="w-full">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-2xl shadow-inner text-lg text-blue-700 font-bold">Carregando...</div>
+          <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-2xl shadow-inner text-lg text-blue-700 font-bold"><LoaderOverlay /></div>
         ) : filtrados.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-2xl shadow-inner">
             <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -77,7 +105,12 @@ console.log(filtrados);
         )}
       </div>
       <p className="text-lg font-bold text-gray-800 group-hover:text-red-700 text-center mb-1">{dir.nome}</p>
-      <span className="text-xs text-gray-500 text-center">{dir.biografia}</span>
+  <span className="text-xs text-gray-500 text-center mt-5">
+  {dir.biografia.length > 100 
+    ? dir.biografia.substring(0, 100) + "..." 
+    : dir.biografia}
+</span>
+
     </Link>
   );
 })}
