@@ -25,7 +25,7 @@ function Inicio() {
 console.log(filtrados);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 flex flex-col items-center py-10 px-2 animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br flex flex-col items-center py-10 px-2 animate-fade-in">
       <div className="w-full max-w-2xl flex flex-col items-center mb-8">
         <img src={LogoTPA} alt={'TPA'} className="w-32 mb-4 drop-shadow-lg" />
         <h2 className="text-3xl md:text-4xl font-extrabold text-red-700 mb-2 tracking-tight text-center drop-shadow">50 Anos 50 Histórias</h2>
@@ -33,7 +33,7 @@ console.log(filtrados);
         <div className="w-full flex justify-center mb-6">
           <input
             type="text"
-            placeholder="Pesquisar diretor pelo nome..."
+            placeholder="Pesquisar colaborador pelo nome..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             className="w-full max-w-md px-5 py-3 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-red-400 text-lg transition"
@@ -50,7 +50,7 @@ console.log(filtrados);
         </div>
       </div>
 
-      <div className="w-full max-w-5xl">
+      <div className="w-full">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-2xl shadow-inner text-lg text-blue-700 font-bold">Carregando...</div>
         ) : filtrados.length === 0 ? (
@@ -59,7 +59,7 @@ console.log(filtrados);
             <p className="text-gray-500 text-lg font-medium">Nenhum diretor encontrado.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-20 sm:grid-cols-20 lg:grid-cols-6 gap-12 h-[500px]">
        {filtrados.map((dir) => {
   const imgUrl = dir.fotos?.[0] || null;
 
@@ -77,7 +77,7 @@ console.log(filtrados);
         )}
       </div>
       <p className="text-lg font-bold text-gray-800 group-hover:text-red-700 text-center mb-1">{dir.nome}</p>
-      <span className="text-xs text-gray-500 text-center">{dir.cargo}</span>
+      <span className="text-xs text-gray-500 text-center">{dir.biografia}</span>
     </Link>
   );
 })}

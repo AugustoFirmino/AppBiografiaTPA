@@ -373,7 +373,7 @@ router.get('/imagens/:id', async (req, res) => {
 // Rota GET /api/listar/directores
 router.get('/listar/directores', async (req, res) => {
   try {
-    const [usuarios] = await pool.query('SELECT id, nome, cargo FROM usuarios ORDER BY id DESC');
+    const [usuarios] = await pool.query('SELECT id, nome, cargo, biografia FROM usuarios ORDER BY id DESC');
     const [fotos] = await pool.query('SELECT id, id_director, imagem_base64 FROM imagens');
 
     const directoresComFotos = usuarios.map(dir => {
@@ -385,6 +385,7 @@ router.get('/listar/directores', async (req, res) => {
         id: dir.id,
         nome: dir.nome,
         cargo: dir.cargo,
+        biografia: dir.biografia,
         fotos: fotosDoDiretor
       };
     });
