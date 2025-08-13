@@ -701,73 +701,51 @@ router.put('/actualizar/imagens', async (req, res) => {
 
 // Supondo que 'upload' já foi definido com: const upload = multer({ storage });
 
-// 🔄 Atualiza imagens no storage e banco — substituindo as existentes
+// 🔄 Atualiza imagens no banco — substituindo ou inserindo se não existir
 router.put('/actualizar/novas-imagens', upload.array('imagens'), async (req, res) => {
   try {
     const { id_director } = req.body;
     const arquivos = req.files;
 
-    // 🚫 Verifica parâmetros obrigatórios
     if (!id_director || !arquivos || arquivos.length === 0) {
       return res.status(400).json({ erro: "ID do diretor ou imagens não fornecidos." });
-    }
-
-    // 📂 Criar pasta do diretor se não existir
-    const pastaDestino = path.join(raizProjeto, id_director);
-    if (!fs.existsSync(pastaDestino)) {
-      fs.mkdirSync(pastaDestino, { recursive: true });
     }
 
     for (let i = 0; i < arquivos.length; i++) {
       const file = arquivos[i];
       const descricao = req.body[`descricao_foto_${i + 1}`] || "";
 
-      const nomeImagem = file.originalname;
-      const caminhoFinal = path.join(pastaDestino, nomeImagem);
+      // Converter buffer para base64
+      const imagemBase64 = file.buffer.toString('base64');
 
-      // 💾 Salva arquivo — se for memoryStorage usamos file.buffer, se for diskStorage usamos file.path
-      if (file.buffer) {
-        fs.writeFileSync(caminhoFinal, file.buffer);
-      } else if (file.path) {
-        fs.copyFileSync(file.path, caminhoFinal);
-      } else {
-        throw new Error(`Arquivo ${nomeImagem} não contém buffer nem path.`);
-      }
-
-      const urlImagem = `/uploads/${id_director}/${nomeImagem}`;
-
-      // 🔍 Verifica se já existe imagem com esse caminho
+      // Verifica se já existe imagem com essa descrição para o diretor
       const [rows] = await pool.query(
-        "SELECT id FROM imagens WHERE id_director = ? AND caminho = ?",
-        [id_director, urlImagem]
+        "SELECT id FROM imagens WHERE id_director = ? AND descricao = ?",
+        [id_director, descricao]
       );
 
       if (rows.length > 0) {
-        // ✏️ Atualiza descrição se já existir
+        // Atualiza imagem e descrição
         await pool.query(
-          "UPDATE imagens SET descricao = ? WHERE id_director = ? AND caminho = ?",
-          [descricao, id_director, urlImagem]
+          `UPDATE imagens SET imagem_base64 = ?, descricao = ? WHERE id_director = ? AND id = ?`,
+          [imagemBase64, descricao, id_director, rows[0].id]
         );
       } else {
-        // ➕ Insere nova imagem no banco
+        // Insere nova
         await pool.query(
-          "INSERT INTO imagens (id_director, caminho, descricao) VALUES (?, ?, ?)",
-          [id_director, urlImagem, descricao]
+          `INSERT INTO imagens (id_director, imagem_base64, descricao) VALUES (?, ?, ?)`,
+          [id_director, imagemBase64, descricao]
         );
       }
     }
 
-    res.json({ sucesso: true, mensagem: "Imagens atualizadas com sucesso." });
+    res.status(200).json({ sucesso: true, mensagem: 'Imagens atualizadas com sucesso!' });
 
-  } catch (err) {
-    console.error('❌ Erro ao atualizar imagens:', err.stack || err);
-    res.status(500).json({
-      erro: "Erro interno ao atualizar imagens.",
-      detalhe: err.message
-    });
+  } catch (erro) {
+    console.error("❌ Erro ao atualizar imagens:", erro);
+    res.status(500).json({ erro: 'Erro ao atualizar as imagens na base de dados.' });
   }
-
-
+});
 
 //rota para deletar a imagem selecionada
 // ✅ ROTA PARA DELETAR IMAGEM POR ID
