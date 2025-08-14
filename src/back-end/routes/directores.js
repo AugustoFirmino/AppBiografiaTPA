@@ -787,38 +787,34 @@ router.delete('/remover/imagens', async (req, res) => {
   }
 
   try {
-    // 1. Buscar caminhos das imagens no banco
+    // 1. Buscar imagens no banco
     const [imagens] = await pool.query(
       `SELECT imagem_base64 FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
       ids
     );
 
-    // 2. Remover arquivos do sistema
-    for (const img of imagens) {
-      const caminhoFisico = path.join(__dirname, '..', img.caminho);
-      if (fs.existsSync(caminhoFisico)) {
-        fs.unlinkSync(caminhoFisico);
-        console.log('🗑️ Imagem deletada:', caminhoFisico);
-      } else {
-        console.warn('⚠️ Imagem não encontrada:', caminhoFisico);
-      }
+    if (imagens.length === 0) {
+      return res.status(404).json({ erro: "Nenhuma das imagens foi encontrada no banco." });
     }
 
-    // 3. Remover do banco de dados
+    // 2. Apenas log para conferência
+    imagens.forEach((img, idx) => {
+      console.log(`🗑️ Imagem ${ids[idx]} encontrada, base64 length:`, img.imagem_base64?.length || 0);
+    });
+
+    // 3. Remover registros do banco
     await pool.query(
       `DELETE FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
       ids
     );
 
-    res.json({ sucesso: true, mensagem: 'Imagens removidas com sucesso.' });
+    res.json({ sucesso: true, mensagem: 'Imagens removidas com sucesso do banco de dados.' });
 
   } catch (error) {
     console.error('❌ Erro ao remover imagens:', error);
-    console.log(error);
     res.status(500).json({ erro: "Erro interno ao remover imagens." });
   }
 });
-
 
 
 
