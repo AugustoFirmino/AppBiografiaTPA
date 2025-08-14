@@ -754,7 +754,7 @@ router.delete('/deletar/imagem/:id', async (req, res) => {
 
   try {
     // 1. Buscar o caminho da imagem no banco
-    const [rows] = await pool.query("SELECT caminho FROM imagens WHERE id = ?", [id]);
+    const [rows] = await pool.query("SELECT imagem_base64 FROM imagens WHERE id = ?", [id]);
 
     if (rows.length === 0) {
       return res.status(404).json({ erro: 'Imagem não encontrada no banco de dados.' });
@@ -794,7 +794,7 @@ router.delete('/remover/imagens', async (req, res) => {
   try {
     // 1. Buscar caminhos das imagens no banco
     const [imagens] = await pool.query(
-      `SELECT caminho FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
+      `SELECT imagem_base64 FROM imagens WHERE id IN (${ids.map(() => '?').join(',')})`,
       ids
     );
 
