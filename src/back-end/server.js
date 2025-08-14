@@ -45,6 +45,11 @@ app.use('/api', diretorRoutes);
 app.use('/uploads', express.static(path.join(raizProjeto)));
 
 
+app.get(/^\/(?!api|uploads).*/, (req, res) => {
+  res.sendFile(path.join(raizProjeto, 'public', 'build', 'index.html'));
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

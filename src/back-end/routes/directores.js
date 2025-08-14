@@ -753,28 +753,23 @@ router.delete('/deletar/imagem/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    // 1. Buscar o caminho da imagem no banco
-    const [rows] = await pool.query("SELECT imagem_base64 FROM imagens WHERE id = ?", [id]);
+    // 1. Buscar imagem no banco
+    const [rows] = await pool.query(
+      "SELECT imagem_base64 FROM imagens WHERE id = ?",
+      [id]
+    );
 
     if (rows.length === 0) {
       return res.status(404).json({ erro: 'Imagem não encontrada no banco de dados.' });
     }
 
-    const caminhoRelativo = rows[0].caminho; // Ex: /uploads/37/imagem.jpg
-    const caminhoAbsoluto = path.join(__dirname, '..','..' ,caminhoRelativo);
-
-    // 2. Deletar arquivo físico se existir
-    if (fs.existsSync(caminhoAbsoluto)) {
-      fs.unlinkSync(caminhoAbsoluto);
-      console.log('🗑️ Imagem removida da pasta uploads:', caminhoAbsoluto);
-    } else {
-      console.warn('⚠️ Arquivo não encontrado na pasta:', caminhoAbsoluto);
-    }
+    // 2. Apenas log para confirmar que existe
+    console.log('🗑️ Imagem encontrada no banco, base64 length:', rows[0].imagem_base64?.length || 0);
 
     // 3. Remover registro do banco
     await pool.query("DELETE FROM imagens WHERE id = ?", [id]);
 
-    res.json({ sucesso: true, mensagem: 'Imagem deletada com sucesso.' });
+    res.json({ sucesso: true, mensagem: 'Imagem deletada com sucesso do banco de dados.' });
 
   } catch (err) {
     console.error('❌ Erro ao deletar imagem:', err);
@@ -819,6 +814,7 @@ router.delete('/remover/imagens', async (req, res) => {
 
   } catch (error) {
     console.error('❌ Erro ao remover imagens:', error);
+    console.log(error);
     res.status(500).json({ erro: "Erro interno ao remover imagens." });
   }
 });
