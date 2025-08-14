@@ -84,7 +84,7 @@ const LoaderOverlay = () => {
         ) : filtrados.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-2xl shadow-inner">
             <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-            <p className="text-gray-500 text-lg font-medium">Nenhum diretor encontrado.</p>
+            <p className="text-gray-500 text-lg font-medium">Nenhum colaborador encontrado.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-20 sm:grid-cols-20 lg:grid-cols-6 gap-12 h-[500px]">

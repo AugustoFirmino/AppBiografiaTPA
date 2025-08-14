@@ -1273,7 +1273,7 @@ useEffect(() => {
       : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
 >
   <UserPlusIcon className="w-5 h-5 mr-2" />
-  Cadastrar Directores
+  Cadastrar Colaboradores
 </button>
 
 <button
@@ -1311,7 +1311,7 @@ useEffect(() => {
 
           {paginaAtual === 'cadastrar' && (
           <div>
-             <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Cadastro de Directores</h2>
+             <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Cadastro de Colaboradores</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow p-6 space-y-6 border border-blue-100">
