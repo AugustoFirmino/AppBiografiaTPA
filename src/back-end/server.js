@@ -18,7 +18,8 @@ const __dirname = path.dirname(__filename);
 const whitelist = [
   'http://localhost:5173',
   'http://tpaonline-001-site2.ntempurl.com',
-  'https://appbiografiatpa.onrender.com'
+  'https://appbiografiatpa.onrender.com',
+  'http://50anos.baudesporto.ao'
 ];
 
 
