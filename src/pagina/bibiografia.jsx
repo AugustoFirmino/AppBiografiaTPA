@@ -334,50 +334,170 @@ const galeriaDescricoes = Array.isArray(director.fotos)
             )}
           </section>
         )}
+{/* DEPOIMENTOS com painel lateral */}
+{secaoAtiva === "depoimentos" && (
+  <section className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-6 mt-8">
+    
+    {/* Área principal do depoimento */}
+    {slideIndex !== null && director.depoimentos[slideIndex] && (
+      <div className="flex-1 bg-white rounded-3xl shadow-lg p-8 flex flex-col items-center relative">
+        {/* Botão de fechar */}
+        <button
+          className="absolute top-4 left-4 text-gray-500 hover:text-red-600 text-2xl font-bold"
+          onClick={() => setSlideIndex(null)}
+          aria-label="Fechar depoimento"
+        >
+          ×
+        </button>
 
-        {/* DEPOIMENTOS */}
-        {secaoAtiva === "depoimentos" && (
-          <section className="w-full max-w-5xl mx-auto">
-            <h2 className="text-3xl font-extrabold mb-8 text-center tracking-tight drop-shadow-lg">
-              <span className="text-black">Depoimentos</span>
-            </h2>
-            {Array.isArray(director.depoimentos) && director.depoimentos.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                {director.depoimentos.map((depoimento, index) => (
-                  <div
-                    key={depoimento.id || index}
-                    className="relative group bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100 p-8 flex flex-col gap-6"
-                  >
-                    <div className="flex items-center gap-4 mb-2">
-                      <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-blue-400 bg-blue-100 flex items-center justify-center shadow-lg">
-                        {depoimento.avatar ? (
-                          <img src={depoimento.avatar} alt={depoimento.nome} className="w-full h-full object-cover" />
-                        ) : (
-                          <svg className="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        )}
-                      </div>
-                      <div>
-                        <span className="block font-bold text-gray-800 text-lg">{depoimento.nome}</span>
-                        <span className="block text-xs text-blue-600 font-semibold">{depoimento.cargo}</span>
-                      </div>
-                    </div>
-                    <div className="relative bg-white/80 rounded-xl p-6 shadow-inner border border-blue-100">
-                      <div className="absolute -top-6 left-4 text-7xl text-blue-100 select-none leading-none pointer-events-none font-serif">“</div>
-                      <p className="text-gray-800 italic leading-relaxed text-justify text-base font-medium z-10 relative">
-                        {depoimento.mensagem}
-                      </p>
-                    </div>
-                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="inline-block bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">#{index + 1}</span>
-                    </div>
+        <span className="font-bold text-gray-800 text-2xl mt-4">
+          Depoimento de {director.depoimentos[slideIndex].nome}
+        </span>
+
+        <div className="mt-6 px-4 w-full h-100 overflow-y-auto">
+          <p className="text-gray-800 italic text-justify leading-relaxed text-lg">
+            {director.depoimentos[slideIndex].mensagem}
+          </p>
+        </div>
+      </div>
+    )}
+
+    {/* Painel lateral de avatares */}
+    {slideIndex === null ? (
+      <div className="w-full flex flex-col items-center">
+        {/* Título centralizado */}
+        <h3 className="w-full text-2xl font-bold text-gray-700 mb-6 text-center">
+          Depoimentos
+        </h3>
+
+        <div
+          className={`
+            ${Array.isArray(director.depoimentos) && director.depoimentos.length > 4 
+              ? "overflow-y-auto max-h-[80vh]" 
+              : ""
+            }
+            grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 w-full
+          `}
+        >
+          {Array.isArray(director.depoimentos) && director.depoimentos.length > 0 ? (
+            director.depoimentos.map((depoimento, index) => (
+              <button
+                key={depoimento.id || index}
+                onClick={() => setSlideIndex(index)}
+                className="relative flex flex-col items-center p-4 rounded-xl border shadow transition-all duration-300 border-gray-200 bg-white hover:shadow-md"
+              >
+                {/* Avatar */}
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-300 flex items-center justify-center bg-blue-100 mb-2">
+                  {depoimento.avatar ? (
+                    <img
+                      src={depoimento.avatar}
+                      alt={depoimento.nome}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <svg
+                      className="w-6 h-6 text-blue-300"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Nome */}
+                <span className="font-semibold text-gray-800 text-sm text-center w-full truncate">
+                  {depoimento.nome}
+                </span>
+
+                {/* Cargo */}
+                <span className="text-xs text-blue-600 text-center w-full truncate">
+                  {depoimento.cargo}
+                </span>
+              </button>
+            ))
+          ) : (
+            <p className="text-gray-400 italic text-center col-span-3">
+              Nenhum depoimento disponível
+            </p>
+          )}
+        </div>
+      </div>
+    ) : (
+      <div className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4">
+        <h3 className="text-lg font-bold text-gray-700 mb-2 text-center">
+          Depoimentos
+        </h3>
+        <div
+          className={`
+            ${Array.isArray(director.depoimentos) && director.depoimentos.length > 4 
+              ? "overflow-y-auto max-h-[80vh]" 
+              : ""
+            }
+            grid grid-cols-1 gap-3
+          `}
+        >
+          {Array.isArray(director.depoimentos) && director.depoimentos.length > 0 ? (
+            director.depoimentos.map((depoimento, index) => {
+              const isSelected = slideIndex === index;
+              return (
+                <button
+                  key={depoimento.id || index}
+                  onClick={() => setSlideIndex(index)}
+                  className={`relative flex flex-col items-center p-2 rounded-xl border shadow transition-all duration-300
+                    ${isSelected 
+                      ? "border-blue-500 bg-blue-50 scale-105 shadow-lg z-10" 
+                      : "border-gray-200 bg-white hover:shadow-md"}
+                  `}
+                >
+                  {/* Avatar */}
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-300 flex items-center justify-center bg-blue-100">
+                    {depoimento.avatar ? (
+                      <img
+                        src={depoimento.avatar}
+                        alt={depoimento.nome}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <svg
+                        className="w-6 h-6 text-blue-300"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    )}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-gray-500 italic text-lg mt-10">Ainda não há depoimentos para este diretor.</p>
-            )}
-          </section>
-        )}
+
+                  {/* Nome */}
+                  <span className="font-semibold text-gray-800 text-xs text-center w-full truncate">
+                    {depoimento.nome}
+                  </span>
+
+                  {/* Cargo */}
+                  <span className="text-[11px] text-blue-600 text-center w-full truncate">
+                    {depoimento.cargo}
+                  </span>
+                </button>
+              );
+            })
+          ) : (
+            <p className="text-gray-400 italic text-center col-span-1">
+              Nenhum depoimento disponível
+            </p>
+          )}
+        </div>
+      </div>
+    )}
+  </section>
+)}
+
+
+
       </main>
     </div>
   );
